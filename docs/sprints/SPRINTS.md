@@ -11,8 +11,8 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 ## Sprints
 | Sprint | Fechas | Fase | Objetivo | Estado | Progreso |
 |---|---|---|---|---|---|
-| [0](sprint-00.md) | 02-nov → 15-nov-2026 | — | Fundaciones: estructura, Docker, CI, sprints, AWS seguro | 🚧 En curso | 4/7 |
-| [1](sprint-01.md) | 16-nov → 29-nov | F1 | Requerimientos, casos de uso, encuesta, backlog | ⏳ | 0/4 |
+| [0](sprint-00.md) | 02-nov → 15-nov-2026 | — | Fundaciones: estructura, Docker, CI, sprints, AWS seguro | ✅ Cerrado | 6/7 (+1 movida a S1) |
+| [1](sprint-01.md) | 16-nov → 29-nov | F1 | Requerimientos, casos de uso, encuesta, backlog | 🚧 En curso | 0/5 |
 | 2 | 30-nov → 13-dic | F2 | Diseño: ER, wireframes, ADRs, modelos, datos simulados | ⏳ | — |
 | 3 | 14-dic → 27-dic | F3 | Gestión (Entrega 1): CRUD inmuebles y clientes/solicitudes, auth | ⏳ | — |
 | 4 | 28-dic → 10-ene | F3 | Gestión (Entrega 2): agenda sin cruces, seguimiento de etapas | ⏳ | — |

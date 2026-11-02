@@ -8,6 +8,7 @@
 - [ ] Casos de uso y reglas de negocio — [#9](https://github.com/Williamtrix2022/HogarSits/issues/9)
 - [ ] Instrumento de encuesta (8-15 inmobiliarias) — [#10](https://github.com/Williamtrix2022/HogarSits/issues/10)
 - [ ] Backlog priorizado de Sprints 2-6 — [#11](https://github.com/Williamtrix2022/HogarSits/issues/11)
+- [ ] AWS Budget con alerta a $1 USD (viene del Sprint 0) — [#14](https://github.com/Williamtrix2022/HogarSits/issues/14)
 
 ## Log de avance
 _—_
