@@ -16,7 +16,7 @@
 - 2026-11-01: estructura nueva (`config/`, `apps/`), modelos divididos por app, migraciones regeneradas, ruff y 2 tests verdes (verificado contra SQLite temporal). Milestones, labels e issues creados en GitHub.
 
 ## Review
-Entregado: proyecto Django reestructurado (`config/`, `apps/`), PostgreSQL 17 con Docker Compose, CI en GitHub Actions (verde), `main` protegida con PR + CI obligatorios, `CLAUDE.md`, skill `/sprint-update`, plantillas, sistema de sprints y ADR-001. Verificado: `migrate`, 2 tests y admin funcionando contra Postgres en Docker. Cuenta AWS con usuario IAM y MFA. 6 de 7 historias; el Budget de AWS pasa al Sprint 1 (#14).
+Entregado: proyecto Django reestructurado (`config/`, `apps/`), PostgreSQL 17 con Docker Compose, CI en GitHub Actions (verde), `main` protegida con PR + CI obligatorios, `CLAUDE.md`, skill `/sprint-update`, plantillas, sistema de sprints y ADR-001. Verificado: `migrate`, 2 tests y admin funcionando contra Postgres en Docker. Cuenta AWS con usuario IAM y MFA. 7 de 7 issues cerrados; el Budget de AWS pasó al Sprint 1 (#14).
 
 ## Retro
 - Bien: PRs pequeños con CI verde; el diagnóstico del puerto 5432 fue rápido.
