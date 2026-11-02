@@ -6,7 +6,7 @@
 ## Historias comprometidas
 - [x] Reestructurar proyecto Django (config/, apps/, settings por entorno) — [#1](https://github.com/Williamtrix2022/HogarSits/issues/1)
 - [ ] PostgreSQL + Docker Compose (archivos listos; falta probar con Docker Desktop encendido) — [#2](https://github.com/Williamtrix2022/HogarSits/issues/2)
-- [ ] CI con GitHub Actions (workflow escrito; verificar que pasa en el PR) — [#3](https://github.com/Williamtrix2022/HogarSits/issues/3)
+- [x] CI con GitHub Actions (verde en el PR #12 con Postgres 17) — [#3](https://github.com/Williamtrix2022/HogarSits/issues/3)
 - [x] CLAUDE.md, skill /sprint-update, plantillas — [#4](https://github.com/Williamtrix2022/HogarSits/issues/4)
 - [x] Sistema de sprints en docs/ y ADR-001 — [#5](https://github.com/Williamtrix2022/HogarSits/issues/5)
 - [ ] Cuenta AWS segura (MFA, IAM, Budgets) — [#6](https://github.com/Williamtrix2022/HogarSits/issues/6) *(manual, a cargo del usuario)*
