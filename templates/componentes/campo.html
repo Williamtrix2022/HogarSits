@@ -1,0 +1,15 @@
+{% comment %}
+  Campo de formulario accesible. Parámetros: campo (un BoundField) y opcionalmente sin_opcional.
+  Etiqueta siempre visible; se marca lo opcional (no lo obligatorio, que es la mayoría); el error va
+  debajo del campo y se enlaza con aria-describedby (ver AccesibleFormMixin).
+{% endcomment %}
+<div class="campo{% if campo.errors %} error{% endif %}">
+  {% if campo.field.widget.input_type == "checkbox" %}
+    <label for="{{ campo.id_for_label }}">{{ campo }} {{ campo.label }}</label>
+  {% else %}
+    <label for="{{ campo.id_for_label }}">{{ campo.label }}{% if not campo.field.required and not sin_opcional %} <span class="opcional">(opcional)</span>{% endif %}</label>
+    {{ campo }}
+  {% endif %}
+  {% if campo.help_text %}<div class="ayuda">{{ campo.help_text|safe }}</div>{% endif %}
+  {% for e in campo.errors %}<p class="error-texto"{% if forloop.first %} id="error-{{ campo.html_name }}"{% endif %}>{{ e }}</p>{% endfor %}
+</div>

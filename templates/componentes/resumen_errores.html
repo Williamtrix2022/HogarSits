@@ -1,0 +1,14 @@
+{% comment %}
+  Resumen de errores al inicio del formulario. Parámetro: form.
+  Recibe el foco al fallar el envío (nav.js), enlaza cada error con su campo y complementa
+  —no reemplaza— el error junto a cada campo.
+{% endcomment %}
+{% if form.errors %}
+<div class="resumen-errores" role="group" aria-labelledby="resumen-errores-titulo" tabindex="-1" data-resumen-errores>
+  <h2 id="resumen-errores-titulo">Revise {{ form.errors|length }} {% if form.errors|length == 1 %}punto{% else %}puntos{% endif %} antes de guardar</h2>
+  <ul>
+    {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+    {% for campo in form %}{% if campo.errors %}<li><a href="#{{ campo.id_for_label }}">{{ campo.label }}: {{ campo.errors.0 }}</a></li>{% endif %}{% endfor %}
+  </ul>
+</div>
+{% endif %}

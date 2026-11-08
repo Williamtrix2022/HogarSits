@@ -2,23 +2,13 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
+from apps.comun.formularios import AccesibleFormMixin
+
 from .roles import ROL_ADMIN, ROL_ASESOR, administradores_activos, asignar_rol, rol_de
 
 User = get_user_model()
 
 OPCIONES_ROL = [(ROL_ASESOR, "Asesor"), (ROL_ADMIN, "Administrador")]
-
-
-class AccesibleFormMixin:
-    """Tras validar, enlaza cada campo con su error para los lectores de pantalla."""
-
-    def full_clean(self):
-        super().full_clean()
-        for nombre in self.errors:
-            if nombre in self.fields:  # los errores generales no pertenecen a un campo
-                atributos = self.fields[nombre].widget.attrs
-                atributos["aria-invalid"] = "true"
-                atributos["aria-describedby"] = f"error-{nombre}"
 
 
 class LoginForm(AuthenticationForm):

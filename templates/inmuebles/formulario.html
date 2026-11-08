@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block titulo_pagina %}{{ titulo }}{% endblock %}
+{% block acciones %}
+{% if object %}
+<form method="post" action="{% url 'inmuebles:activo' object.pk %}">{% csrf_token %}
+  <input type="hidden" name="next" value="{% url 'inmuebles:lista' %}">
+  <button class="boton {% if object.activo %}peligro{% else %}secundario{% endif %}" type="submit">{% if object.activo %}Desactivar inmueble{% else %}Activar inmueble{% endif %}</button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block contenido %}
+{% include "componentes/resumen_errores.html" with form=form %}
+<form method="post" class="tarjeta" novalidate>
+  {% csrf_token %}
+  <div class="rejilla-campos">
+    <div class="ancho-completo">{% include "componentes/campo.html" with campo=form.titulo %}</div>
+    {% include "componentes/campo.html" with campo=form.tipo_inmueble %}
+    {% include "componentes/campo.html" with campo=form.operacion %}
+    <div class="ancho-completo">{% include "componentes/campo.html" with campo=form.direccion %}</div>
+    {% include "componentes/campo.html" with campo=form.barrio %}
+    {% include "componentes/campo.html" with campo=form.precio %}
+    {% include "componentes/campo.html" with campo=form.area_m2 %}
+    {% include "componentes/campo.html" with campo=form.habitaciones %}
+    {% include "componentes/campo.html" with campo=form.estado %}
+    {% if object %}{% include "componentes/campo.html" with campo=form.activo %}{% endif %}
+    <div class="ancho-completo">{% include "componentes/campo.html" with campo=form.descripcion %}</div>
+  </div>
+  <div class="acciones">
+    <a class="boton secundario" href="{% url 'inmuebles:lista' %}">Cancelar</a>
+    <button class="boton" type="submit">Guardar</button>
+  </div>
+</form>
+
+{% if object %}
+<section class="seccion" aria-labelledby="historial-titulo">
+  <h2 id="historial-titulo">Historial de estado</h2>
+  {% if historial %}
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead><tr><th scope="col">Fecha</th><th scope="col">Cambio</th><th scope="col">Quién</th></tr></thead>
+      <tbody>
+      {% for h in historial %}
+        <tr>
+          <td>{{ h.fecha|date:"d/m/Y H:i" }}</td>
+          <td>{% if h.estado_anterior %}De {{ h.get_estado_anterior_display }} a {{ h.get_estado_nuevo_display }}{% else %}Registrado como {{ h.get_estado_nuevo_display }}{% endif %}</td>
+          <td>{{ h.cambiado_por.get_full_name|default:h.cambiado_por.username|default:"—" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>Aún no hay cambios de estado registrados para este inmueble.</p>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/inmuebles.js' %}" defer></script>{% endblock %}

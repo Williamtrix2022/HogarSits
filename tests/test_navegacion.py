@@ -190,3 +190,10 @@ def test_el_plano_del_login_solo_se_anima_la_primera_vez(client):
     assert "hs-plano-visto" in html and "plano-visto" in html
     css = (BASE / "static/css/login.css").read_text(encoding="utf-8")
     assert "html:not(.plano-visto)" in css
+
+
+def test_la_rejilla_movil_no_se_ensancha_con_las_tablas():
+    """Regresión: con `1fr` la página se salía de la pantalla en móvil por el ancho de la tabla."""
+    css = (BASE / "static/css/app.css").read_text(encoding="utf-8")
+    movil = css[css.index("@media (max-width: 900px)") :]
+    assert ".estructura { grid-template-columns: minmax(0, 1fr); }" in movil

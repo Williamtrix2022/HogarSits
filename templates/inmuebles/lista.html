@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block titulo %}Inmuebles{% endblock %}
+{% block titulo_pagina %}Inmuebles{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'inmuebles:crear' %}">Nuevo inmueble</a>{% endblock %}
+
+{% block contenido %}
+<form class="filtros" method="get" role="search" aria-label="Filtrar inmuebles">
+  <div class="filtros-campos">
+    <div class="filtro-buscar">{% include "componentes/campo.html" with campo=filtro.q sin_opcional=True %}</div>
+    {% include "componentes/campo.html" with campo=filtro.estado sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=filtro.operacion sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=filtro.tipo_inmueble sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=filtro.precio_min sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=filtro.precio_max sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=filtro.incluir_inactivos sin_opcional=True %}
+    <div class="acciones filtros-acciones">
+      <button class="boton" type="submit">Filtrar</button>
+      {% if hay_filtros %}<a class="boton secundario" href="{% url 'inmuebles:lista' %}">Limpiar filtros</a>{% endif %}
+    </div>
+  </div>
+</form>
+
+{% include "componentes/resumen_errores.html" with form=filtro %}
+
+<p class="resumen-resultados" role="status">
+  {% with total=paginator.count %}{% if total == 1 %}1 inmueble{% else %}{{ total }} inmuebles{% endif %}{% if hay_filtros %} con estos filtros{% endif %}.{% endwith %}
+</p>
+
+{% if inmuebles %}
+<div class="tabla-contenedor">
+  <table class="tabla">
+    <caption class="solo-lectores">Lista de inmuebles</caption>
+    <thead>
+      <tr>
+        <th scope="col">Inmueble</th><th scope="col">Operación</th>
+        <th scope="col" class="num">Precio</th><th scope="col">Estado</th><th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in inmuebles %}
+      <tr>
+        <td>
+          <a class="enlace-fila" href="{% url 'inmuebles:editar' i.pk %}">{{ i.titulo }}</a>
+          <span class="sub">{% if i.barrio %}{{ i.barrio }}{% else %}{{ i.direccion }}{% endif %}{% if not i.activo %} <span class="chip">Inactivo</span>{% endif %}</span>
+        </td>
+        <td>{{ i.get_operacion_display }}<span class="sub">{{ i.get_tipo_inmueble_display }}{% if i.habitaciones %}, {{ i.habitaciones }} hab.{% endif %}</span></td>
+        <td class="num">{{ i.precio|pesos }}</td>
+        <td><span class="chip{% if i.estado == 'DISPONIBLE' %} ok{% elif i.estado == 'RESERVADO' %} reservado{% endif %}">{{ i.get_estado_display }}</span></td>
+        <td>
+          <div class="acciones">
+            <a class="boton secundario" href="{% url 'inmuebles:editar' i.pk %}">Editar</a>
+            <form method="post" action="{% url 'inmuebles:activo' i.pk %}">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="boton {% if i.activo %}peligro{% else %}secundario{% endif %}" type="submit">{% if i.activo %}Desactivar{% else %}Activar{% endif %}</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "componentes/paginacion.html" %}
+{% elif hay_filtros %}
+{% url 'inmuebles:lista' as url_lista %}
+{% include "componentes/vacio.html" with icono="inmuebles" titulo="No hay inmuebles con esos filtros" texto="Pruebe quitando algún filtro, o busque con menos palabras." accion_url=url_lista accion_texto="Limpiar filtros" %}
+{% else %}
+{% url 'inmuebles:crear' as url_nuevo %}
+{% include "componentes/vacio.html" with icono="inmuebles" titulo="Aún no hay inmuebles" texto="Registre el primero para empezar a recibir solicitudes." accion_url=url_nuevo accion_texto="Nuevo inmueble" %}
+{% endif %}
+{% endblock %}
