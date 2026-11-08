@@ -1,0 +1,20 @@
+/* Tokens de la identidad visual de HogarSits (docs/diseno/IDENTIDAD_VISUAL.md). */
+:root {
+  --hs-navy: #001F5B;
+  --hs-navy-500: #2A4A82;
+  --hs-navy-100: #E6EBF4;
+  --hs-copper: #B87333;       /* solo iconos, gráficas y texto grande */
+  --hs-copper-text: #8F5622;  /* cobre para texto pequeño (6,0:1 sobre blanco) */
+  --hs-copper-100: #F3E6DA;
+  --hs-slate: #4A4A4A;
+  --hs-white: #FFFFFF;
+  --hs-bg: #F4F2EE;
+  --hs-ok: #2F8F4E;
+  --hs-closed: #6B6B6B;
+  --hs-error: #B3261E;
+
+  --font-head: "Nunito Sans", "Avenir", system-ui, sans-serif;
+  --font-body: "Open Sans", system-ui, sans-serif;
+  --radio: 10px;
+  --sombra: 0 1px 3px rgba(0, 31, 91, 0.12);
+}

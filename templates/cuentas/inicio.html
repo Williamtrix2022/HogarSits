@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Hogar · Hola, {{ user.first_name|default:user.username }}</h1>
+<div class="tarjeta">
+  <p>Ha iniciado sesión como <strong>{{ rol_usuario|default:"usuario sin rol" }}</strong>.</p>
+  <p>Aquí aparecerá el panel «a quién contactar hoy» y sus visitas del día.</p>
+</div>
+{% endblock %}

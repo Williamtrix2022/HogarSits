@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Sin permiso{% endblock %}
+{% block contenido %}
+<div class="tarjeta">
+  <h1>No tiene permiso para ver esta sección</h1>
+  <p>Esta sección es solo para administradores.</p>
+  <a class="boton" href="{% url 'cuentas:inicio' %}">Volver a Hogar</a>
+</div>
+{% endblock %}
