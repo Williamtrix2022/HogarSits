@@ -12,11 +12,11 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 | Sprint | Fechas | Fase | Objetivo | Estado | Progreso |
 |---|---|---|---|---|---|
 | [0](sprint-00.md) | 02-nov → 15-nov-2026 | — | Fundaciones: estructura, Docker, CI, sprints, AWS seguro | ✅ Cerrado | 7/7 (Budget AWS → S1) |
-| [1](sprint-01.md) | 16-nov → 29-nov | F1 | Requerimientos, casos de uso, encuesta, backlog | 🚧 En curso | 4/5 |
+| [1](sprint-01.md) | 16-nov → 29-nov | F1 | Requerimientos, casos de uso, encuesta, backlog | 🚧 En curso | 4/7 |
 | 2 | 30-nov → 13-dic | F2 | Diseño: ER, wireframes, ADRs, modelos, datos simulados | ⏳ | 0/5 |
 | 3 | 14-dic → 27-dic | F3 | Gestión (Entrega 1): CRUD inmuebles y clientes/solicitudes, auth | ⏳ | 0/6 |
-| 4 | 28-dic → 10-ene | F3 | Gestión (Entrega 2): agenda sin cruces, seguimiento de etapas | ⏳ | 0/5 |
-| 5 | 11-ene → 24-ene | F4 | Analítica (Entrega 3): Poisson, M/M/c, Markov, dashboard | ⏳ | 0/6 |
+| 4 | 28-dic → 10-ene | F3 | Gestión (Entrega 2): agenda sin cruces, seguimiento de etapas | ⏳ | 0/7 |
+| 5 | 11-ene → 24-ene | F4 | Analítica (Entrega 3): Poisson, M/M/c, Markov, dashboard | ⏳ | 0/7 |
 | 6 | 25-ene → 07-feb | F5-F6 | Pruebas, despliegue AWS, informe y sustentación | ⏳ | 0/7 |
 
 > Las fechas son una propuesta: ajústalas al calendario real de la asignatura.
