@@ -9,7 +9,7 @@
 - [x] Instrumento de encuesta (`docs/investigacion/ENCUESTA_INMOBILIARIAS.md`) — [#10](https://github.com/Williamtrix2022/HogarSits/issues/10)
 - [x] Backlog priorizado de Sprints 2-6 (`docs/sprints/BACKLOG.md`, issues #19–#47) — [#11](https://github.com/Williamtrix2022/HogarSits/issues/11)
 - [ ] AWS Budget con alerta a $1 USD (viene del Sprint 0) — [#14](https://github.com/Williamtrix2022/HogarSits/issues/14)
-- [ ] Analizar ronda 1 de encuestas e incorporarla al diseño (análisis hecho; requerimientos v0.2 en curso) — [#50](https://github.com/Williamtrix2022/HogarSits/issues/50)
+- [x] Analizar ronda 1 de encuestas e incorporarla al diseño (requerimientos v0.2, backlog ajustado) — [#50](https://github.com/Williamtrix2022/HogarSits/issues/50)
 - [ ] Segunda ronda de entrevistas (I02) y completar hasta 8 encuestas — [#55](https://github.com/Williamtrix2022/HogarSits/issues/55)
 
 ## Log de avance
@@ -19,5 +19,9 @@
 - 2026-11-03: backlog de Sprints 2-6 creado: 29 issues (#19–#47) en sus milestones y `docs/sprints/BACKLOG.md` (#11).
 - 2026-11-07: ronda 1 de encuestas (n=3) analizada (#50); requerimientos v0.2, backlog ajustado (#52–#55 nuevos), identidad visual documentada en `docs/diseno/IDENTIDAD_VISUAL.md`.
 
+## Estado (8-nov-2026)
+Entregado: requerimientos v0.2, casos de uso y reglas, instrumento de encuesta, backlog de los sprints 2 a 6 y el análisis de la primera ronda (n = 3).
+**Pendiente para cerrar el sprint** (dependen de personas): #14 Budget de AWS y #55 segunda ronda de entrevistas (con I02; completar hasta 8; aclarar I03).
+
 ## Review / Retro
-_Pendiente._
+_Se completan al cerrar el sprint._

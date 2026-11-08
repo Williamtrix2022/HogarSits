@@ -15,8 +15,15 @@
 - 2026-11-08: generador de datos simulados (#23): simulación en Python puro + comando; recupera λ, μ y P de la Propuesta en los tests. Hallazgo: con la matriz del README las visitas saturan a los asesores y no se reproducen las esperas de la encuesta (ver DATOS_SIMULADOS §5); nueva pregunta para la ronda 2.
 - 2026-11-08: wireframes en Mermaid (#21): mapa del sitio, 3 flujos, 14 pantallas con la identidad visual, trazabilidad a historias e issues; sintaxis validada con el parser de Mermaid 11.5.
 
+## Estado (8-nov-2026)
+4 de 5 hechos. Falta **#20 (ADR-002)**, bloqueado por la segunda ronda de entrevistas (#55): hace falta saber cómo registran las inmobiliarias un seguimiento que no cambia la etapa.
+
+## Retro parcial
+- Bien: el modelo con integridad en la BD (28 tests) y el generador de datos dieron una base sólida; la encuesta cambió el diseño antes de escribir pantallas.
+- Mejorar: el generador **no reproduce las esperas reportadas** (ver `DATOS_SIMULADOS.md` §5): preguntar quién hace las visitas y cuántas por día.
+
 ## Review / Retro
-_Pendiente._
+_Se completan al cerrar el sprint (con el ADR-002)._
 
 ## Aprendizajes
 - `auto_now_add` ignora el valor asignado: para datos históricos/simulados se usa `default=timezone.now, editable=False`.

@@ -18,8 +18,12 @@
 - 2026-11-08: #25 — plantilla base con la identidad visual (skills `ui-ux-pro-max` y `ui-animation`): barra superior, menú que muestra solo los destinos existentes, iconos Phosphor, componentes (aviso, estado vacío, tabla, formulario accesible), panel móvil, guía de componentes y plan de movimiento. El plano del login pasa a animarse solo la primera vez. Verificado con capturas y 107 tests.
 - 2026-11-08: #26 — CRUD de inmuebles: lista con búsqueda y filtros (estado, operación, tipo, rango de precio, inactivos), paginación, alta, ficha con historial de estado (RF-12 adelantado), desactivar en lugar de borrar. «Inmuebles» apareció solo en el menú. Se creó `apps/comun` (campo de pesos, resumen de errores accesible). Se corrigió un desborde en móvil de la plantilla base (#25).
 
+## Estado (8-nov-2026)
+3 de 8 hechos: acceso con roles, plantilla base y CRUD de inmuebles (152 tests en total). Quedan clientes (#28), solicitudes (#29), fotos en S3 (#27, **requiere el Budget de AWS #14**) y la seguridad del login (#60, #61).
+**Siguiente recomendado:** #28 (clientes sin duplicados): sigue el mismo patrón que inmuebles y desbloquea #29.
+
 ## Review / Retro
-_Pendiente._
+_Se completan al cerrar el sprint._
 
 ## Aprendizajes
 - Una rejilla `1fr` crece hasta el ancho mínimo de su contenido (una tabla): en móvil se usa `minmax(0, 1fr)` para que la tabla se desplace dentro de su contenedor.

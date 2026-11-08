@@ -221,4 +221,35 @@ Formato: *Como … quiero … para …* con criterios de aceptación (CA). Estas
 | Versión | Fecha | Cambio |
 |---|---|---|
 | 0.1 | 2026-11-03 | Borrador inicial a partir de Propuesta, Estudio de Mercado y README. |
+| 0.2.1 | 2026-11-08 | Se añade la sección 11 con el estado de implementación (hasta el Sprint 3, issue #26). |
 | 0.2 | 2026-11-07 | Ronda 1 de encuestas (n = 3): RF-25 a *debe*; añadidos RF-26 (recordatorios), RF-35 (recordatorio de visitas), RF-36 (horario y disponibilidad del asesor), RF-59 (lenguaje de negocio), RF-62 (indicadores por asesor), HU-12 y HU-13; RF-60 con picos y ocupación; supuestos y brechas actualizados. |
+
+## 11. Estado de implementación (8-nov-2026)
+
+✅ hecho · ◐ parcial (modelo listo, falta la pantalla) · ⏳ pendiente.
+
+| Requerimiento | Estado | Dónde / nota |
+|---|---|---|
+| RF-01 inicio y cierre de sesión | ✅ | #24; toda vista exige sesión por defecto |
+| RF-02 administrar usuarios | ✅ | #24; crear, editar, activar y desactivar |
+| RF-03 permisos por rol | ✅ | #24; la analítica por rol llega en el Sprint 5 |
+| RF-10 CRUD de inmuebles | ✅ | #26; desactivar en lugar de borrar |
+| RF-11 estados del inmueble | ✅ | #26; coherentes con la operación |
+| RF-12 historial de estado | ✅ | #26 (adelantado del Sprint 4) |
+| RF-13 fotos | ◐ | modelo `FotoInmueble`; subida y S3 en #27 |
+| RF-14 búsqueda y filtros | ✅ | #26; título, dirección, barrio, estado, operación, tipo y precio |
+| RF-15 inmuebles cerrados | ⏳ | #31 |
+| RF-20 a RF-25 clientes y solicitudes | ◐ | modelos y restricciones listos; pantallas en #28, #29, #33 |
+| RF-26, RF-35 recordatorios | ⏳ | #33, #52 |
+| RF-30 a RF-34 agenda | ◐ | modelo `Visita` con restricciones de cruce; pantallas en el Sprint 4 (#30) |
+| RF-36 horario del asesor | ◐ | modelo `HorarioAsesor`; pantalla en #53 |
+| RF-40 a RF-43 etapas | ◐ | modelo `SeguimientoEtapa`; servicio en #32 (depende del ADR-002) |
+| RF-50 a RF-59, RF-62 analítica | ⏳ | Sprint 5 |
+| RF-60 datos simulados | ✅ | #23 |
+| RF-61 validación de modelos | ⏳ | Sprint 6 |
+| RNF-02 calidad automatizada | ✅ | CI con `ruff`, migraciones y 152 pruebas |
+| RNF-03 integridad en la BD | ✅ | cruces de agenda, tiempos, correo único, estado/operación |
+| RNF-04 seguridad | ◐ | sesión, roles y salvaguardas listos; faltan fuerza bruta (#60) y cambio de contraseña (#61) |
+| RNF-05 español y usabilidad | ✅ | interfaz en es-CO, accesibilidad AA verificada con capturas |
+| RNF-07 zona horaria | ✅ | UTC en BD, America/Bogota en pantalla |
+| RNF-09 portabilidad | ◐ | Docker Compose local; AWS en el Sprint 6 |
