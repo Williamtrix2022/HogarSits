@@ -6,12 +6,14 @@
 ## Historias comprometidas
 - [x] Diagrama Entidad-Relación (`docs/diseno/ER.md`) — [#19](https://github.com/Williamtrix2022/HogarSits/issues/19)
 - [ ] ADR-002: autotransiciones de Markov — [#20](https://github.com/Williamtrix2022/HogarSits/issues/20) *(bloqueado hasta la segunda ronda de entrevistas, #55)*
-- [ ] Wireframes de las pantallas principales (con la identidad visual) — [#21](https://github.com/Williamtrix2022/HogarSits/issues/21)
+- [x] Wireframes (`docs/diseno/WIREFRAMES.md`: 14 pantallas, mapa, flujos) — [#21](https://github.com/Williamtrix2022/HogarSits/issues/21)
 - [x] Refactor de modelos y migraciones (28 tests de integridad sobre PostgreSQL) — [#22](https://github.com/Williamtrix2022/HogarSits/issues/22)
-- [ ] Comando seed_datos_simulados (con picos por franja y visitas que ocupan al asesor) — [#23](https://github.com/Williamtrix2022/HogarSits/issues/23)
+- [x] Comando seed_datos_simulados (`docs/diseno/DATOS_SIMULADOS.md`; 22 tests) — [#23](https://github.com/Williamtrix2022/HogarSits/issues/23)
 
 ## Log de avance
 - 2026-11-08: modelo de datos rediseñado (Visita, HorarioAsesor, FotoInmueble, HistorialEstadoInmueble; Inmueble/Solicitud ampliados). Reglas de agenda y tiempos como restricciones de PostgreSQL (`ExclusionConstraint` + `CHECK`). ER con justificación de decisiones, ADR-003, migraciones aplicadas y probadas.
+- 2026-11-08: generador de datos simulados (#23): simulación en Python puro + comando; recupera λ, μ y P de la Propuesta en los tests. Hallazgo: con la matriz del README las visitas saturan a los asesores y no se reproducen las esperas de la encuesta (ver DATOS_SIMULADOS §5); nueva pregunta para la ronda 2.
+- 2026-11-08: wireframes en Mermaid (#21): mapa del sitio, 3 flujos, 14 pantallas con la identidad visual, trazabilidad a historias e issues; sintaxis validada con el parser de Mermaid 11.5.
 
 ## Review / Retro
 _Pendiente._

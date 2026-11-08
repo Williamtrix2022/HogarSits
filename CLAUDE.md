@@ -5,7 +5,8 @@ Sistema de gestión y análisis (Poisson, colas M/M/c, Markov) para inmobiliaria
 ## Comandos
 - Entorno: `venv/Scripts/python.exe` (Windows) · deps en `requirements/{base,dev}.txt`
 - BD local: `docker compose up -d db` · app: `python manage.py runserver` (settings `config.settings.dev`)
-- Calidad: `ruff check .` · `pytest` · `python manage.py makemigrations --check --dry-run`
+- Calidad: `ruff check .` · `pytest` (requiere PostgreSQL en Docker) · `python manage.py makemigrations --check --dry-run`
+- Datos de prueba: `python manage.py seed_datos_simulados` (ver `docs/diseno/DATOS_SIMULADOS.md`; `--limpiar` los borra)
 
 ## Convenciones
 - Apps en `apps/` (inmuebles, clientes, seguimiento, agenda, analitica). Config en `config/settings/{base,dev,prod}.py`.
