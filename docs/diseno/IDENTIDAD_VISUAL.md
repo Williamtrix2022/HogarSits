@@ -62,4 +62,5 @@ Light solo para texto grande (≥ 18 px); en tablas y formularios usar Regular.
 ## 5. Pendientes
 - [ ] Logo en SVG (los archivos actuales son JPEG; para favicon y cabecera conviene vectorial o PNG con fondo transparente).
 - [ ] Confirmar los tonos derivados y la fuente alternativa a Avenir.
+- [ ] **Color de error** (la hoja de marca no lo define): propuesta `#B3261E` (contraste 6,5:1 sobre blanco), usado en los wireframes.
 - [ ] Modo oscuro: fuera de alcance por ahora.
