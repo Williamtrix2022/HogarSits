@@ -97,24 +97,61 @@ $$\mathbf{P} = \begin{pmatrix}
 
 ## 🧭 Desarrollo y seguimiento
 
-* **Sprints:** [`docs/sprints/SPRINTS.md`](docs/sprints/SPRINTS.md) (tablero) · [Milestones en GitHub](https://github.com/Williamtrix2022/HogarSits/milestones)
-* **Decisiones de arquitectura:** [`docs/decisiones/`](docs/decisiones/) · **Notas de aprendizaje:** [`docs/aprendizaje/`](docs/aprendizaje/)
+### Estado del proyecto (8-nov-2026)
+
+| Sprint | Fase | Estado |
+|---|---|---|
+| 0 Fundaciones | — | ✅ Cerrado (7/7) |
+| 1 Requerimientos | F1 | 🚧 5/7. Faltan el Budget de AWS (#14) y la segunda ronda de entrevistas (#55) |
+| 2 Diseño | F2 | 🚧 4/5. Falta el ADR de Markov (#20), que espera la segunda ronda |
+| 3 Gestión, entrega 1 | F3 | 🚧 3/8. Siguen clientes (#28), solicitudes (#29), fotos en S3 (#27) y seguridad del login (#60, #61) |
+| 4 a 6 | F3 a F6 | ⏳ Agenda y seguimiento, analítica (Poisson, M/M/c, Markov), pruebas y despliegue en AWS |
+
+**Ya funciona:** inicio de sesión con roles (Administrador y Asesor), administración de usuarios, gestión de inmuebles (lista con búsqueda y filtros, alta, edición, historial de estado, desactivar), generador de datos simulados y una interfaz con la identidad visual de HogarSits.
+**En construcción:** clientes, solicitudes de atención, agenda de visitas, seguimiento de etapas y el módulo analítico.
+**Calidad:** 152 pruebas automáticas sobre PostgreSQL; el CI de GitHub las corre en cada Pull Request.
+
+### Documentación
+
+Todo está indexado en [`docs/README.md`](docs/README.md). Lo principal:
+
+* **Tablero de sprints:** [`docs/sprints/SPRINTS.md`](docs/sprints/SPRINTS.md) y [milestones en GitHub](https://github.com/Williamtrix2022/HogarSits/milestones)
+* **Requerimientos y estado de implementación:** [`docs/requerimientos/REQUERIMIENTOS.md`](docs/requerimientos/REQUERIMIENTOS.md)
+* **Diseño:** [modelo de datos](docs/diseno/ER.md) · [wireframes](docs/diseno/WIREFRAMES.md) · [identidad visual](docs/diseno/IDENTIDAD_VISUAL.md)
+* **Decisiones de arquitectura:** [`docs/decisiones/`](docs/decisiones/README.md) · **Aprendizaje:** [`docs/aprendizaje/`](docs/aprendizaje/README.md)
 * **Convenciones para Claude Code:** [`CLAUDE.md`](CLAUDE.md)
 
 ### Puesta en marcha local
 
-```bash
-cp .env.example .env                    # y edita SECRET_KEY
-python -m venv venv && venv\Scripts\activate    # Windows
+Requiere Python 3.14, Docker Desktop y Git.
+
+```powershell
+copy .env.example .env                  # y edita SECRET_KEY
+python -m venv venv
+venv\Scripts\Activate.ps1               # PowerShell (en cmd: venv\Scripts\activate)
 pip install -r requirements/dev.txt
-docker compose up -d db                 # PostgreSQL
+docker compose up -d db                 # PostgreSQL en el puerto 5433 del equipo
 python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver              # http://localhost:8000/admin/
+python manage.py createsuperuser        # será tu usuario Administrador
+python manage.py seed_datos_simulados   # opcional: datos de prueba (--limpiar los borra)
+python manage.py runserver              # http://localhost:8000/ingresar/
 ```
 
-Calidad: `ruff check .` · `pytest`. Todo cambio entra por Pull Request con CI verde.
+> El contenedor usa el puerto **5433** porque el 5432 suele estar ocupado por un PostgreSQL instalado en el equipo. Las pruebas necesitan que la base esté encendida (`docker compose up -d db`).
+
+### Calidad y flujo de trabajo
+
+```powershell
+ruff check .                                 # estilo
+pytest                                       # pruebas (necesitan PostgreSQL)
+python manage.py makemigrations --check --dry-run
+```
+
+`main` está protegida: todo cambio entra por **Pull Request** con el CI en verde, una rama por historia (`feature/<n>-descripcion`) y `Closes #n` en la descripción.
 
 ### Estructura
 
-`config/` (settings por entorno) · `apps/{inmuebles,clientes,seguimiento,agenda,analitica}` · `apps/analitica/services/` (Poisson, colas, Markov) · `docs/` · `tests/`
+* `config/`: configuración por entorno (`base`, `dev`, `prod`)
+* `apps/cuentas` (acceso, roles, menú) · `apps/comun` (utilidades compartidas) · `apps/inmuebles` · `apps/clientes` · `apps/seguimiento` · `apps/agenda` · `apps/analitica` (con `services/` para Poisson, colas y Markov)
+* `templates/` y `static/`: interfaz (componentes en `templates/componentes/`; guía viva en `/administracion/componentes/`)
+* `docs/` documentación · `tests/` pruebas

@@ -9,7 +9,7 @@ Sistema de gestión y análisis (Poisson, colas M/M/c, Markov) para inmobiliaria
 - Datos de prueba: `python manage.py seed_datos_simulados` (ver `docs/diseno/DATOS_SIMULADOS.md`; `--limpiar` los borra)
 
 ## Convenciones
-- Apps en `apps/` (inmuebles, clientes, seguimiento, agenda, analitica). Config en `config/settings/{base,dev,prod}.py`.
+- Apps en `apps/` (cuentas, comun, inmuebles, clientes, seguimiento, agenda, analitica). `comun` guarda lo compartido (campo de pesos, mixin de formularios accesibles, filtros de formato). Config en `config/settings/{base,dev,prod}.py`.
 - Matemática estocástica en `apps/analitica/services/` como funciones puras (sin imports de Django) con tests contra los ejemplos de la Propuesta (M/M/1 λ=2, μ=3; matriz P del README: P(cierre)≈22,8 %, pasos≈2,4).
 - Seguridad: `LoginRequiredMiddleware` protege **toda** vista; lo público se marca con `@login_not_required`. Roles = grupos `Administrador`/`Asesor` (`apps/cuentas/roles.py`, ADR-004).
 - UI: nuevas pantallas extienden `templates/base.html` (`titulo_pagina`, `acciones`, `contenido`) y usan `templates/componentes/`; el menú muestra solo los destinos de `apps/cuentas/navegacion.py` cuya URL existe. Catálogo en `/administracion/componentes/`. Reglas: `docs/diseno/IDENTIDAD_VISUAL.md` y `MOVIMIENTO.md`.
