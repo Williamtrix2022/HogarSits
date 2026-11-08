@@ -13,6 +13,7 @@ Concepto: una casa cuyo techo se convierte en una **flecha ascendente sobre una 
 | `--hs-copper` | Warm Copper | `#B87333` | Acentos, iconos, gráficas, elementos grandes |
 | `--hs-slate` | Slate Grey | `#4A4A4A` | Texto secundario, bordes, estados cerrados |
 | `--hs-white` | Clean White | `#FFFFFF` | Superficies y tarjetas |
+| `--hs-error` | Error (**aprobado 2026-11-08**, no está en la hoja de marca) | `#B3261E` | Errores de validación: borde del campo, texto del mensaje y avisos de bloqueo. Siempre con texto o icono, nunca solo color |
 | `--hs-bg` | Fondo cálido (de la hoja de marca) | `#F4F2EE` | Fondo de la aplicación (aprox.) |
 
 Tonos derivados (propuestos, no vienen en la hoja; validar con el equipo): `--hs-navy-100: #E6EBF4`, `--hs-navy-500: #2A4A82`, `--hs-copper-100: #F3E6DA`, **`--hs-copper-text: #8F5622`**.
@@ -27,6 +28,8 @@ Tonos derivados (propuestos, no vienen en la hoja; validar con el equipo): `--hs
 | Blanco sobre cobre | **3,8** | ⚠️ solo botones con texto grande/negrita |
 | Navy sobre cobre | 4,1 | ⚠️ no usar para texto pequeño |
 | `#8F5622` (cobre oscuro) sobre blanco | 6,0 | ✅ **usar para texto cobre pequeño** |
+| `#B3261E` (error) sobre blanco | 6,5 | ✅ texto y bordes de error |
+| `#B3261E` (error) sobre fondo cálido | 5,9 | ✅ |
 
 **Reglas:** el botón primario es **navy con texto blanco**; el cobre nunca es color de texto pequeño (usar `--hs-copper-text`); el estado no se comunica solo con color (siempre texto + punto/icono).
 
@@ -53,7 +56,7 @@ Light solo para texto grande (≥ 18 px); en tablas y formularios usar Regular.
   --hs-navy: #001F5B;   --hs-navy-500: #2A4A82;  --hs-navy-100: #E6EBF4;
   --hs-copper: #B87333; --hs-copper-text: #8F5622; --hs-copper-100: #F3E6DA;
   --hs-slate: #4A4A4A;  --hs-white: #FFFFFF;     --hs-bg: #F4F2EE;
-  --hs-ok: #2F8F4E;     --hs-closed: #6B6B6B;
+  --hs-ok: #2F8F4E;     --hs-closed: #6B6B6B;  --hs-error: #B3261E;
   --font-head: "Nunito Sans", "Avenir", system-ui, sans-serif;
   --font-body: "Open Sans", system-ui, sans-serif;
 }
@@ -62,5 +65,4 @@ Light solo para texto grande (≥ 18 px); en tablas y formularios usar Regular.
 ## 5. Pendientes
 - [ ] Logo en SVG (los archivos actuales son JPEG; para favicon y cabecera conviene vectorial o PNG con fondo transparente).
 - [ ] Confirmar los tonos derivados y la fuente alternativa a Avenir.
-- [ ] **Color de error** (la hoja de marca no lo define): propuesta `#B3261E` (contraste 6,5:1 sobre blanco), usado en los wireframes.
 - [ ] Modo oscuro: fuera de alcance por ahora.

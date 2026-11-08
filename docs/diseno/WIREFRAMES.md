@@ -426,7 +426,7 @@ Los usuarios se **desactivan**, no se borran (tienen historial). El horario sema
 | W14 | HU-11 | RF-02, RF-36 | 3–4 | #24, #53 |
 
 ## 8. Pendientes y puntos a validar
-- [ ] **Color de error**: la paleta de marca no define uno; se propone `#B3261E` (contraste 6,5:1 sobre blanco). Añadir a `IDENTIDAD_VISUAL.md` al aprobarlo.
+- [x] **Color de error** `#B3261E` aprobado como parte de la paleta oficial (2026-11-08); ver `IDENTIDAD_VISUAL.md`.
 - [ ] Validar estos bocetos con **I02** (candidata a piloto) en la segunda ronda (#55): ¿«a quién contactar hoy» es lo primero que quiere ver? ¿Cuántos días sin respuesta marcan una solicitud (N)?
 - [ ] Definir cómo se muestra en W9 la autotransición (depende de ADR-002, #20).
 - [ ] Alta fidelidad con la marca al implementar (#25); revisar accesibilidad (contraste, foco con teclado, tamaño táctil ≥ 44 px).
