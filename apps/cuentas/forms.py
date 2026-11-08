@@ -9,6 +9,18 @@ User = get_user_model()
 OPCIONES_ROL = [(ROL_ASESOR, "Asesor"), (ROL_ADMIN, "Administrador")]
 
 
+class AccesibleFormMixin:
+    """Tras validar, enlaza cada campo con su error para los lectores de pantalla."""
+
+    def full_clean(self):
+        super().full_clean()
+        for nombre in self.errors:
+            if nombre in self.fields:  # los errores generales no pertenecen a un campo
+                atributos = self.fields[nombre].widget.attrs
+                atributos["aria-invalid"] = "true"
+                atributos["aria-describedby"] = f"error-{nombre}"
+
+
 class LoginForm(AuthenticationForm):
     """El mensaje no revela si falló el usuario, la contraseña o si la cuenta está inactiva."""
 
@@ -18,7 +30,7 @@ class LoginForm(AuthenticationForm):
     }
 
 
-class UsuarioCrearForm(UserCreationForm):
+class UsuarioCrearForm(AccesibleFormMixin, UserCreationForm):
     rol = forms.ChoiceField(choices=OPCIONES_ROL, initial=ROL_ASESOR, label="Rol")
 
     class Meta:
@@ -45,7 +57,7 @@ class UsuarioCrearForm(UserCreationForm):
         return usuario
 
 
-class UsuarioEditarForm(forms.ModelForm):
+class UsuarioEditarForm(AccesibleFormMixin, forms.ModelForm):
     rol = forms.ChoiceField(choices=OPCIONES_ROL, label="Rol")
 
     class Meta:

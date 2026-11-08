@@ -9,35 +9,69 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap">
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
+  {% include "componentes/iconos.svg.html" %}
   <a class="saltar" href="#contenido">Saltar al contenido</a>
-  <header class="barra">
-    <a class="marca" href="{% url 'cuentas:inicio' %}">HogarSits</a>
-    {% if user.is_authenticated %}
-    <div class="acciones">
-      <span class="usuario">{{ user.get_full_name|default:user.username }}{% if rol_usuario %} · {{ rol_usuario }}{% endif %}</span>
-      <form method="post" action="{% url 'cuentas:logout' %}">{% csrf_token %}<button class="boton" type="submit">Salir</button></form>
+  <div class="pagina" data-pagina data-menu-abierto="false">
+    <header class="topbar">
+      <button type="button" class="boton-menu" data-menu-boton aria-expanded="false" aria-controls="menu-principal">
+        {% include "componentes/icono.html" with nombre="menu" %}
+        <span>Menú</span>
+      </button>
+      <a class="topbar-logo" href="{% url 'cuentas:inicio' %}">
+        <img src="{% static 'img/logo-hogarsits.png' %}" width="849" height="283" alt="HogarSits, ir a Hogar">
+      </a>
+      {% if user.is_authenticated %}
+      <div class="topbar-usuario">
+        <p class="usuario"><strong>{{ user.get_full_name|default:user.username }}</strong>{% if rol_usuario %}<span>{{ rol_usuario }}</span>{% endif %}</p>
+        <form method="post" action="{% url 'cuentas:logout' %}">{% csrf_token %}
+          <button class="boton secundario" type="submit">{% include "componentes/icono.html" with nombre="salir" %}Salir</button>
+        </form>
+      </div>
+      {% endif %}
+    </header>
+
+    <div class="estructura">
+      <nav class="menu" id="menu-principal" aria-label="Principal">
+        <button type="button" class="menu-cerrar" data-menu-cerrar aria-label="Cerrar menú">
+          {% include "componentes/icono.html" with nombre="cerrar" %}
+        </button>
+        <ul class="menu-lista">
+          {% for item in menu %}
+          <li>
+            <a href="{{ item.url }}"{% if item.activo %} aria-current="page"{% endif %}>
+              {% include "componentes/icono.html" with nombre=item.icono %}
+              <span>{{ item.etiqueta }}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <main id="contenido" class="contenido">
+        {% if messages %}
+        <ul class="avisos">
+          {% for m in messages %}
+            {% if "error" in m.tags %}{% include "componentes/aviso.html" with tipo="error" texto=m cerrable=True %}
+            {% elif "success" in m.tags %}{% include "componentes/aviso.html" with tipo="exito" texto=m cerrable=True %}
+            {% elif "warning" in m.tags %}{% include "componentes/aviso.html" with tipo="aviso" texto=m cerrable=True %}
+            {% else %}{% include "componentes/aviso.html" with tipo="info" texto=m cerrable=True %}{% endif %}
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <header class="pagina-encabezado">
+          <h1>{% block titulo_pagina %}{% endblock %}</h1>
+          <div class="acciones">{% block acciones %}{% endblock %}</div>
+        </header>
+
+        {% block contenido %}{% endblock %}
+      </main>
     </div>
-    {% endif %}
-  </header>
-  <div class="estructura">
-    <nav class="menu" aria-label="Principal">
-      {% url 'cuentas:inicio' as url_inicio %}
-      <a href="{{ url_inicio }}"{% if request.path == url_inicio %} aria-current="page"{% endif %}>Hogar</a>
-      {% if es_admin %}
-      {% url 'cuentas:usuarios' as url_usuarios %}
-      <a href="{{ url_usuarios }}"{% if '/administracion/' in request.path %} aria-current="page"{% endif %}>Administración</a>
-      {% endif %}
-    </nav>
-    <main id="contenido" class="contenido">
-      {% if messages %}
-      <ul class="mensajes" role="status">
-        {% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}
-      </ul>
-      {% endif %}
-      {% block contenido %}{% endblock %}
-    </main>
+    <div class="scrim" data-menu-scrim></div>
   </div>
+  <script src="{% static 'js/nav.js' %}" defer></script>
 </body>
 </html>
