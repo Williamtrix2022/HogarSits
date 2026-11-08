@@ -75,10 +75,5 @@ a { color: var(--hs-navy); }
 .mensajes li.error { background: var(--hs-white); border-left-color: var(--hs-error); color: var(--hs-error); font-weight: 600; }
 .mensajes li.warning { background: var(--hs-copper-100); border-left-color: var(--hs-copper-text); }
 
-/* Inicio de sesión (W1) */
-.entrada { min-height: 100vh; display: grid; place-items: center; padding: 1rem; }
-.entrada .tarjeta { width: min(420px, 100%); border-top: 6px solid var(--hs-navy); }
-.entrada .logo { text-align: center; margin-bottom: 1rem; }
-.entrada .logo strong { font: 800 2rem var(--font-head); color: var(--hs-navy); display: block; }
-.entrada .logo span { color: var(--hs-slate); }
+/* Aviso de error en formularios */
 .aviso-error { background: var(--hs-white); border: 2px solid var(--hs-error); color: var(--hs-error); border-radius: 8px; padding: .75rem 1rem; font-weight: 600; margin-bottom: 1rem; }
