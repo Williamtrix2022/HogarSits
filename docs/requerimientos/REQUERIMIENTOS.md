@@ -1,9 +1,11 @@
 # HogarSits — Documento de Requerimientos (Fase 1)
 
-**Versión:** 0.1 (borrador) · **Fecha:** 2026-11-03 · **Sprint:** 1 · **Issue:** #8
+**Versión:** 0.2 (borrador) · **Fecha:** 2026-11-07 · **Sprint:** 1–2 · **Issues:** #8, #50
 **Fuentes:** `docs/HogarSits_Propuesta_Proyecto.docx`, `docs/HogarSits_Estudio_de_Mercado.md`, `README.md`.
 
-> **Estado de validación.** Este borrador se deriva de la Propuesta y del Estudio de Mercado. Todavía **no** se han hecho entrevistas con una inmobiliaria de Montería (ver issue #10), por lo que las necesidades son **hipótesis**. Los requerimientos marcados con ⚠️ dependen de esa validación y pueden cambiar. Hasta tener datos reales, el sistema se desarrolla con datos simulados.
+> **Estado de validación.** La v0.1 se derivó de la Propuesta y del Estudio de Mercado. La v0.2 incorpora la **ronda 1 de encuestas (n = 3, ver [resultados](../investigacion/resultados/RESULTADOS_ENCUESTA.md))**: muestra pequeña, así que las necesidades siguen siendo **hipótesis** parcialmente respaldadas. Los requerimientos marcados con ⚠️ dependen de esa validación y pueden cambiar. Hasta tener datos reales, el sistema se desarrolla con datos simulados.
+
+**Cambios en v0.2** (detalle en §10): RF-25 sube a *debe*; nuevos RF-26, RF-35, RF-36, RF-59 y RF-62; RF-60 incorpora picos y ocupación del asesor; nuevas HU-12 y HU-13.
 
 ---
 
@@ -53,7 +55,8 @@ Prioridad con MoSCoW: **M** (debe), **S** (debería), **C** (podría). Sprint = 
 | RF-22 | Registrar una **solicitud de atención** con cliente, tipo de interés (compra/alquiler), presupuesto e inmueble de interés (opcional). El sistema guarda automáticamente la **fecha y hora de llegada**. | M | 3 |
 | RF-23 | Una solicitud pasa por los estados **En espera → En atención → Finalizado / Cancelado**, registrando la hora de inicio y fin de la atención. | M | 3 |
 | RF-24 | Asignar un asesor a la solicitud. | M | 3 |
-| RF-25 | Listar solicitudes pendientes y marcar las que llevan más de N días sin seguimiento (alerta). ⚠️ N por validar. | S | 4 |
+| RF-25 | Listar solicitudes pendientes y marcar las que llevan más de N días sin seguimiento (alerta). ⚠️ N por validar (E7). *Sube a M: 3 de 3 encuestadas han perdido solicitudes por falta de seguimiento.* | M | 4 |
+| RF-26 | Recordatorios de seguimiento: cada asesor ve las solicitudes que le toca contactar hoy. | M | 4 |
 
 ### 3.4 Agenda de visitas
 | ID | Requerimiento | Prio | Sprint |
@@ -63,6 +66,8 @@ Prioridad con MoSCoW: **M** (debe), **S** (debería), **C** (podría). Sprint = 
 | RF-32 | El sistema **rechaza** una visita que se cruce en horario con otra del **mismo inmueble**. | M | 4 |
 | RF-33 | Reprogramar, cancelar y marcar una visita como realizada. | M | 4 |
 | RF-34 | Ver la agenda por asesor y por día/semana. | S | 4 |
+| RF-35 | Recordatorio de las visitas próximas al asesor (p. ej. del día siguiente). | S | 4 |
+| RF-36 | Registrar el **horario semanal** de cada asesor. Una visita programada marca al asesor como **ocupado**; el sistema puede calcular cuántos asesores hay disponibles (c efectivo) por franja. | M | 2 (modelo) / 4 (uso) |
 
 ### 3.5 Seguimiento de etapas
 | ID | Requerimiento | Prio | Sprint |
@@ -84,11 +89,13 @@ Prioridad con MoSCoW: **M** (debe), **S** (debería), **C** (podría). Sprint = 
 | RF-56 | Dashboard con tablas y gráficas (llegadas, colas, matriz P, probabilidades) y filtro por rango de fechas. | M | 5 |
 | RF-57 | Advertir cuando no hay datos suficientes para estimar (p. ej. menos de un mínimo de observaciones). | S | 5 |
 | RF-58 | Exportar resultados (CSV o PDF). | C | 5 |
+| RF-59 | Presentar los resultados con **textos en lenguaje de negocio** junto a las cifras (p. ej. «de cada 10 clientes, 2 cierran», «con 2 asesores esperarías unos 29 min»). *La analítica fue lo menos valorado en la encuesta.* | M | 5 |
+| RF-62 | **Indicadores por asesor**: solicitudes atendidas, visitas realizadas, cierres y tiempos de atención. *Pedido por una inmobiliaria.* | S | 5 |
 
 ### 3.7 Datos simulados y validación
 | ID | Requerimiento | Prio | Sprint |
 |---|---|---|---|
-| RF-60 | Comando que genera datos simulados: llegadas con proceso de Poisson, tiempos de atención exponenciales y trayectorias de Markov con una matriz P configurable. | M | 2 |
+| RF-60 | Comando que genera datos simulados: llegadas con proceso de Poisson **con λ distinto por franja (picos de mañana y tarde)**, tiempos de atención exponenciales, **visitas de 30–120 min que ocupan al asesor** y trayectorias de Markov con una matriz P configurable. Parámetros por defecto de la ronda 1: 2–5 asesores, 9–12 h de atención, 4–20 llegadas/día. | M | 2 |
 | RF-61 | Poder comparar los parámetros estimados con los parámetros usados para simular (λ, μ, P) para validar los modelos. | M | 6 |
 
 ## 4. Requerimientos no funcionales
@@ -141,7 +148,7 @@ Formato: *Como … quiero … para …* con criterios de aceptación (CA). Estas
 - CA1: el dashboard muestra λ estimado por franja y día.
 - CA2: se muestra la distribución de Poisson ajustada junto a la frecuencia observada.
 
-**HU-08 · Dimensionar asesores** (RF-51–53) — *Como administrador quiero conocer ρ, Lq y Wq para decidir cuántos asesores necesito.*
+**HU-08 · Dimensionar asesores** (RF-51–53) — *Como administrador quiero conocer ρ, Lq y Wq (explicados en lenguaje de negocio, RF-59) para decidir cuántos asesores necesito.*
 - CA1: el sistema calcula ρ, L, Lq, W, Wq con λ, μ y c.
 - CA2: si ρ ≥ 1 se muestra una advertencia de inestabilidad.
 - CA3: se sugiere el menor c que cumple el umbral de espera.
@@ -154,6 +161,15 @@ Formato: *Como … quiero … para …* con criterios de aceptación (CA). Estas
 - CA1: un comando genera N solicitudes con λ, μ y P configurables.
 - CA2: el informe compara parámetros reales vs. estimados.
 
+**HU-12 · No perder solicitudes ni visitas** (RF-25, 26, 35) — *Como asesor quiero ver cada mañana a quién debo contactar y qué visitas tengo para que ninguna solicitud se pierda por falta de seguimiento.*
+- CA1: veo una lista de solicitudes con seguimiento pendiente, ordenada por antigüedad.
+- CA2: las solicitudes sin movimiento más de N días aparecen marcadas.
+- CA3: veo mis visitas del día y del siguiente.
+
+**HU-13 · Evaluar el desempeño del equipo** (RF-62) — *Como administrador quiero ver indicadores por asesor para conocer la carga y los resultados de cada uno.*
+- CA1: por asesor y rango de fechas: solicitudes atendidas, visitas realizadas, cierres y tiempo medio de atención.
+- CA2: un asesor solo ve sus propios indicadores.
+
 **HU-11 · Controlar accesos** (RF-01–03) — *Como administrador quiero que cada persona vea solo lo que le corresponde.*
 - CA1: un asesor no puede administrar usuarios.
 - CA2: sin iniciar sesión no se accede a ninguna pantalla de gestión.
@@ -164,20 +180,23 @@ Formato: *Como … quiero … para …* con criterios de aceptación (CA). Estas
 |---|---|---|
 | Hora de llegada de la solicitud | `SolicitudAtencion.timestamp_llegada` | λ, Poisson |
 | Inicio y fin de la atención | `timestamp_inicio_atencion`, `timestamp_fin_atencion` | μ, colas |
-| Número de asesores disponibles por franja | Asesores activos / turnos ⚠️ (por definir en Sprint 2) | c en M/M/c |
+| Asesores disponibles por franja | `HorarioAsesor` (turno semanal) menos las `Visita` programadas en la franja | c efectivo en M/M/c |
 | Etapa origen, destino y fecha de cada transición | `SeguimientoEtapa` | Matriz P |
 | Resultado final (cierre/abandono) | Etapa final de la solicitud | Absorción |
 
-**Brechas del modelo actual (a resolver en el Sprint 2):** no existe el modelo `Visita`; `Inmueble` no tiene área, habitaciones, tipo de inmueble ni fotos; `SolicitudAtencion` no tiene tipo de interés ni presupuesto; no hay forma de saber cuántos asesores estaban disponibles en cada franja.
+**Brechas del modelo (se cierran en el Sprint 2, issues #19 y #22):** modelo `Visita`; `HorarioAsesor` (disponibilidad); `Inmueble` con tipo, área, habitaciones y fotos; `SolicitudAtencion` con tipo de interés, presupuesto y etapa actual. **Pendiente de la ronda 2:** estados y autotransiciones de la cadena de Markov (ADR-002, #20).
 
 ## 7. Restricciones y supuestos
 
 - **Académico:** alcance y fechas fijados por la asignatura; equipo de 4 personas con roles definidos en el README.
 - **Tecnológicas:** Python/Django, PostgreSQL, NumPy/SciPy/Pandas, Chart.js o Matplotlib, Git/GitHub (ADR-001).
 - **Supuestos estocásticos** (a verificar con datos): llegadas de Poisson homogéneo dentro de cada franja; tiempos de atención exponenciales; cadena de Markov homogénea y sin memoria. Si los datos reales no los cumplen, se documenta la limitación en el informe final.
+- **Hallazgo de la ronda 1:** λ **no es constante** en el día (picos de mañana y tarde) y las visitas (30–120 min) sacan al asesor de la oficina. Por eso λ se estima por franja y c es el número de asesores *disponibles*, no el total. En 2 de 3 inmobiliarias el modelo M/M/c con λ diario predice esperas mucho menores a las reportadas.
 - **Datos:** hasta obtener datos reales, se trabaja con datos simulados; los resultados no son conclusiones sobre el mercado de Montería.
 
-## 8. Preguntas abiertas para la inmobiliaria (alimentan #10)
+## 8. Preguntas abiertas para la inmobiliaria
+
+*Ronda 1 respondió las preguntas 2 y 3 en parte (asesores, horarios, duración de atención). Quedan para la **ronda 2** (con I02): 4 (etapas reales), 5 (N días y espera máxima), 7 (visitas grupales y varias solicitudes), y cómo registran un seguimiento que no cambia la etapa.*
 
 1. ¿Cómo registran hoy inmuebles, clientes y visitas, y con qué herramientas?
 2. ¿Cuántos asesores atienden y en qué horarios? ¿Atienden en oficina, por teléfono o por mensajes?
@@ -193,6 +212,13 @@ Formato: *Como … quiero … para …* con criterios de aceptación (CA). Estas
 |---|---|---|
 | F1 Requerimientos | 1 | Este documento, casos de uso (#9), encuesta (#10), backlog (#11) |
 | F2 Diseño | 2 | Modelo de datos (sección 6), RF-60 |
-| F3 Gestión | 3–4 | RF-01 a RF-43 |
-| F4 Analítica | 5 | RF-50 a RF-58 |
+| F3 Gestión | 3–4 | RF-01 a RF-43 (incluye RF-26, RF-35, RF-36) |
+| F4 Analítica | 5 | RF-50 a RF-59 y RF-62 |
 | F5–F6 Pruebas y entrega | 6 | RF-61, RNF-01, RNF-06, RNF-09 |
+
+## 10. Historial de cambios
+
+| Versión | Fecha | Cambio |
+|---|---|---|
+| 0.1 | 2026-11-03 | Borrador inicial a partir de Propuesta, Estudio de Mercado y README. |
+| 0.2 | 2026-11-07 | Ronda 1 de encuestas (n = 3): RF-25 a *debe*; añadidos RF-26 (recordatorios), RF-35 (recordatorio de visitas), RF-36 (horario y disponibilidad del asesor), RF-59 (lenguaje de negocio), RF-62 (indicadores por asesor), HU-12 y HU-13; RF-60 con picos y ocupación; supuestos y brechas actualizados. |
