@@ -1,6 +1,6 @@
 # HogarSits — Backlog de los Sprints 2 a 6
 
-Generado en el Sprint 1 (issue #11) a partir de [`REQUERIMIENTOS.md`](../requerimientos/REQUERIMIENTOS.md) y [`CASOS_DE_USO.md`](../requerimientos/CASOS_DE_USO.md). Cada fila es un issue de GitHub en su milestone; el estado real está en GitHub y se resume en [`SPRINTS.md`](SPRINTS.md).
+Generado en el Sprint 1 (issue #11) y ajustado el 2026-11-07 con la ronda 1 de encuestas (issue #50) a partir de [`REQUERIMIENTOS.md`](../requerimientos/REQUERIMIENTOS.md) y [`CASOS_DE_USO.md`](../requerimientos/CASOS_DE_USO.md). Cada fila es un issue de GitHub en su milestone; el estado real está en GitHub y se resume en [`SPRINTS.md`](SPRINTS.md).
 
 > El orden dentro de cada sprint es la prioridad propuesta. Se reajusta en cada planning según lo que revele la encuesta (#10) y el avance.
 
@@ -32,8 +32,10 @@ Generado en el Sprint 1 (issue #11) a partir de [`REQUERIMIENTOS.md`](../requeri
 | [#30](https://github.com/Williamtrix2022/HogarSits/issues/30) | Agenda de visitas sin cruces de asesor ni inmueble (HU-05) |
 | [#31](https://github.com/Williamtrix2022/HogarSits/issues/31) | Bloquear o advertir inmuebles vendidos/arrendados (HU-02) |
 | [#32](https://github.com/Williamtrix2022/HogarSits/issues/32) | Seguimiento de etapas con historial (HU-06) |
-| [#33](https://github.com/Williamtrix2022/HogarSits/issues/33) | Alerta de solicitudes sin seguimiento (RF-25) |
+| [#33](https://github.com/Williamtrix2022/HogarSits/issues/33) | Alertas y recordatorios de seguimiento (RF-25, RF-26, HU-12) |
 | [#34](https://github.com/Williamtrix2022/HogarSits/issues/34) | Subagente tester para reglas de negocio |
+| [#52](https://github.com/Williamtrix2022/HogarSits/issues/52) | Recordatorio de visitas próximas (RF-35) |
+| [#53](https://github.com/Williamtrix2022/HogarSits/issues/53) | Horario semanal de asesores y disponibilidad por franja (RF-36) |
 
 ## Sprint 5 — Analítica, Entrega 3 (F4)
 
@@ -45,6 +47,7 @@ Generado en el Sprint 1 (issue #11) a partir de [`REQUERIMIENTOS.md`](../requeri
 | [#38](https://github.com/Williamtrix2022/HogarSits/issues/38) | Dashboard analítico con Chart.js (RF-56, RF-57) |
 | [#39](https://github.com/Williamtrix2022/HogarSits/issues/39) | Subagente revisor-estocastico y skill /modelo-estocastico |
 | [#40](https://github.com/Williamtrix2022/HogarSits/issues/40) | Exportar resultados a CSV (RF-58) |
+| [#54](https://github.com/Williamtrix2022/HogarSits/issues/54) | Indicadores por asesor (RF-62, HU-13) |
 
 ## Sprint 6 — Pruebas, AWS y Entrega (F5–F6)
 
@@ -64,3 +67,5 @@ Generado en el Sprint 1 (issue #11) a partir de [`REQUERIMIENTOS.md`](../requeri
 - #23 (datos simulados) es necesario para probar #35–#38 y #41 antes de tener datos reales.
 - #14 (Budget de AWS) debe estar hecho antes de #27 y de todos los issues AWS del Sprint 6.
 - #30 (agenda) y #31 (inmuebles cerrados) dependen de #26 (inmuebles) y #29 (solicitudes).
+- #55 (segunda ronda de entrevistas) desbloquea #20 (ADR-002 de Markov) y los umbrales N de #33.
+- #53 (horarios) depende del modelo `HorarioAsesor` de #22.
