@@ -6,30 +6,123 @@
   <title>Iniciar sesión · HogarSits</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&family=Open+Sans:wght@400;600&display=swap">
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
-  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
-<body>
-  <main class="entrada">
-    <div class="tarjeta">
-      <div class="logo"><strong>HogarSits</strong><span>Gestión y Análisis Inmobiliario</span></div>
+<body class="acceso">
+  <aside class="acceso-plano" aria-hidden="true">
+    <svg class="plano" viewBox="0 0 500 540" role="presentation" focusable="false">
+      <!-- Cotas -->
+      <g class="cota">
+        <path d="M40 22H480M40 15V29M480 15V29"/>
+        <path d="M22 40V420M15 40H29M15 420H29"/>
+        <text x="260" y="12" text-anchor="middle">11,00 m</text>
+        <text x="12" y="230" text-anchor="middle" transform="rotate(-90 12 230)">9,50 m</text>
+      </g>
+
+      <!-- Muros: exteriores con hueco para la puerta de entrada (x 140 a 190) -->
+      <path class="trazo muro" pathLength="1" d="M140 420H40V40H480V420H190"/>
+      <!-- Muros interiores, con huecos de puertas -->
+      <path class="trazo muro-int" pathLength="1"
+        d="M40 230H100M140 230H200M236 230H380M420 230H480M180 40V230M260 40V230M300 230V320M300 370V420"/>
+
+      <!-- Ventanas -->
+      <g class="ventana">
+        <rect x="80" y="37" width="60" height="6"/>
+        <rect x="340" y="37" width="80" height="6"/>
+        <rect x="477" y="300" width="6" height="60"/>
+        <rect x="37" y="280" width="6" height="80"/>
+      </g>
+
+      <!-- Puertas interiores -->
+      <g class="puerta-int">
+        <path d="M100 230V190M140 230A40 40 0 0 0 100 190"/>
+        <path d="M200 230V194M236 230A36 36 0 0 0 200 194"/>
+        <path d="M420 230V190M380 230A40 40 0 0 1 420 190"/>
+      </g>
+
+      <!-- Muebles y sanitarios -->
+      <g class="mueble">
+        <rect x="52" y="62" width="76" height="92"/><path d="M52 84H128"/>
+        <rect x="346" y="62" width="104" height="104"/><path d="M346 90H450"/>
+        <rect x="186" y="46" width="68" height="30"/>
+        <ellipse cx="220" cy="150" rx="11" ry="14"/>
+        <rect x="452" y="252" width="26" height="150"/>
+        <rect x="456" y="296" width="18" height="30"/>
+        <circle cx="200" cy="318" r="28"/>
+        <rect x="52" y="378" width="70" height="32"/>
+      </g>
+
+      <!-- Nombres de los espacios -->
+      <g class="rotulo">
+        <text x="50" y="216">Alcoba 1</text>
+        <text x="186" y="130">Baño</text>
+        <text x="268" y="216">Alcoba principal</text>
+        <text x="50" y="256">Sala-comedor</text>
+        <text x="308" y="256">Cocina</text>
+        <text x="160" y="444" text-anchor="middle">Entrada</text>
+      </g>
+
+      <!-- Puerta de entrada: lo único en cobre. Se abre una vez al cargar. -->
+      <path class="giro" d="M190 420A50 50 0 0 0 140 370"/>
+      <line class="hoja" x1="140" y1="420" x2="190" y2="420"/>
+
+      <!-- Rótulo del plano -->
+      <g class="cartela">
+        <rect x="300" y="458" width="180" height="62"/>
+        <path d="M300 482H480M390 482V520"/>
+        <text x="308" y="475">Casa de 3 alcobas</text>
+        <text x="308" y="500">Área 104 m²</text>
+        <text x="398" y="500">Escala 1:50</text>
+        <text x="308" y="514" class="menor">Plano de ejemplo</text>
+      </g>
+    </svg>
+
+    <p class="acceso-lema">Sus inmuebles, clientes y visitas en un solo lugar.</p>
+  </aside>
+
+  <main class="acceso-formulario">
+    <div class="acceso-columna">
+      <img class="acceso-logo" src="{% static 'img/logo-hogarsits.png' %}" width="849" height="283"
+           alt="HogarSits, gestión y análisis inmobiliario">
+
       <h1>Iniciar sesión</h1>
+      <p class="acceso-ayuda">Use el usuario y la contraseña que le dio el administrador.</p>
+
       <form method="post" novalidate>
         {% csrf_token %}
-        {% if form.errors %}<p class="aviso-error" role="alert">{% firstof form.non_field_errors.0 "Revise los datos e intente de nuevo." %}</p>{% endif %}
+        {% if form.errors %}
+        <p class="acceso-error" id="error-acceso" role="alert">{% firstof form.non_field_errors.0 "Revise los datos e intente de nuevo." %}</p>
+        {% endif %}
+
         <div class="campo">
           <label for="{{ form.username.id_for_label }}">Usuario</label>
-          <input type="text" name="username" id="{{ form.username.id_for_label }}" autocomplete="username" autofocus required value="{{ form.username.value|default_if_none:'' }}">
+          <input type="text" name="username" id="{{ form.username.id_for_label }}"
+                 autocomplete="username" autocapitalize="none" spellcheck="false" required
+                 value="{{ form.username.value|default_if_none:'' }}"
+                 {% if form.errors %}aria-invalid="true" aria-describedby="error-acceso"{% else %}autofocus{% endif %}>
         </div>
+
         <div class="campo">
           <label for="{{ form.password.id_for_label }}">Contraseña</label>
-          <input type="password" name="password" id="{{ form.password.id_for_label }}" autocomplete="current-password" required>
+          <div class="acceso-clave">
+            <input type="password" name="password" id="{{ form.password.id_for_label }}"
+                   autocomplete="current-password" required
+                   {% if form.errors %}aria-invalid="true" aria-describedby="error-acceso" autofocus{% endif %}>
+            <button type="button" class="acceso-ver" data-ver-clave aria-pressed="false"
+                    aria-controls="{{ form.password.id_for_label }}">Mostrar</button>
+          </div>
         </div>
+
         <input type="hidden" name="next" value="{{ next }}">
-        <button class="boton" type="submit">Entrar</button>
+        <button class="acceso-entrar" type="submit">Entrar</button>
       </form>
+
+      <p class="acceso-nota">¿No puede entrar? Pida al administrador que restablezca su contraseña.</p>
     </div>
   </main>
+
+  <script src="{% static 'js/login.js' %}" defer></script>
 </body>
 </html>

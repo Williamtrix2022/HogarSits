@@ -267,3 +267,32 @@ def test_el_formulario_protege_al_ultimo_administrador_activo():
     assert "al menos un administrador activo" in str(form.errors)
     form = UsuarioEditarForm({**datos, "is_active": ""}, instance=ultimo)
     assert not form.is_valid()
+
+
+# --- Pantalla de acceso (diseño, accesibilidad) --------------------------------------------
+def test_los_archivos_estaticos_del_login_existen():
+    from django.contrib.staticfiles import finders
+
+    for ruta in ("css/tokens.css", "css/login.css", "js/login.js", "img/logo-hogarsits.png"):
+        assert finders.find(ruta), f"falta static/{ruta}"
+
+
+def test_login_enlaza_sus_recursos_y_etiqueta_los_campos(client):
+    html = client.get(reverse("cuentas:login")).content.decode()
+    assert "css/login.css" in html and "js/login.js" in html and "logo-hogarsits.png" in html
+    assert 'for="id_username"' in html and 'for="id_password"' in html
+    assert "autofocus" in html and "aria-invalid" not in html  # sin error, foco en usuario
+
+
+def test_login_con_error_marca_los_campos_y_conserva_el_usuario(client, asesor_user):
+    r = client.post(reverse("cuentas:login"), {"username": "asesor1", "password": "mal"})
+    html = r.content.decode()
+    assert html.count('aria-invalid="true"') == 2
+    assert 'role="alert"' in html and 'value="asesor1"' in html
+    assert 'value="mal"' not in html  # la contraseña nunca se devuelve al navegador
+
+
+def test_el_plano_decorativo_no_estorba_a_lectores_de_pantalla(client):
+    html = client.get(reverse("cuentas:login")).content.decode()
+    assert 'class="acceso-plano" aria-hidden="true"' in html
+    assert 'alt="HogarSits, gestión y análisis inmobiliario"' in html

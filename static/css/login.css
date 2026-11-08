@@ -1,0 +1,109 @@
+/* Inicio de sesión (W1). Marca: docs/diseno/IDENTIDAD_VISUAL.md.
+   Idea: entrar a la plataforma es entrar a una casa. El plano se dibuja una vez al cargar y se
+   abre la puerta de entrada, lo único en cobre de la pantalla. */
+*, *::before, *::after { box-sizing: border-box; }
+
+.acceso {
+  margin: 0; min-height: 100vh; display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  background: var(--hs-white); color: var(--hs-slate);
+  font-family: var(--font-body); font-size: 1rem; line-height: 1.5;
+}
+
+/* Panel del plano ------------------------------------------------------------------------ */
+.acceso-plano {
+  background: var(--hs-navy); color: var(--hs-white);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  display: flex; flex-direction: column; justify-content: center; gap: 2.5rem;
+}
+.plano { display: block; width: 100%; max-width: 540px; height: auto; margin: 0 auto; overflow: visible; }
+.plano text { font-family: var(--font-body); }
+.plano path, .plano line, .plano rect, .plano circle, .plano ellipse { fill: none; }
+
+.plano .muro { stroke: var(--hs-white); stroke-width: 4; stroke-linejoin: miter; }
+.plano .muro-int { stroke: var(--hs-white); stroke-width: 3; }
+.plano .ventana rect { fill: var(--hs-navy); stroke: var(--hs-white); stroke-width: 1; }
+.plano .puerta-int path { stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.2; }
+.plano .mueble * { stroke: rgba(255, 255, 255, 0.4); stroke-width: 1; }
+.plano .cota path { stroke: rgba(255, 255, 255, 0.45); stroke-width: 1; }
+.plano .cota text { fill: rgba(255, 255, 255, 0.75); font-size: 11px; }
+.plano .rotulo text { fill: rgba(255, 255, 255, 0.85); font-size: 12px; }
+.plano .cartela rect, .plano .cartela path { stroke: rgba(255, 255, 255, 0.6); stroke-width: 1; }
+.plano .cartela text { fill: rgba(255, 255, 255, 0.85); font-size: 11px; }
+.plano .cartela .menor { fill: rgba(255, 255, 255, 0.6); font-size: 9px; }
+
+/* Puerta de entrada: el único cobre. Estado final = abierta. */
+.plano .giro { stroke: var(--hs-copper); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.plano .hoja {
+  stroke: var(--hs-copper); stroke-width: 4; stroke-linecap: round;
+  transform: rotate(-90deg); transform-origin: 140px 420px;
+}
+
+.acceso-lema {
+  margin: 0; max-width: 20ch; color: var(--hs-white);
+  font: 300 clamp(1.6rem, 2.3vw, 2.3rem) / 1.2 var(--font-head);
+}
+
+/* Una sola secuencia: muros, detalles, puerta. Sin movimiento si el usuario lo pide. */
+@media (prefers-reduced-motion: no-preference) {
+  .plano .trazo { stroke-dasharray: 1; stroke-dashoffset: 1; animation: dibujar 1.5s ease-out forwards; }
+  .plano .muro-int { animation-delay: 0.5s; animation-duration: 1.4s; }
+  .plano .cota, .plano .ventana, .plano .puerta-int, .plano .mueble, .plano .rotulo, .plano .cartela {
+    opacity: 0; animation: aparecer 0.8s ease-out 1.7s forwards;
+  }
+  .plano .giro { opacity: 0; animation: aparecer 0.6s ease-out 2.5s forwards; }
+  .plano .hoja { animation: abrir 1.1s cubic-bezier(0.4, 0, 0.2, 1) 2.5s both; }
+}
+@keyframes dibujar { to { stroke-dashoffset: 0; } }
+@keyframes aparecer { to { opacity: 1; } }
+@keyframes abrir { from { transform: rotate(0deg); } to { transform: rotate(-90deg); } }
+
+/* Formulario ------------------------------------------------------------------------------ */
+.acceso-formulario { display: flex; align-items: center; justify-content: center; padding: 2.5rem 1.5rem; }
+.acceso-columna { width: 100%; max-width: 380px; }
+.acceso-logo { display: block; width: 250px; max-width: 100%; height: auto; margin: 0 0 3rem; }
+
+.acceso h1 { margin: 0 0 .5rem; font: 800 2rem / 1.15 var(--font-head); color: var(--hs-navy); }
+.acceso-ayuda { margin: 0 0 2rem; }
+
+.acceso .campo { margin-bottom: 1.25rem; }
+.acceso label { display: block; margin-bottom: .35rem; font-weight: 600; color: var(--hs-navy); }
+.acceso input {
+  width: 100%; min-height: 48px; padding: .6rem .8rem; font: 1rem var(--font-body);
+  color: var(--hs-slate); background: var(--hs-white); border: 1px solid #8a8a8a; border-radius: 6px;
+}
+.acceso input:hover { border-color: var(--hs-navy-500); }
+.acceso input:focus-visible { outline: 3px solid var(--hs-navy-500); outline-offset: 1px; border-color: var(--hs-navy); }
+.acceso input[aria-invalid="true"] { border: 2px solid var(--hs-error); }
+
+.acceso-clave { position: relative; }
+.acceso-clave input { padding-right: 5.5rem; }
+.acceso-ver {
+  position: absolute; right: .25rem; top: 50%; transform: translateY(-50%);
+  min-height: 40px; padding: 0 .75rem; border: 0; border-radius: 4px; background: none;
+  color: var(--hs-navy); font: 600 .9rem var(--font-body); text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer;
+}
+.acceso-ver:focus-visible { outline: 3px solid var(--hs-navy-500); outline-offset: 0; }
+
+.acceso-entrar {
+  width: 100%; min-height: 50px; margin-top: .5rem; border: 0; border-radius: 6px;
+  background: var(--hs-navy); color: var(--hs-white); font: 700 1.05rem var(--font-head); cursor: pointer;
+}
+.acceso-entrar:hover { background: var(--hs-navy-500); }
+.acceso-entrar:active { transform: translateY(1px); }
+.acceso-entrar:focus-visible { outline: 3px solid var(--hs-navy-500); outline-offset: 3px; }
+
+.acceso-error {
+  margin: 0 0 1.25rem; padding: .7rem .9rem; border: 2px solid var(--hs-error); border-radius: 6px;
+  background: var(--hs-white); color: var(--hs-error); font-weight: 600;
+}
+.acceso-nota { margin: 1.75rem 0 0; font-size: .9rem; }
+
+/* Pantallas angostas: se oculta el plano y queda solo el formulario ----------------------- */
+@media (max-width: 900px) {
+  .acceso { grid-template-columns: 1fr; border-top: 8px solid var(--hs-navy); }
+  .acceso-plano { display: none; }
+  .acceso-formulario { align-items: flex-start; padding-top: 2rem; }
+  .acceso-logo { width: 190px; margin-bottom: 2rem; }
+}

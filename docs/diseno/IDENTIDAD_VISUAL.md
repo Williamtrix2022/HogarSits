@@ -62,7 +62,18 @@ Light solo para texto grande (≥ 18 px); en tablas y formularios usar Regular.
 }
 ```
 
-## 5. Pendientes
+## 5. Pantalla de acceso (implementada, #24)
+
+Primera pantalla con diseño propio; sirve de referencia para el resto. Archivos: `templates/cuentas/login.html`, `static/css/login.css`, `static/js/login.js`, `static/img/logo-hogarsits.png` (recorte del logo horizontal).
+
+- **Idea:** entrar a la plataforma es entrar a una casa. El panel azul marino dibuja un **plano de casa** (cotas y rótulo de plano incluidos) una sola vez al cargar y, al final, se abre la puerta de entrada.
+- **El cobre se usa una sola vez** en toda la pantalla: la puerta de entrada (hoja y arco de giro). El resto es azul marino, blanco y pizarra.
+- **Formulario** sobre blanco, alineado a la izquierda, sin tarjeta ni sombra; etiquetas visibles, «Mostrar/Ocultar» contraseña (mejora progresiva), mensaje de error que dice qué hacer, y una nota honesta de qué hacer si no puede entrar.
+- **Evitado a propósito:** tarjeta centrada sobre degradado, ilustraciones genéricas, etiquetas en mayúsculas, flechas en botones, iconos decorativos.
+- **Accesibilidad:** contrastes AA, foco visible, objetivos de 44–50 px, el plano es `aria-hidden`, el logo tiene `alt`, con error los campos llevan `aria-invalid` y el foco pasa a la contraseña, y con `prefers-reduced-motion` el plano aparece ya dibujado y con la puerta abierta.
+- **Responsive:** por debajo de 900 px se oculta el plano y queda el formulario con una franja azul superior.
+
+## 6. Pendientes
 - [ ] Logo en SVG (los archivos actuales son JPEG; para favicon y cabecera conviene vectorial o PNG con fondo transparente).
 - [ ] Confirmar los tonos derivados y la fuente alternativa a Avenir.
 - [ ] Modo oscuro: fuera de alcance por ahora.
