@@ -16,7 +16,7 @@ Concepto: una casa cuyo techo se convierte en una **flecha ascendente sobre una 
 | `--hs-error` | Error (**aprobado 2026-11-08**, no está en la hoja de marca) | `#B3261E` | Errores de validación: borde del campo, texto del mensaje y avisos de bloqueo. Siempre con texto o icono, nunca solo color |
 | `--hs-bg` | Fondo cálido (de la hoja de marca) | `#F4F2EE` | Fondo de la aplicación (aprox.) |
 
-Tonos derivados (propuestos, no vienen en la hoja; validar con el equipo): `--hs-navy-100: #E6EBF4`, `--hs-navy-500: #2A4A82`, `--hs-copper-100: #F3E6DA`, **`--hs-copper-text: #8F5622`**.
+Tonos derivados (propuestos, no vienen en la hoja; validar con el equipo): `--hs-navy-100: #E6EBF4`, `--hs-navy-500: #2A4A82`, `--hs-copper-100: #F3E6DA`, **`--hs-copper-text: #8F5622`**, `--hs-line: #DAD6CE` (bordes y líneas suaves).
 
 ### Contraste (WCAG 2.1 AA; texto normal ≥ 4,5:1, texto grande/iconos ≥ 3:1)
 | Combinación | Ratio | Veredicto |
@@ -73,7 +73,32 @@ Primera pantalla con diseño propio; sirve de referencia para el resto. Archivos
 - **Accesibilidad:** contrastes AA, foco visible, objetivos de 44–50 px, el plano es `aria-hidden`, el logo tiene `alt`, con error los campos llevan `aria-invalid` y el foco pasa a la contraseña, y con `prefers-reduced-motion` el plano aparece ya dibujado y con la puerta abierta.
 - **Responsive:** por debajo de 900 px se oculta el plano y queda el formulario con una franja azul superior.
 
-## 6. Pendientes
+## 6. Interfaz base (implementada, #25)
+
+Archivos: `templates/base.html`, `templates/componentes/` (icono, aviso, estado vacío, sprite de iconos), `static/css/app.css`, `static/js/nav.js`, `apps/cuentas/navegacion.py`. Catálogo vivo en la pantalla **Administración → `/administracion/componentes/`** (solo administradores). Movimiento: [`MOVIMIENTO.md`](MOVIMIENTO.md).
+
+**Método.** Se usaron las skills `ui-ux-pro-max` (sistema de diseño y guías de UX) y `ui-animation` (movimiento). Las recomendaciones se verificaron antes de aplicarlas, como exige la skill:
+
+| Recomendación de la skill | Decisión | Motivo |
+|---|---|---|
+| Estilo *Minimalism & Swiss* | **Adoptado** | La propia skill lo indica para dashboards y herramientas profesionales: rejilla, espacio, alto contraste. |
+| Iconos Phosphor de línea, decorativos con `aria-hidden` | **Adoptado** | Coincide con los iconos de la hoja de marca (casa, edificio, personas, barras). Licencia MIT en `static/img/LICENCIA-phosphor-icons.txt`. |
+| Pautas UX: estado activo visible, saltar al contenido, tablas con desplazamiento, 44 px, foco visible | **Adoptado** | Ver lista abajo. |
+| Patrón «Hero-Centric» | Descartado | Es para páginas de aterrizaje; esto es una aplicación interna. |
+| Paleta verde azulada y tipografía Cinzel/Josefin | Descartado | La marca ya define paleta y tipografías; la decisión del cliente prevalece. |
+| Scroll reveal | Descartado | Es un antipatrón en interfaz de producto (ver `MOVIMIENTO.md`). |
+
+**Estructura.** Barra superior blanca con el logo, el usuario y «Salir»; menú lateral de 232 px; contenido de hasta 1120 px sobre el fondo cálido; encabezado de página con título y acciones (`{% block titulo_pagina %}` y `{% block acciones %}`). Por debajo de 900 px el menú es un panel lateral con su botón «Menú»; sin JavaScript queda visible en la página.
+
+**Menú que se completa solo.** `navegacion.py` declara todos los destinos previstos y el menú **muestra únicamente los que ya existen**; cada sprint «enciende» su sección al registrar la URL. Contrato de nombres: `inmuebles:lista` (#26), `clientes:lista` (#28), `seguimiento:cola` (#29), `agenda:semana` (Sprint 4), `analitica:inicio` (Sprint 5, solo administrador). El ítem activo se marca con fondo, barra lateral y `aria-current="page"`, no solo con color.
+
+**Componentes:** botones (primario, secundario, peligro), estados con punto y texto, avisos de cuatro tipos (cerrables; los errores usan `role="alert"`, el resto `role="status"`), formularios con etiqueta visible y error junto al campo (enlazado con `aria-describedby`), tablas con contenedor desplazable, estado vacío, iconos en un sprite SVG **en línea** (no depende de otro origen cuando los estáticos pasen a S3 o CloudFront).
+
+**Lista de entrega (de la skill) verificada:** sin emojis como iconos · `cursor: pointer` en lo clicable · hover con transición suave (150 ms) y solo con puntero fino · contraste mínimo 4,5:1 · foco visible · `prefers-reduced-motion` respetado · responsive a 500 px y 1440 px (capturas) · objetivos táctiles de 44 px · enlace «Saltar al contenido» · tablas sin romper el diseño en móvil.
+
+**Pendiente de comprobar a mano:** 375 px y 768 px reales (Edge headless no baja de 500 px), lector de pantalla y navegación solo con teclado en un navegador real.
+
+## 7. Pendientes
 - [ ] Logo en SVG (los archivos actuales son JPEG; para favicon y cabecera conviene vectorial o PNG con fondo transparente).
 - [ ] Confirmar los tonos derivados y la fuente alternativa a Avenir.
 - [ ] Modo oscuro: fuera de alcance por ahora.

@@ -9,12 +9,22 @@
   --hs-slate: #4A4A4A;
   --hs-white: #FFFFFF;
   --hs-bg: #F4F2EE;
+  --hs-line: #DAD6CE;         /* líneas y bordes suaves (derivado) */
   --hs-ok: #2F8F4E;
   --hs-closed: #6B6B6B;
   --hs-error: #B3261E;
 
   --font-head: "Nunito Sans", "Avenir", system-ui, sans-serif;
   --font-body: "Open Sans", system-ui, sans-serif;
-  --radio: 10px;
-  --sombra: 0 1px 3px rgba(0, 31, 91, 0.12);
+  --radio: 8px;
+  --sombra: 0 1px 2px rgba(0, 31, 91, 0.08);
+  --sombra-panel: 0 8px 32px rgba(0, 31, 91, 0.24);
+
+  /* Movimiento (docs/diseno/MOVIMIENTO.md). Rutinario < 300 ms; nunca `transition: all`. */
+  --curva-entrada: cubic-bezier(0.22, 1, 0.36, 1);   /* pulsación, aparición */
+  --curva-panel: cubic-bezier(0.25, 1, 0.5, 1);      /* paneles y menús que se deslizan */
+  --dur-hover: 150ms;                                 /* color al pasar el cursor */
+  --dur-pulsar: 120ms;                                /* al soltar un botón */
+  --dur-panel: 240ms;                                 /* panel del menú móvil y su fondo */
+  --dur-aviso: 150ms;                                 /* cierre de un aviso */
 }

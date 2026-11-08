@@ -1,0 +1,10 @@
+{% comment %}
+  Estado vacío: una pantalla vacía es una invitación a actuar.
+  Parámetros: icono, titulo, texto, y opcionalmente accion_url + accion_texto.
+{% endcomment %}
+<div class="vacio">
+  {% include "componentes/icono.html" with nombre=icono %}
+  <p class="vacio-titulo">{{ titulo }}</p>
+  <p>{{ texto }}</p>
+  {% if accion_url %}<a class="boton" href="{{ accion_url }}">{{ accion_texto }}</a>{% endif %}
+</div>

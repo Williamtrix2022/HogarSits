@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block titulo %}{{ titulo }}{% endblock %}
+{% block titulo_pagina %}{{ titulo }}{% endblock %}
 {% block contenido %}
-<h1>{{ titulo }}</h1>
 <form method="post" class="tarjeta" novalidate>
   {% csrf_token %}
-  {% if form.non_field_errors %}<div class="aviso-error" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  {% if form.non_field_errors %}<p class="errores-formulario" role="alert">{{ form.non_field_errors|join:" " }}</p>{% endif %}
   {% for campo in form %}
   <div class="campo{% if campo.errors %} error{% endif %}">
     {% if campo.field.widget.input_type == "checkbox" %}
@@ -14,7 +14,7 @@
       {{ campo }}
     {% endif %}
     {% if campo.help_text %}<div class="ayuda">{{ campo.help_text|safe }}</div>{% endif %}
-    {% for e in campo.errors %}<p class="error-texto">{{ e }}</p>{% endfor %}
+    {% for e in campo.errors %}<p class="error-texto" id="error-{{ campo.html_name }}">{{ e }}</p>{% endfor %}
   </div>
   {% endfor %}
   <div class="acciones">

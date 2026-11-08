@@ -25,6 +25,20 @@ class InicioView(TemplateView):
     template_name = "cuentas/inicio.html"
 
 
+class GuiaComponentesView(AdminRequeridoMixin, TemplateView):
+    """Catálogo vivo de la interfaz: sirve de referencia y de banco de pruebas visual."""
+
+    template_name = "cuentas/guia_componentes.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["iconos"] = [
+            "casa", "inmuebles", "clientes", "solicitudes", "agenda", "analisis",
+            "administracion", "salir", "menu", "cerrar", "exito", "error", "info", "aviso",
+        ]
+        return ctx
+
+
 class UsuarioListView(AdminRequeridoMixin, ListView):
     model = User
     template_name = "cuentas/usuarios_lista.html"

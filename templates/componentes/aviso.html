@@ -1,0 +1,16 @@
+{% comment %}
+  Aviso reutilizable. Parámetros: tipo (exito | error | aviso | info), texto, cerrable (opcional).
+  Los errores usan role="alert" (se anuncian de inmediato); el resto role="status" (sin interrumpir).
+{% endcomment %}
+<li class="aviso aviso-{{ tipo }}" role="{% if tipo == 'error' %}alert{% else %}status{% endif %}">
+  {% if tipo == "exito" %}{% include "componentes/icono.html" with nombre="exito" %}
+  {% elif tipo == "error" %}{% include "componentes/icono.html" with nombre="error" %}
+  {% elif tipo == "aviso" %}{% include "componentes/icono.html" with nombre="aviso" %}
+  {% else %}{% include "componentes/icono.html" with nombre="info" %}{% endif %}
+  <p>{{ texto }}</p>
+  {% if cerrable %}
+  <button type="button" class="aviso-cerrar" data-aviso-cerrar aria-label="Cerrar aviso">
+    {% include "componentes/icono.html" with nombre="cerrar" %}
+  </button>
+  {% endif %}
+</li>

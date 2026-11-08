@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block titulo %}Guía de componentes{% endblock %}
+{% block titulo_pagina %}Guía de componentes{% endblock %}
+{% block contenido %}
+<p>Catálogo vivo de la interfaz de HogarSits. Cada pantalla nueva debe armarse con estas piezas.
+  Reglas y decisiones: <code>docs/diseno/IDENTIDAD_VISUAL.md</code> y <code>docs/diseno/MOVIMIENTO.md</code>.</p>
+
+<section class="guia-seccion" aria-labelledby="g-paleta">
+  <h2 id="g-paleta">Paleta</h2>
+  <div class="muestras">
+    <div class="muestra"><i style="background:#001F5B"></i>Azul marino<br>#001F5B</div>
+    <div class="muestra"><i style="background:#2A4A82"></i>Azul 500<br>#2A4A82</div>
+    <div class="muestra"><i style="background:#E6EBF4"></i>Azul 100<br>#E6EBF4</div>
+    <div class="muestra"><i style="background:#B87333"></i>Cobre (solo gráficos)<br>#B87333</div>
+    <div class="muestra"><i style="background:#8F5622"></i>Cobre texto<br>#8F5622</div>
+    <div class="muestra"><i style="background:#4A4A4A"></i>Pizarra<br>#4A4A4A</div>
+    <div class="muestra"><i style="background:#F4F2EE"></i>Fondo<br>#F4F2EE</div>
+    <div class="muestra"><i style="background:#B3261E"></i>Error<br>#B3261E</div>
+  </div>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-tipo">
+  <h2 id="g-tipo">Tipografía</h2>
+  <div class="tarjeta">
+    <h1>Título de página (Nunito Sans 800, 28 px)</h1>
+    <h2 style="margin-top:1rem">Título de sección (700, 20 px)</h2>
+    <h3 style="margin-top:1rem">Subtítulo (700, 17 px)</h3>
+    <p style="margin-top:1rem">Texto de cuerpo en Open Sans, 16 px con interlineado de 1,5. Las líneas se mantienen por debajo de unos 75 caracteres para que se lean cómodas.</p>
+  </div>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-botones">
+  <h2 id="g-botones">Botones</h2>
+  <div class="guia-fila">
+    <button class="boton" type="button">Guardar</button>
+    <button class="boton secundario" type="button">Cancelar</button>
+    <button class="boton peligro" type="button">Desactivar</button>
+    <button class="boton secundario" type="button">{% include "componentes/icono.html" with nombre="salir" %}Con icono</button>
+  </div>
+  <p style="margin-top:.75rem">La acción principal es una sola por pantalla y usa un verbo claro («Guardar»), no «Enviar». Al pulsar responde de inmediato.</p>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-estados">
+  <h2 id="g-estados">Estados (punto y texto)</h2>
+  <div class="guia-fila">
+    <span class="chip ok">Disponible</span>
+    <span class="chip reservado">Reservado</span>
+    <span class="chip">Vendido</span>
+    <span class="chip">Arrendado</span>
+  </div>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-avisos">
+  <h2 id="g-avisos">Avisos</h2>
+  <ul class="avisos">
+    {% include "componentes/aviso.html" with tipo="exito" texto="Usuario luis creado." cerrable=True %}
+    {% include "componentes/aviso.html" with tipo="info" texto="Las solicitudes sin respuesta por más de 3 días aparecen primero." cerrable=True %}
+    {% include "componentes/aviso.html" with tipo="aviso" texto="Hay 14 llegadas entre las 12:00 y las 13:00; la estimación no es confiable." cerrable=True %}
+    {% include "componentes/aviso.html" with tipo="error" texto="No se puede agendar: Ana ya tiene una visita de 10:00 a 11:00. Pruebe a las 11:00." cerrable=True %}
+  </ul>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-form">
+  <h2 id="g-form">Formulario</h2>
+  <form class="tarjeta" onsubmit="return false" novalidate>
+    <div class="campo">
+      <label for="g-nombre">Nombre</label>
+      <input type="text" id="g-nombre" value="Ana Pérez">
+      <p class="ayuda">Como aparecerá en la agenda.</p>
+    </div>
+    <div class="campo error">
+      <label for="g-correo">Correo</label>
+      <input type="email" id="g-correo" value="ana@" aria-invalid="true" aria-describedby="error-g-correo">
+      <p class="error-texto" id="error-g-correo">Escriba un correo completo, por ejemplo ana@correo.com.</p>
+    </div>
+    <div class="campo">
+      <label for="g-rol">Rol</label>
+      <select id="g-rol"><option>Asesor</option><option>Administrador</option></select>
+    </div>
+    <div class="acciones"><button class="boton secundario" type="button">Cancelar</button><button class="boton" type="button">Guardar</button></div>
+  </form>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-tabla">
+  <h2 id="g-tabla">Tabla</h2>
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead><tr><th scope="col">Inmueble</th><th scope="col">Operación</th><th scope="col">Precio</th><th scope="col">Estado</th></tr></thead>
+      <tbody>
+        <tr><td>Casa 12, Cantaclaro</td><td>Venta</td><td>$ 240.000.000</td><td><span class="chip ok">Disponible</span></td></tr>
+        <tr><td>Apto 4, Centro</td><td>Alquiler</td><td>$ 1.300.000</td><td><span class="chip reservado">Reservado</span></td></tr>
+        <tr><td>Casa 7, Mocarí</td><td>Venta</td><td>$ 310.000.000</td><td><span class="chip">Vendido</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-vacio">
+  <h2 id="g-vacio">Estado vacío</h2>
+  {% include "componentes/vacio.html" with icono="inmuebles" titulo="Aún no hay inmuebles" texto="Registre el primero para empezar a recibir solicitudes." accion_url="#g-vacio" accion_texto="Nuevo inmueble" %}
+</section>
+
+<section class="guia-seccion" aria-labelledby="g-iconos">
+  <h2 id="g-iconos">Iconos (Phosphor, de línea)</h2>
+  <div class="guia-fila">
+    {% for n in iconos %}<span class="muestra">{% include "componentes/icono.html" with nombre=n %} {{ n }}</span>{% endfor %}
+  </div>
+</section>
+{% endblock %}
