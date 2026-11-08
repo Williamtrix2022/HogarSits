@@ -1,0 +1,43 @@
+{% load static %}<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Hogar{% endblock %} · HogarSits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="barra">
+    <a class="marca" href="{% url 'cuentas:inicio' %}">HogarSits</a>
+    {% if user.is_authenticated %}
+    <div class="acciones">
+      <span class="usuario">{{ user.get_full_name|default:user.username }}{% if rol_usuario %} · {{ rol_usuario }}{% endif %}</span>
+      <form method="post" action="{% url 'cuentas:logout' %}">{% csrf_token %}<button class="boton" type="submit">Salir</button></form>
+    </div>
+    {% endif %}
+  </header>
+  <div class="estructura">
+    <nav class="menu" aria-label="Principal">
+      {% url 'cuentas:inicio' as url_inicio %}
+      <a href="{{ url_inicio }}"{% if request.path == url_inicio %} aria-current="page"{% endif %}>Hogar</a>
+      {% if es_admin %}
+      {% url 'cuentas:usuarios' as url_usuarios %}
+      <a href="{{ url_usuarios }}"{% if '/administracion/' in request.path %} aria-current="page"{% endif %}>Administración</a>
+      {% endif %}
+    </nav>
+    <main id="contenido" class="contenido">
+      {% if messages %}
+      <ul class="mensajes" role="status">
+        {% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      {% block contenido %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>
