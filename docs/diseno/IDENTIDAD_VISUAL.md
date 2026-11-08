@@ -94,6 +94,10 @@ Archivos: `templates/base.html`, `templates/componentes/` (icono, aviso, estado 
 
 **Componentes:** botones (primario, secundario, peligro), estados con punto y texto, avisos de cuatro tipos (cerrables; los errores usan `role="alert"`, el resto `role="status"`), formularios con etiqueta visible y error junto al campo (enlazado con `aria-describedby`), tablas con contenedor desplazable, estado vacío, iconos en un sprite SVG **en línea** (no depende de otro origen cuando los estáticos pasen a S3 o CloudFront).
 
+**Listas de trabajo (primera aplicación: Inmuebles, #26).** Barra de filtros que se envuelve en vez de recortarse (`role="search"`, se envía por GET para poder compartir el enlace), recuento de resultados anunciado con `role="status"`, tabla con `<caption>` oculta y `scope="col"`, precio alineado a la derecha, estado con punto y texto, paginación de 20 en 20 que conserva los filtros, y dos estados vacíos distintos: sin datos («Aún no hay…», con acción) y sin resultados («No hay … con esos filtros», con «Limpiar filtros»).
+
+**Formularios.** Etiqueta siempre visible; se marca lo **opcional** (no lo obligatorio, que es la mayoría); el error va debajo del campo y enlazado con `aria-describedby`; al fallar el envío aparece un **resumen de errores al inicio que recibe el foco** y enlaza cada error con su campo. El dinero se escribe como se escribe en Colombia (`240.000.000`, `$ 240.000.000`) y se muestra como `$ 240.000.000`.
+
 **Lista de entrega (de la skill) verificada:** sin emojis como iconos · `cursor: pointer` en lo clicable · hover con transición suave (150 ms) y solo con puntero fino · contraste mínimo 4,5:1 · foco visible · `prefers-reduced-motion` respetado · responsive a 500 px y 1440 px (capturas) · objetivos táctiles de 44 px · enlace «Saltar al contenido» · tablas sin romper el diseño en móvil.
 
 **Pendiente de comprobar a mano:** 375 px y 768 px reales (Edge headless no baja de 500 px), lector de pantalla y navegación solo con teclado en un navegador real.

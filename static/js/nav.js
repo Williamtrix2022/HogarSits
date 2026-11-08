@@ -33,6 +33,9 @@
     movil.addEventListener("change", () => fijar(false));
   }
 
+  // Tras un envío fallido, el foco va al resumen de errores (enlaza cada error con su campo).
+  document.querySelector("[data-resumen-errores]")?.focus();
+
   // Cierre de avisos: fundido breve y se retira del documento.
   document.querySelectorAll("[data-aviso-cerrar]").forEach((cerrar) => {
     cerrar.addEventListener("click", () => {

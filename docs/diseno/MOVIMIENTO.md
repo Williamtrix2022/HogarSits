@@ -36,6 +36,7 @@ Reglas: solo `transform`, `opacity` y color; **nunca** `transition: all` ni prop
 | Revelado al hacer scroll (listas, tarjetas) | Es interfaz de producto, no una página de marketing: un efecto de scroll aquí estorba. |
 | Menú desplegable del usuario | No hace falta: el nombre y «Salir» están siempre visibles. |
 | Resaltado de fila de tabla | Se recorre decenas de veces al día: cambia el fondo al instante, sin transición. |
+| Filtros, resultados y paginación de las listas | Se usan decenas de veces al día: el resultado cambia al instante, sin transición. |
 | Aparición de los avisos al cargar la página | Aparecen por una acción del usuario; moverlos sería ruido. Se leen de inmediato. |
 | Cambio de color del ítem activo del menú | Navegar es de alta frecuencia: el estado nuevo es inmediato. |
 
