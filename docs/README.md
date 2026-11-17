@@ -5,6 +5,7 @@
 ## Para empezar
 | Qué | Dónde |
 |---|---|
+| **Guion para exponer el avance** (resumen, cómo correrlo, demo paso a paso, preguntas probables) | [`presentacion/AVANCE.md`](presentacion/AVANCE.md) |
 | Qué es el proyecto, fases y cómo correrlo | [`../README.md`](../README.md) |
 | Estado de los sprints (tablero maestro) | [`sprints/SPRINTS.md`](sprints/SPRINTS.md) |
 | Convenciones para trabajar con Claude Code | [`../CLAUDE.md`](../CLAUDE.md) |
