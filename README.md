@@ -102,7 +102,7 @@ $$\mathbf{P} = \begin{pmatrix}
 | Sprint | Fase | Estado |
 |---|---|---|
 | 0 Fundaciones | — | ✅ Cerrado (7/7) |
-| 1 Requerimientos | F1 | 🚧 5/7. Faltan el Budget de AWS (#14) y la segunda ronda de entrevistas (#55) |
+| 1 Requerimientos | F1 | 🚧 6/7. Falta la segunda ronda de entrevistas (#55); el Budget de AWS (#14) ya está creado |
 | 2 Diseño | F2 | 🚧 4/5. Falta el ADR de Markov (#20), que espera la segunda ronda |
 | 3 Gestión, entrega 1 | F3 | 🚧 3/8. Siguen clientes (#28), solicitudes (#29), fotos en S3 (#27) y seguridad del login (#60, #61) |
 | 4 a 6 | F3 a F6 | ⏳ Agenda y seguimiento, analítica (Poisson, M/M/c, Markov), pruebas y despliegue en AWS |
