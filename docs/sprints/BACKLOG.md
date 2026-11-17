@@ -66,7 +66,7 @@ Generado en el Sprint 1 (issue #11), ajustado con la ronda 1 de encuestas (#50) 
 ## Dependencias importantes
 
 - #20 (ADR de autotransiciones) está **bloqueado por #55** (segunda ronda de entrevistas) y condiciona #32 (etapas) y #37 (Markov).
-- #14 (Budget de AWS, del Sprint 1) debe estar hecho **antes** de #27 y de todos los issues de AWS del Sprint 6.
+- #14 (Budget de AWS, del Sprint 1; **hecho el 17-nov-2026**) debía estar hecho **antes** de #27 y de todos los issues de AWS del Sprint 6.
 - #28 (clientes) y #29 (solicitudes) preceden a #30 (agenda) y #31 (inmuebles cerrados).
 - #53 (horarios) usa el modelo `HorarioAsesor` ya creado en #22.
 - #60 y #61 (seguridad del login y contraseñas) conviene cerrarlos antes de entregar a la inmobiliaria piloto.
