@@ -21,7 +21,7 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 
 > Las fechas son una propuesta: ajústalas al calendario real de la asignatura.
 
-## Estado al 8-nov-2026
+## Estado al 8-nov-2026 (verificado el 17-nov-2026)
 
 - **Sprint 0** cerrado. **Sprint 1** (requerimientos) casi completo: faltan dos tareas que dependen de personas, no de código: el **Budget de AWS (#14)** y la **segunda ronda de entrevistas (#55)**.
 - **Sprint 2** (diseño): falta solo el **ADR-002 de Markov (#20)**, bloqueado hasta tener la segunda ronda.

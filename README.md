@@ -115,6 +115,8 @@ $$\mathbf{P} = \begin{pmatrix}
 
 Todo está indexado en [`docs/README.md`](docs/README.md). Lo principal:
 
+* **Para exponer el avance:** [`docs/presentacion/AVANCE.md`](docs/presentacion/AVANCE.md) (resumen, cómo correrlo y demostración paso a paso)
+
 * **Tablero de sprints:** [`docs/sprints/SPRINTS.md`](docs/sprints/SPRINTS.md) y [milestones en GitHub](https://github.com/Williamtrix2022/HogarSits/milestones)
 * **Requerimientos y estado de implementación:** [`docs/requerimientos/REQUERIMIENTOS.md`](docs/requerimientos/REQUERIMIENTOS.md)
 * **Diseño:** [modelo de datos](docs/diseno/ER.md) · [wireframes](docs/diseno/WIREFRAMES.md) · [identidad visual](docs/diseno/IDENTIDAD_VISUAL.md)
