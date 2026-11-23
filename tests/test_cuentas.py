@@ -296,3 +296,50 @@ def test_el_plano_decorativo_no_estorba_a_lectores_de_pantalla(client):
     html = client.get(reverse("cuentas:login")).content.decode()
     assert 'class="acceso-plano" aria-hidden="true"' in html
     assert 'alt="HogarSits, gestión y análisis inmobiliario"' in html
+
+
+# --- Protección contra fuerza bruta (RNF-04, #60) -----------------------------------------
+def _intentar(client, usuario, clave):
+    return client.post(reverse("cuentas:login"), {"username": usuario, "password": clave})
+
+
+def test_bloquea_tras_cinco_fallos_aun_con_la_clave_correcta(client):
+    crear("pepe")
+    for _ in range(5):
+        _intentar(client, "pepe", "mala")
+    r = _intentar(client, "pepe", CLAVE)
+    assert "Demasiados intentos" in r.content.decode()
+    assert "_auth_user_id" not in client.session
+
+
+def test_un_acceso_correcto_reinicia_el_contador(client):
+    crear("pepe")
+    for _ in range(4):
+        _intentar(client, "pepe", "mala")
+    assert _intentar(client, "pepe", CLAVE).status_code == 302
+    client.logout()
+    for _ in range(4):
+        _intentar(client, "pepe", "mala")
+    assert _intentar(client, "pepe", CLAVE).status_code == 302
+
+
+def test_el_bloqueo_vence_con_el_tiempo(client):
+    from datetime import timedelta
+
+    from django.utils import timezone
+
+    from apps.cuentas.models import IntentoAcceso
+
+    crear("pepe")
+    for _ in range(5):
+        _intentar(client, "pepe", "mala")
+    IntentoAcceso.objects.update(bloqueado_hasta=timezone.now() - timedelta(seconds=1))
+    assert _intentar(client, "pepe", CLAVE).status_code == 302
+
+
+def test_el_bloqueo_es_por_usuario(client):
+    crear("pepe")
+    crear("ana")
+    for _ in range(5):
+        _intentar(client, "pepe", "mala")
+    assert _intentar(client, "ana", CLAVE).status_code == 302

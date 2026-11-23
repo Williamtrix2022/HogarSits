@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from apps.comun.formularios import AccesibleFormMixin
 
+from . import bloqueo
 from .roles import ROL_ADMIN, ROL_ASESOR, administradores_activos, asignar_rol, rol_de
 
 User = get_user_model()
@@ -17,7 +18,25 @@ class LoginForm(AuthenticationForm):
     error_messages = {
         "invalid_login": "Usuario o contraseña incorrectos. Revise e intente de nuevo.",
         "inactive": "Usuario o contraseña incorrectos. Revise e intente de nuevo.",
+        "bloqueado": "Demasiados intentos fallidos. Espere %(minutos)s min e intente de nuevo.",
     }
+
+    def clean(self):
+        username = self.cleaned_data.get("username")
+        if username and self.request is not None:
+            minutos = bloqueo.minutos_restantes(self.request, username)
+            if minutos:
+                raise forms.ValidationError(
+                    self.error_messages["bloqueado"], code="bloqueado", params={"minutos": minutos}
+                )
+            try:
+                datos = super().clean()
+            except forms.ValidationError:
+                bloqueo.registrar_fallo(self.request, username)
+                raise
+            bloqueo.limpiar(self.request, username)
+            return datos
+        return super().clean()
 
 
 class UsuarioCrearForm(AccesibleFormMixin, UserCreationForm):
