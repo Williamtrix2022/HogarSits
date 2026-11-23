@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block titulo_pagina %}{{ titulo }}{% endblock %}
+{% block contenido %}
+{% include "componentes/resumen_errores.html" with form=form %}
+<form method="post" class="tarjeta" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}{% include "componentes/campo.html" with campo=campo %}{% endfor %}
+  <div class="acciones">
+    <a class="boton secundario" href="{% url 'clientes:lista' %}">Cancelar</a>
+    <button class="boton" type="submit">Guardar</button>
+  </div>
+</form>
+
+{% if object %}
+<section class="tarjeta" aria-labelledby="titulo-solicitudes">
+  <h2 id="titulo-solicitudes">Solicitudes recientes</h2>
+  {% if solicitudes %}
+  <ul>
+    {% for s in solicitudes %}
+    <li>{{ s.timestamp_llegada|date:"d/m/Y H:i" }} · {{ s.get_tipo_interes_display }} · {{ s.get_estado_display }}{% if s.inmueble %} · {{ s.inmueble.titulo }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Este cliente aún no tiene solicitudes.</p>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}
