@@ -38,7 +38,7 @@ Las probabilidades de **permanecer** en una etapa dependen de cuánto se registr
 | **Base (README)** | 0,20 · 0,15 · 0,20 | 22,7 % | **2,40** |
 | Más permanencia | 0,40 · 0,30 · 0,40 | 22,8 % | 3,11 |
 
-**Lo que muestra:** la diagonal **no cambia la probabilidad de cierre** (≈ 22,8 % en las tres) pero **sí los pasos esperados** (2,06 → 3,11). Es la consecuencia del ADR-002: el modo de contar los pasos cambia el «tiempo hasta cerrar», no *si* se cierra. Matrices en JSON para `--matriz`:
+**Lo que muestra:** la diagonal **no cambia la probabilidad de cierre** (22,7–22,8 % en las tres; la diferencia es solo el redondeo a 3 decimales de las filas) pero **sí los pasos esperados** (2,06 → 3,11). Es la consecuencia del ADR-002: el modo de contar los pasos cambia el «tiempo hasta cerrar», no *si* se cierra. Matrices en JSON para `--matriz`:
 
 ```
 menos: [[0.05,0.594,0,0,0.356],[0,0.05,0.503,0,0.447],[0,0,0.05,0.653,0.297],[0,0,0,1,0],[0,0,0,0,1]]
