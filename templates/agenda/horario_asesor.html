@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo %}Horario de {{ asesor.get_full_name|default:asesor.username }}{% endblock %}
+{% block titulo_pagina %}Horario de {{ asesor.get_full_name|default:asesor.username }}{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'horarios:lista' %}">Volver a los horarios</a>{% endblock %}
+{% block contenido %}
+<section class="tarjeta" aria-labelledby="t-semana">
+  <h2 id="t-semana">Semana · {{ horas }} horas</h2>
+  <ul class="lista-turnos">
+    {% for d in dias %}
+    <li>
+      <strong>{{ d.nombre }}</strong>
+      {% if d.turnos %}
+        {% for t in d.turnos %}
+        <span class="turno">{{ t.hora_inicio|time:"H:i" }}–{{ t.hora_fin|time:"H:i" }}
+          <form method="post" action="{% url 'horarios:borrar' t.pk %}" class="en-linea">{% csrf_token %}
+            <button class="boton peligro" type="submit" aria-label="Quitar el turno del {{ d.nombre }} de {{ t.hora_inicio|time:'H:i' }} a {{ t.hora_fin|time:'H:i' }}">Quitar</button>
+          </form>
+        </span>
+        {% endfor %}
+      {% else %}<span class="sub">Sin turno</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="tarjeta" aria-labelledby="t-agregar">
+  <h2 id="t-agregar">Agregar turno</h2>
+  {% include "componentes/resumen_errores.html" with form=form %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for campo in form %}{% include "componentes/campo.html" with campo=campo %}{% endfor %}
+    <div class="acciones"><button class="boton" type="submit">Agregar turno</button></div>
+  </form>
+</section>
+{% endblock %}

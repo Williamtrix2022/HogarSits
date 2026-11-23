@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block titulo %}Administración{% endblock %}
 {% block titulo_pagina %}Administración · Usuarios{% endblock %}
-{% block acciones %}<a class="boton" href="{% url 'cuentas:usuario_nuevo' %}">Nuevo usuario</a>{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'horarios:lista' %}">Horarios de asesores</a> <a class="boton" href="{% url 'cuentas:usuario_nuevo' %}">Nuevo usuario</a>{% endblock %}
 {% block contenido %}
 {% if filas %}
 <div class="tabla-contenedor">
