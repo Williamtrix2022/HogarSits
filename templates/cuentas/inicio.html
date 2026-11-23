@@ -1,8 +1,51 @@
 {% extends "base.html" %}
 {% block titulo_pagina %}Hogar · Hola, {{ user.first_name|default:user.username }}{% endblock %}
 {% block contenido %}
-<div class="tarjeta">
-  <p>Ha iniciado sesión como <strong>{{ rol_usuario|default:"usuario sin rol" }}</strong>.</p>
-  <p>Aquí aparecerá el panel «a quién contactar hoy» y sus visitas del día.</p>
-</div>
+{% if es_admin %}
+<form class="filtros" method="get" aria-label="Ver por asesor">
+  <div class="filtros-campos">
+    <div class="campo">
+      <label for="f-asesor">Ver como</label>
+      <select id="f-asesor" name="asesor">
+        <option value="">Todo el equipo</option>
+        {% for a in asesores %}<option value="{{ a.pk }}"{% if asesor_elegido.pk == a.pk %} selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="acciones filtros-acciones"><button class="boton" type="submit">Ver</button></div>
+  </div>
+</form>
+{% endif %}
+
+<ul class="indicadores" aria-label="Resumen">
+  <li><strong>{{ en_espera }}</strong> en espera</li>
+  <li><strong>{{ visitas_hoy }}</strong> visitas hoy</li>
+  <li{% if total_sin_seguimiento %} class="alerta"{% endif %}><strong>{{ total_sin_seguimiento }}</strong> sin seguimiento</li>
+</ul>
+
+<section class="tarjeta" aria-labelledby="t-contactar">
+  <h2 id="t-contactar">A quién contactar hoy</h2>
+  {% if pendientes %}
+  <ul class="lista-pendientes">
+    {% for p in pendientes %}{% include "seguimiento/_pendiente.html" with p=p con_asesor=ver_equipo %}{% endfor %}
+  </ul>
+  <p><a href="{% url 'seguimiento:pendientes' %}{% if asesor_elegido %}?asesor={{ asesor_elegido.pk }}{% endif %}">Ver las {{ total_pendientes }} pendientes</a>
+  · se marcan los que llevan más de {{ dias_umbral }} días sin movimiento.</p>
+  {% else %}
+  <p>Todo al día. No tiene seguimientos pendientes.</p>
+  {% endif %}
+</section>
+
+<section class="tarjeta" aria-labelledby="t-visitas">
+  <h2 id="t-visitas">Mis visitas</h2>
+  {% if visitas %}
+  <ul>
+    {% for v in visitas %}
+    <li>{% if v.es_hoy %}Hoy{% else %}Mañana{% endif %} {{ v.inicio|time:"H:i" }} · {{ v.inmueble.titulo }} · {{ v.solicitud.cliente.nombre }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No tiene visitas hoy ni mañana.</p>
+  {% endif %}
+  <p><a href="{% url 'agenda:semana' %}">Ver la agenda</a></p>
+</section>
 {% endblock %}

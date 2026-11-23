@@ -7,6 +7,10 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView, UpdateView
 
+from apps.agenda import services as agenda_services
+from apps.seguimiento import services as seguimiento_services
+from apps.seguimiento.models import SolicitudAtencion
+
 from . import bloqueo
 from .forms import (
     CambiarClaveForm,
@@ -27,9 +31,40 @@ class AdminRequeridoMixin(UserPassesTestMixin):
 
 
 class InicioView(TemplateView):
-    """Pantalla «Hogar». El panel «a quién contactar hoy» llega en el Sprint 4 (#33)."""
+    """Pantalla «Hogar»: a quién contactar hoy y mis visitas (HU-12, RF-25, RF-26, RF-35).
+
+    El asesor ve lo suyo. El administrador ve el total del equipo y puede filtrar por asesor.
+    """
 
     template_name = "cuentas/inicio.html"
+    MAX_EN_PANEL = 5
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        usuario = self.request.user
+        admin = es_admin(usuario)
+        elegido = None
+        if admin:
+            pedido = self.request.GET.get("asesor", "")
+            elegido = User.objects.filter(pk=int(pedido)).first() if pedido.isdigit() else None
+            ctx["asesores"] = User.objects.filter(is_active=True).order_by("first_name", "username")
+            ctx["asesor_elegido"] = elegido
+        responsable = elegido if admin else usuario
+        pendientes = seguimiento_services.pendientes_de_seguimiento(asesor=responsable)
+        ctx.update(
+            pendientes=pendientes[: self.MAX_EN_PANEL],
+            total_pendientes=len(pendientes),
+            total_sin_seguimiento=sum(p.sin_seguimiento for p in pendientes),
+            dias_umbral=seguimiento_services.dias_sin_seguimiento(),
+            en_espera=SolicitudAtencion.objects.filter(
+                estado=SolicitudAtencion.Estado.EN_ESPERA
+            ).count(),
+            ver_equipo=admin and elegido is None,
+        )
+        visitas = agenda_services.visitas_proximas(responsable or usuario)
+        ctx["visitas"] = visitas
+        ctx["visitas_hoy"] = sum(v.es_hoy for v in visitas)
+        return ctx
 
 
 class GuiaComponentesView(AdminRequeridoMixin, TemplateView):

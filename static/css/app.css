@@ -222,3 +222,11 @@ a { color: var(--hs-navy); }
 /* Indicador de etapas de una solicitud (W9) */
 .etapas { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; list-style: none; margin: 0; padding: 0; }
 .chip.peligro::before { background: var(--hs-error, #B3261E); }
+
+/* Panel «a quién contactar hoy» (W2) */
+.indicadores { display: flex; flex-wrap: wrap; gap: .75rem 2rem; list-style: none; margin: 0 0 1rem; padding: 0; }
+.indicadores strong { font-size: 1.5rem; margin-right: .25rem; }
+.indicadores .alerta strong { color: var(--hs-error, #B3261E); }
+.lista-pendientes { list-style: none; margin: 0 0 .75rem; padding: 0; }
+.lista-pendientes .pendiente { padding: .6rem .75rem; border-bottom: 1px solid var(--hs-line, #E6EBF4); }
+.lista-pendientes .sin-seguimiento { background: #F3E6DA; border-left: 4px solid #8F5622; }

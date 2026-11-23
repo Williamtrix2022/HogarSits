@@ -1,0 +1,8 @@
+{% comment %}Una fila de «a quién contactar». Parámetro: p (un Pendiente) y opcionalmente con_asesor.{% endcomment %}
+<li class="pendiente{% if p.sin_seguimiento %} sin-seguimiento{% endif %}">
+  <a class="enlace-fila" href="{% url 'seguimiento:detalle' p.solicitud.pk %}">{{ p.solicitud.cliente.nombre }}</a>
+  · {{ p.solicitud.get_etapa_actual_display }}
+  · {% if p.dias == 0 %}movimiento de hoy{% elif p.dias == 1 %}sin movimiento hace 1 día{% else %}sin movimiento hace {{ p.dias }} días{% endif %}
+  {% if p.sin_seguimiento %}<span class="chip peligro">Sin seguimiento</span>{% endif %}
+  {% if con_asesor %}<span class="sub">{% if p.solicitud.asesor %}{{ p.solicitud.asesor.get_full_name|default:p.solicitud.asesor.username }}{% else %}Sin asesor asignado{% endif %}</span>{% endif %}
+</li>

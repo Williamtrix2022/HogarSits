@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Pendientes de seguimiento{% endblock %}
+{% block titulo_pagina %}Pendientes de seguimiento{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'cuentas:inicio' %}">Volver al inicio</a>{% endblock %}
+{% block contenido %}
+{% if es_admin %}
+<form class="filtros" method="get" aria-label="Filtrar por asesor">
+  <div class="filtros-campos">
+    <div class="campo">
+      <label for="f-asesor">Asesor</label>
+      <select id="f-asesor" name="asesor">
+        <option value="">Todo el equipo</option>
+        {% for a in asesores %}<option value="{{ a.pk }}"{% if asesor_elegido.pk == a.pk %} selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="acciones filtros-acciones"><button class="boton" type="submit">Filtrar</button></div>
+  </div>
+</form>
+{% endif %}
+
+<p class="resumen-resultados" role="status">
+  {% if pendientes|length == 1 %}1 solicitud pendiente{% else %}{{ pendientes|length }} solicitudes pendientes{% endif %}, la más antigua primero.
+  {% if total_sin_seguimiento %}{{ total_sin_seguimiento }} llevan más de {{ dias_umbral }} días sin movimiento.{% endif %}
+</p>
+
+{% if pendientes %}
+<ul class="lista-pendientes">
+  {% for p in pendientes %}{% include "seguimiento/_pendiente.html" with p=p con_asesor=True %}{% endfor %}
+</ul>
+{% else %}
+{% include "componentes/vacio.html" with icono="solicitudes" titulo="Todo al día" texto="No tiene seguimientos pendientes." %}
+{% endif %}
+{% endblock %}
