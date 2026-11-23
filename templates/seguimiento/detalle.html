@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block titulo %}Solicitud de {{ solicitud.cliente.nombre }}{% endblock %}
+{% block titulo_pagina %}Solicitud de {{ solicitud.cliente.nombre }}{% endblock %}
+{% block acciones %}
+<a class="boton secundario" href="{% url 'seguimiento:cola' %}">Volver a la cola</a>
+{% if solicitud.estado != 'CANCELADO' and solicitud.etapa_actual != 4 and solicitud.etapa_actual != 5 %}
+<a class="boton" href="{% url 'agenda:crear' %}?solicitud={{ solicitud.pk }}">Agendar visita</a>
+{% endif %}
+{% endblock %}
+
+{% block contenido %}
+<section class="tarjeta" aria-labelledby="t-resumen">
+  <h2 id="t-resumen">Resumen</h2>
+  <p>
+    {{ solicitud.get_tipo_interes_display }}{% if solicitud.inmueble %} · {{ solicitud.inmueble.titulo }}{% endif %}{% if solicitud.presupuesto %} · hasta {{ solicitud.presupuesto|pesos }}{% endif %}
+    · llegó el {{ solicitud.timestamp_llegada|date:"d/m/Y H:i" }}
+    · <span class="chip">{{ solicitud.get_estado_display }}</span>
+  </p>
+</section>
+
+<section class="tarjeta" aria-labelledby="t-etapas">
+  <h2 id="t-etapas">Etapa</h2>
+  <ol class="etapas" aria-label="Etapas de la solicitud">
+    {% for e in etapas %}
+    <li{% if e.actual %} aria-current="step"{% endif %}>
+      <span class="chip{% if e.actual %} ok{% endif %}">{{ e.etapa.value }} {{ e.etapa.label }}{% if e.hecha %} ✓{% elif e.actual %} ● actual{% endif %}</span>
+    </li>
+    {% endfor %}
+    {% if abandonada %}<li aria-current="step"><span class="chip peligro">5 Abandono ● actual</span></li>{% endif %}
+  </ol>
+</section>
+
+{% if puede_registrar %}
+<section class="tarjeta" aria-labelledby="t-registrar">
+  <h2 id="t-registrar">Registrar seguimiento</h2>
+  {% include "componentes/resumen_errores.html" with form=form %}
+  <form method="post" action="{% url 'seguimiento:etapa' solicitud.pk %}" novalidate>
+    {% csrf_token %}
+    {% for campo in form %}{% include "componentes/campo.html" with campo=campo %}{% endfor %}
+    <div class="acciones"><button class="boton" type="submit">Guardar seguimiento</button></div>
+  </form>
+</section>
+{% else %}
+<section class="tarjeta"><p>Esta solicitud ya no admite cambios de etapa{% if solicitud.estado == 'CANCELADO' %} (está cancelada){% else %} ({{ solicitud.get_etapa_actual_display }} es una etapa final){% endif %}.</p></section>
+{% endif %}
+
+<section class="tarjeta" aria-labelledby="t-historial">
+  <h2 id="t-historial">Historial</h2>
+  {% if historial %}
+  <ul>
+    {% for t in historial %}
+    <li>
+      {{ t.fecha_transicion|date:"d/m/Y H:i" }} ·
+      {% if t.sin_avance %}{{ t.get_estado_origen_display }} (sin avance){% else %}{{ t.get_estado_origen_display }} → {{ t.get_estado_destino_display }}{% endif %}
+      {% if t.registrado_por %}· {{ t.registrado_por.get_full_name|default:t.registrado_por.username }}{% endif %}
+      {% if t.nota %}· «{{ t.nota }}»{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Aún no hay seguimientos. La solicitud empezó en Consulta.</p>
+  {% endif %}
+</section>
+
+<section class="tarjeta" aria-labelledby="t-visitas">
+  <h2 id="t-visitas">Visitas</h2>
+  {% if visitas %}
+  <ul>
+    {% for v in visitas %}
+    <li>{{ v.inicio|date:"d/m/Y H:i" }} · {{ v.inmueble.titulo }} · {{ v.get_estado_display }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Sin visitas agendadas.</p>
+  {% endif %}
+</section>
+{% endblock %}

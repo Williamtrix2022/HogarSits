@@ -3,9 +3,11 @@ from django import forms
 from apps.clientes.models import Cliente
 from apps.comun.campos import PesosField
 from apps.comun.formularios import AccesibleFormMixin
+from apps.inmuebles import services as inmuebles_services
 from apps.inmuebles.services import MENSAJE_NO_OFRECIBLE, inmuebles_ofrecibles
 
-from .models import SolicitudAtencion
+from . import services
+from .models import Etapa, SolicitudAtencion
 
 
 class SolicitudForm(AccesibleFormMixin, forms.ModelForm):
@@ -71,3 +73,40 @@ class FiltroSolicitudForm(forms.Form):
         if d.get("q"):
             queryset = queryset.filter(cliente__nombre__icontains=d["q"].strip())
         return queryset
+
+
+class EtapaForm(AccesibleFormMixin, forms.Form):
+    """Registrar un seguimiento: elegir a qué etapa pasa (o seguir en la misma) y una nota."""
+
+    etapa = forms.TypedChoiceField(
+        label="Resultado del seguimiento",
+        coerce=int,
+        error_messages={"required": "Elija a qué etapa pasa la solicitud."},
+    )
+    nota = forms.CharField(
+        label="Nota de contacto", required=False, max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": "Ej. No contestó; se le escribe el lunes"}),
+    )
+    marcar_inmueble = forms.BooleanField(required=False)
+
+    def __init__(self, *args, solicitud, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.solicitud = solicitud
+        actual = Etapa(solicitud.etapa_actual)
+        opciones = []
+        for destino in services.destinos_permitidos(solicitud):
+            if destino == actual:
+                opciones.append((destino.value, f"Seguir en {destino.label} (sin avance)"))
+            elif destino == Etapa.ABANDONO:
+                opciones.append((destino.value, "Marcar como Abandono"))
+            else:
+                opciones.append((destino.value, f"Pasar a {destino.label}"))
+        self.fields["etapa"].choices = opciones
+        inmueble = solicitud.inmueble
+        if inmueble is not None:
+            self.fields["marcar_inmueble"].label = (
+                f"Al cerrar, marcar «{inmueble.titulo}» como "
+                f"{inmuebles_services.estado_de_cierre(inmueble).label}"
+            )
+        else:
+            del self.fields["marcar_inmueble"]

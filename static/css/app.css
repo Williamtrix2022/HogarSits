@@ -218,3 +218,7 @@ a { color: var(--hs-navy); }
   .js .scrim { transition-duration: 100ms; }
   .boton:active { transform: none; }
 }
+
+/* Indicador de etapas de una solicitud (W9) */
+.etapas { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; list-style: none; margin: 0; padding: 0; }
+.chip.peligro::before { background: var(--hs-error, #B3261E); }

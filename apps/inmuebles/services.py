@@ -45,6 +45,27 @@ def guardar_inmueble(form, usuario) -> Inmueble:
     return inmueble
 
 
+def estado_de_cierre(inmueble: Inmueble) -> str:
+    """RN-05: una venta cierra como Vendido; un alquiler, como Arrendado."""
+    if inmueble.operacion == Inmueble.Operacion.VENTA:
+        return Inmueble.Estado.VENDIDO
+    return Inmueble.Estado.ARRENDADO
+
+
+@transaction.atomic
+def cambiar_estado(inmueble: Inmueble, nuevo: str, usuario) -> Inmueble:
+    """Cambia el estado y deja constancia en la bitácora (RF-12), sin pasar por un formulario."""
+    anterior = inmueble.estado
+    if anterior == nuevo:
+        return inmueble
+    inmueble.estado = nuevo
+    inmueble.save(update_fields=["estado", "actualizado_en"])
+    HistorialEstadoInmueble.objects.create(
+        inmueble=inmueble, estado_anterior=anterior, estado_nuevo=nuevo, cambiado_por=usuario
+    )
+    return inmueble
+
+
 def cambiar_activo(inmueble: Inmueble, activo: bool) -> Inmueble:
     """Desactiva o reactiva un inmueble (no se borran: tienen historial y solicitudes)."""
     inmueble.activo = activo

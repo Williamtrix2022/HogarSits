@@ -35,7 +35,7 @@
     {% for s in solicitudes %}
       <tr>
         <td>
-          <a class="enlace-fila" href="{% url 'clientes:editar' s.cliente_id %}">{{ s.cliente.nombre }}</a>
+          <a class="enlace-fila" href="{% url 'seguimiento:detalle' s.pk %}">{{ s.cliente.nombre }}</a>
           <span class="sub">{{ s.get_tipo_interes_display }}{% if s.inmueble %} · {{ s.inmueble.titulo }}{% endif %}{% if s.presupuesto %} · hasta {{ s.presupuesto|pesos }}{% endif %}</span>
         </td>
         <td>{{ s.timestamp_llegada|date:"d/m/Y H:i" }}</td>
@@ -47,6 +47,7 @@
         <td class="num">{{ s.servicio|duracion }}</td>
         <td>
           <div class="acciones">
+            <a class="boton secundario" href="{% url 'seguimiento:detalle' s.pk %}">Seguimiento</a>
             {% if s.estado == 'EN_ESPERA' %}
             <form method="post" action="{% url 'seguimiento:tomar' s.pk %}">{% csrf_token %}
               <input type="hidden" name="next" value="{{ request.get_full_path }}">
