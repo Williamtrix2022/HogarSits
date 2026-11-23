@@ -15,6 +15,11 @@ Lo aprendido por tema, una entrada corta por sprint: **Claude Code (skills, suba
   - **Validar con un caso real:** esa corrida confirmó el hueco de RN-33 con 4 pruebas que fallan. Las instrucciones bastaron; solo faltó decir qué excepción esperar cuando el rechazo aún no está definido.
   - **Un hallazgo no debe romper el CI:** las pruebas que describen una regla aún sin cumplir se dejan `xfail(strict=True)`: el CI sigue verde y, al arreglar la regla, `strict` obliga a quitar la marca.
   - Un subagente es **un contexto aparte**: sirve para tareas acotadas que dejan un informe, no para decisiones que necesitan la conversación completa.
+- **Subagente revisor + skill de método** (`.claude/agents/revisor-estocastico.md`, `.claude/skills/modelo-estocastico/SKILL.md`, #39): dos piezas con trabajos distintos.
+  - **El agente revisa, la skill enseña.** El agente es de **solo lectura** (herramientas `Read`, `Grep`, `Glob`, `Bash`; sin `Edit` ni `Write`): su valor es ser un segundo par de ojos que **no puede «arreglar» lo que revisa**. La skill es el procedimiento para *añadir* un modelo (ejemplo conocido primero, código después, cuatro tipos de prueba).
+  - **Fuente de verdad en el propio prompt:** el agente lleva escritas las cifras de referencia (M/M/1 con λ=2 y μ=3, el wireframe W11, la matriz del README), así que no depende de que alguien se las recuerde. Y se le pide **recalcular por otro camino**, no confiar en los tests del módulo, que son justo lo que revisa.
+  - **La skill registra los errores que ya ocurrieron** (suponer que mezclar horas con picos siempre rechaza Poisson; citar «22,8 %» sin saber que es doble redondeo): es memoria institucional barata.
+  - **Disponibilidad:** la skill apareció en la lista de inmediato; el tipo de agente no (el `tester` tardó unos minutos). Mientras tanto se probó pidiendo a un agente genérico que leyera el archivo y lo siguiera.
 - **Cuidado con las herramientas automáticas:** `ruff --fix` recorrió `.agents/` (código de terceros) y lo modificó. Ahora está excluido en `pyproject.toml`. Regla: **todo autocorrector necesita una lista explícita de qué toca**.
 
 ## Orquestación y calidad
@@ -37,6 +42,10 @@ Lo aprendido por tema, una entrada corta por sprint: **Claude Code (skills, suba
 - En es-CO los decimales se muestran con coma (`4,0`): las pruebas de pantalla deben comprobar la celda exacta, no un fragmento que pueda coincidir por casualidad.
 
 ## Probabilidad y método
+- **Poisson con picos:** mezclar horas con λ distinta da un índice de dispersión `1 + Var(λ)/E(λ)`. Con el perfil suave por defecto vale ≈ 1,05 y el χ² **no** rechaza; con picos marcados sí. Se creyó lo contrario y la prueba lo corrigió: **una expectativa que falla puede estar mal ella, no el código**.
+- **Estimar λ por franja exige contar las horas con cero llegadas**; promediar solo las horas con llegadas la sobrestima.
+- **«≈ 22,8 %» es doble redondeo:** el valor exacto es 22,748 % (22,7 % a un decimal) y los pasos esperados 2,3989 (≈ 2,4). Se calcula con precisión completa y se redondea al final.
+- **Cuatro pruebas por modelo:** el ejemplo conocido, una comprobación independiente (cadena de nacimiento y muerte para colas, `P^k` para absorción), recuperar los parámetros de una simulación y los bordes.
 - Con la matriz del README, **P(cierre desde Consulta) = 22,75 %** y **2,4 pasos** hasta absorción; el generador de datos los recupera en los tests.
 - Con 3 entrevistas, los números orientan pero no generalizan: el modelo M/M/c acertó con una inmobiliaria y no con las otras dos (ver `diseno/DATOS_SIMULADOS.md` §5).
 
