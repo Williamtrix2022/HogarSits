@@ -90,6 +90,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# RN-13: una solicitud sin movimiento por más de N días se marca «sin seguimiento».
+# N queda configurable hasta validarlo con la encuesta (pregunta E7).
+DIAS_SIN_SEGUIMIENTO = env.int("DIAS_SIN_SEGUIMIENTO", default=3)
+
 LOGIN_URL = "cuentas:login"
 LOGIN_REDIRECT_URL = "cuentas:inicio"
 LOGOUT_REDIRECT_URL = "cuentas:login"

@@ -1,9 +1,10 @@
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
 from apps.cuentas.roles import es_admin
 from apps.inmuebles import services as inmuebles_services
@@ -183,3 +184,28 @@ class RegistrarEtapaView(View):
                 request,
                 f"Cierre registrado. Recuerde actualizar «{inmueble.titulo}» a {nuevo.label}.",
             )
+
+
+class PendientesView(TemplateView):
+    """Todas las solicitudes con seguimiento pendiente. El administrador ve todo el equipo."""
+
+    template_name = "seguimiento/pendientes.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        User = get_user_model()
+        usuario = self.request.user
+        admin = es_admin(usuario)
+        elegido = None
+        if admin:
+            pedido = self.request.GET.get("asesor", "")
+            elegido = User.objects.filter(pk=int(pedido)).first() if pedido.isdigit() else None
+            ctx["asesores"] = User.objects.filter(is_active=True).order_by("first_name", "username")
+            ctx["asesor_elegido"] = elegido
+        pendientes = services.pendientes_de_seguimiento(asesor=elegido if admin else usuario)
+        ctx.update(
+            pendientes=pendientes,
+            dias_umbral=services.dias_sin_seguimiento(),
+            total_sin_seguimiento=sum(p.sin_seguimiento for p in pendientes),
+        )
+        return ctx

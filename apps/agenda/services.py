@@ -5,7 +5,7 @@ decirle al asesor *con quién* se cruza, y se atrapa la carrera de dos asesores 
 Los intervalos son [inicio, fin): una visita que termina cuando empieza otra no se cruza.
 """
 
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 
 from django.db import IntegrityError, transaction
 from django.utils import timezone
@@ -120,3 +120,21 @@ def reprogramar(visita: Visita, inicio, duracion_min) -> Visita:
     v.estado = Visita.Estado.CANCELADA
     v.save(update_fields=["estado"])
     return _crear(v.solicitud, v.inmueble, v.asesor, inicio, duracion_min, v.notas, reemplaza_a=v)
+
+
+def visitas_proximas(asesor, ahora=None):
+    """Visitas programadas del asesor para hoy y mañana, en orden (RF-35, HU-12)."""
+    hoy = timezone.localtime(ahora or timezone.now()).date()
+    zona = timezone.get_current_timezone()
+    desde = datetime.combine(hoy, time.min, tzinfo=zona)
+    hasta = desde + timedelta(days=2)
+    visitas = (
+        Visita.objects.filter(
+            asesor=asesor, estado=Visita.Estado.PROGRAMADA, inicio__gte=desde, inicio__lt=hasta
+        )
+        .select_related("inmueble", "solicitud__cliente")
+        .order_by("inicio")
+    )
+    for v in visitas:
+        v.es_hoy = timezone.localtime(v.inicio).date() == hoy
+    return list(visitas)

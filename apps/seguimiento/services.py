@@ -4,9 +4,12 @@ La hora la fija siempre el sistema (RN-11): ni el asesor ni el formulario la esc
 los datos que alimentan λ (llegadas) y μ (servicio) sean fiables.
 """
 
-from datetime import timedelta
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.db import transaction
+from django.db.models import Max
 from django.utils import timezone
 
 from .models import Etapa, SeguimientoEtapa, SolicitudAtencion
@@ -144,3 +147,49 @@ def registrar_etapa(solicitud: SolicitudAtencion, destino: int, usuario, nota: s
 
 def es_autotransicion(transicion: SeguimientoEtapa) -> bool:
     return transicion.estado_origen == transicion.estado_destino
+
+
+# --- Pendientes de seguimiento (HU-12, RF-25, RF-26, RN-13) ----------------------------------
+@dataclass(frozen=True)
+class Pendiente:
+    solicitud: SolicitudAtencion
+    ultimo_movimiento: datetime
+    dias: int  # días completos sin movimiento
+    sin_seguimiento: bool  # RN-13: supera el umbral N
+
+
+def dias_sin_seguimiento() -> int:
+    return settings.DIAS_SIN_SEGUIMIENTO
+
+
+def pendientes_de_seguimiento(asesor=None, ahora=None, umbral_dias=None) -> list[Pendiente]:
+    """Solicitudes con una venta o alquiler en curso, la más olvidada primero.
+
+    Pendiente = no cancelada y en Consulta, Visita o Negociación. El último movimiento es el
+    seguimiento más reciente o, si nunca hubo uno, la llegada (RN-13). Con `asesor` solo se
+    devuelven las suyas; sin él, todas (vista del administrador).
+    """
+    ahora = ahora or timezone.now()
+    limite = timedelta(days=umbral_dias if umbral_dias is not None else dias_sin_seguimiento())
+    consulta = (
+        SolicitudAtencion.objects.exclude(estado=Estado.CANCELADO)
+        .exclude(etapa_actual__in=ETAPAS_FINALES)
+        .select_related("cliente", "inmueble", "asesor")
+        .annotate(ultimo_seguimiento=Max("seguimientos__fecha_transicion"))
+    )
+    if asesor is not None:
+        consulta = consulta.filter(asesor=asesor)
+    pendientes = []
+    for s in consulta:
+        ultimo = max(s.ultimo_seguimiento or s.timestamp_llegada, s.timestamp_llegada)
+        transcurrido = ahora - ultimo
+        pendientes.append(
+            Pendiente(
+                solicitud=s,
+                ultimo_movimiento=ultimo,
+                dias=max(0, transcurrido.days),
+                sin_seguimiento=transcurrido > limite,
+            )
+        )
+    pendientes.sort(key=lambda p: (p.ultimo_movimiento, p.solicitud.pk))  # antigüedad
+    return pendientes
