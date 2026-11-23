@@ -33,6 +33,7 @@ TRANSITORIOS = (CONSULTA, VISITA, NEGOCIACION)
 ABSORBENTES = (CIERRE, ABANDONO)
 NOMBRES = {1: "Consulta", 2: "Visita", 3: "Negociación", 4: "Cierre", 5: "Abandono"}
 MIN_TRANSICIONES_ESTADO = 30  # RN-40 (valor de partida, a validar con datos reales)
+COND_MAXIMA = 1e10  # más allá, I − Q es casi singular y los pasos esperados serían enormes
 
 
 def contar_transiciones(pares: Iterable[tuple[int, int]]) -> np.ndarray:
@@ -141,6 +142,8 @@ def analizar_absorcion(matriz: Sequence[Sequence[float] | None]) -> Absorcion:
     P = np.array(matriz, dtype=float)
     Q, R = P[:3, :3], P[:3, 3:]
     try:
+        if np.linalg.cond(np.eye(3) - Q) > COND_MAXIMA:  # casi sin salida: la inversa no es fiable
+            raise np.linalg.LinAlgError("matriz casi singular")
         N = np.linalg.inv(np.eye(3) - Q)
     except np.linalg.LinAlgError as error:
         raise ValueError(

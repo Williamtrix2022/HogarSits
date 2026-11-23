@@ -133,6 +133,11 @@ class AjustePoisson:
     p_valor: float | None
     rechaza: bool | None  # True si p < α (no parece Poisson); None si no hay prueba
 
+    @property
+    def probado(self) -> bool:
+        """¿Hubo datos suficientes para hacer la prueba χ²? (RN-40: si no, no hay veredicto)."""
+        return self.chi2 is not None
+
 
 def ajuste_poisson(
     conteos: Iterable[int], minimo_esperado: float = 5.0, alfa: float = 0.05
@@ -192,7 +197,7 @@ def ajuste_poisson(
         esperada=tuple(esperada),
         indice_dispersion=dispersion,
         chi2=estadistico,
-        grados_libertad=gl,
+        grados_libertad=max(gl, 0),
         p_valor=p_valor,
         rechaza=rechaza,
     )

@@ -156,3 +156,16 @@ def test_estimar_mu_entradas_invalidas():
 def test_parametros_invalidos(lam, mu, c):
     with pytest.raises(ValueError):
         colas.mmc(lam, mu, c)
+
+
+# --- Cerca del límite de estabilidad (hallazgo de la revisión estocástica) -----------------
+def test_marca_al_limite_cuando_rho_supera_095():
+    assert colas.mmc(0.96, 1.0, 1).al_limite is True
+    assert colas.mmc(0.95, 1.0, 1).al_limite is False  # 0,95 exacto no lo marca
+    assert colas.mmc(0.5, 1.0, 1).al_limite is False
+    assert colas.mmc(1.0, 1.0, 1).al_limite is False  # inestable: no es «al límite», es inestable
+
+
+def test_rho_casi_uno_da_cifras_enormes_y_queda_marcado():
+    q = colas.mmc(1.0, 1.0 + 1e-12, 1)
+    assert q.estable and q.al_limite and q.W > 1e9  # correcto matemáticamente, pero sin sentido
