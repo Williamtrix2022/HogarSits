@@ -1,12 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, TemplateView, UpdateView
+from django.views.generic import CreateView, FormView, ListView, TemplateView, UpdateView
 
-from .forms import UsuarioCrearForm, UsuarioEditarForm
+from . import bloqueo
+from .forms import (
+    CambiarClaveForm,
+    RestablecerClaveForm,
+    UsuarioCrearForm,
+    UsuarioEditarForm,
+)
 from .roles import administradores_activos, es_admin, rol_de
 
 User = get_user_model()
@@ -83,6 +90,48 @@ class UsuarioEditarView(AdminRequeridoMixin, UpdateView):
         respuesta = super().form_valid(form)
         messages.success(self.request, f"Usuario {self.object.username} actualizado.")
         return respuesta
+
+
+class CambiarClaveView(PasswordChangeView):
+    """Cualquier usuario autenticado cambia su propia contraseña (la sesión se conserva)."""
+
+    form_class = CambiarClaveForm
+    template_name = "cuentas/clave_form.html"
+    success_url = reverse_lazy("cuentas:inicio")
+    extra_context = {"titulo": "Cambiar mi contraseña", "volver": reverse_lazy("cuentas:inicio")}
+
+    def form_valid(self, form):
+        messages.success(self.request, "Su contraseña se actualizó.")
+        return super().form_valid(form)
+
+
+class UsuarioRestablecerClaveView(AdminRequeridoMixin, FormView):
+    """El administrador fija una contraseña nueva; también levanta un bloqueo por intentos."""
+
+    form_class = RestablecerClaveForm
+    template_name = "cuentas/clave_form.html"
+    success_url = reverse_lazy("cuentas:usuarios")
+
+    def dispatch(self, request, *args, **kwargs):
+        self.usuario = get_object_or_404(User, pk=kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.usuario
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titulo"] = f"Restablecer contraseña: {self.usuario.username}"
+        ctx["volver"] = reverse_lazy("cuentas:usuarios")
+        return ctx
+
+    def form_valid(self, form):
+        form.save()
+        bloqueo.limpiar_usuario(self.usuario.username)
+        messages.success(self.request, f"Contraseña de {self.usuario.username} restablecida.")
+        return super().form_valid(form)
 
 
 class UsuarioCambiarEstadoView(AdminRequeridoMixin, View):

@@ -343,3 +343,67 @@ def test_el_bloqueo_es_por_usuario(client):
     for _ in range(5):
         _intentar(client, "pepe", "mala")
     assert _intentar(client, "ana", CLAVE).status_code == 302
+
+
+# --- Cambio y restablecimiento de contraseña (#61) ----------------------------------------
+NUEVA = "Otra-Clave-Mas-Larga-2026"
+
+
+def test_cambiar_clave_propia_conserva_la_sesion(client, asesor_user):
+    entrar(client, asesor_user)
+    r = client.post(
+        reverse("cuentas:clave_cambiar"),
+        {"old_password": CLAVE, "new_password1": NUEVA, "new_password2": NUEVA},
+    )
+    assert r.status_code == 302
+    asesor_user.refresh_from_db()
+    assert asesor_user.check_password(NUEVA)
+    assert client.get(reverse("cuentas:inicio")).status_code == 200  # sigue autenticado
+
+
+def test_cambiar_clave_exige_la_actual(client, asesor_user):
+    entrar(client, asesor_user)
+    r = client.post(
+        reverse("cuentas:clave_cambiar"),
+        {"old_password": "incorrecta", "new_password1": NUEVA, "new_password2": NUEVA},
+    )
+    assert r.status_code == 200
+    asesor_user.refresh_from_db()
+    assert asesor_user.check_password(CLAVE)
+
+
+def test_cambiar_clave_requiere_sesion(client):
+    r = client.get(reverse("cuentas:clave_cambiar"))
+    assert r.status_code == 302 and "ingresar" in r["Location"]
+
+
+def test_admin_restablece_la_clave_de_otro_usuario(client, admin_user, asesor_user):
+    entrar(client, admin_user)
+    url = reverse("cuentas:usuario_clave", args=[asesor_user.pk])
+    r = client.post(url, {"new_password1": NUEVA, "new_password2": NUEVA})
+    assert r.status_code == 302
+    asesor_user.refresh_from_db()
+    assert asesor_user.check_password(NUEVA)
+
+
+def test_restablecer_levanta_el_bloqueo_por_intentos(client, admin_user, asesor_user):
+    from apps.cuentas.models import IntentoAcceso
+
+    IntentoAcceso.objects.create(usuario="asesor1", ip="127.0.0.1", fallos=5)
+    entrar(client, admin_user)
+    client.post(
+        reverse("cuentas:usuario_clave", args=[asesor_user.pk]),
+        {"new_password1": NUEVA, "new_password2": NUEVA},
+    )
+    assert not IntentoAcceso.objects.filter(usuario="asesor1").exists()
+
+
+def test_un_asesor_no_puede_restablecer_claves_ajenas(client, asesor_user, admin_user):
+    entrar(client, asesor_user)
+    r = client.post(
+        reverse("cuentas:usuario_clave", args=[admin_user.pk]),
+        {"new_password1": NUEVA, "new_password2": NUEVA},
+    )
+    assert r.status_code == 403
+    admin_user.refresh_from_db()
+    assert admin_user.check_password(CLAVE)
