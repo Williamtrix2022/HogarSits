@@ -237,3 +237,8 @@ a { color: var(--hs-navy); }
 .lista-turnos strong { min-width: 6.5rem; }
 .turno { display: inline-flex; align-items: center; gap: .5rem; }
 .en-linea { display: inline; }
+
+/* Galería de fotos de un inmueble (#27) */
+.galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 1rem; list-style: none; margin: 0 0 1rem; padding: 0; }
+.galeria li { display: flex; flex-direction: column; gap: .5rem; }
+.galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: .5rem; background: #E6EBF4; }

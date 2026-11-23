@@ -4,6 +4,8 @@ from pathlib import Path
 
 import environ
 
+from config.storage import construir_storages
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(DEBUG=(bool, False))
@@ -87,6 +89,12 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Fotos (#27): disco local, o S3 si se define el bucket. Las credenciales de AWS no van aquí:
+# boto3 las toma del entorno (.env en local) o del rol IAM del servicio.
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="us-east-1")
+STORAGES = construir_storages(AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
