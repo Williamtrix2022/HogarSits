@@ -12,7 +12,7 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 | Sprint | Fechas | Fase | Objetivo | Estado | Progreso |
 |---|---|---|---|---|---|
 | [0](sprint-00.md) | 02-nov → 15-nov-2026 | — | Fundaciones: estructura, Docker, CI, sprints, AWS seguro | ✅ Cerrado | 7/7 (Budget AWS → S1) |
-| [1](sprint-01.md) | 16-nov → 29-nov | F1 | Requerimientos, casos de uso, encuesta, backlog | 🚧 En curso | 5/7 |
+| [1](sprint-01.md) | 16-nov → 29-nov | F1 | Requerimientos, casos de uso, encuesta, backlog | 🚧 En curso | 6/7 |
 | [2](sprint-02.md) | 30-nov → 13-dic | F2 | Diseño: ER, wireframes, ADRs, modelos, datos simulados | 🚧 En curso | 4/5 |
 | [3](sprint-03.md) | 14-dic → 27-dic | F3 | Gestión (Entrega 1): CRUD inmuebles y clientes/solicitudes, auth | 🚧 En curso | 3/8 |
 | 4 | 28-dic → 10-ene | F3 | Gestión (Entrega 2): agenda sin cruces, seguimiento de etapas | ⏳ | 0/7 |
@@ -23,9 +23,9 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 
 ## Estado al 8-nov-2026 (verificado el 17-nov-2026)
 
-- **Sprint 0** cerrado. **Sprint 1** (requerimientos) casi completo: faltan dos tareas que dependen de personas, no de código: el **Budget de AWS (#14)** y la **segunda ronda de entrevistas (#55)**.
+- **Sprint 0** cerrado. **Sprint 1** (requerimientos) casi completo: falta una tarea que depende de personas, no de código: la **segunda ronda de entrevistas (#55)**. El **Budget de AWS (#14)** se cerró el 17-nov-2026.
 - **Sprint 2** (diseño): falta solo el **ADR-002 de Markov (#20)**, bloqueado hasta tener la segunda ronda.
-- **Sprint 3** (gestión, entrega 1) en marcha: hechos acceso con roles (#24), plantilla base (#25) y CRUD de inmuebles (#26). Siguen clientes (#28), solicitudes (#29), fotos en S3 (#27, requiere #14) y dos mejoras de seguridad del login (#60, #61).
+- **Sprint 3** (gestión, entrega 1) en marcha: hechos acceso con roles (#24), plantilla base (#25) y CRUD de inmuebles (#26). Siguen clientes (#28), solicitudes (#29), fotos en S3 (#27, ya sin bloqueo: el Budget #14 está creado) y dos mejoras de seguridad del login (#60, #61).
 - **Pruebas:** 152 automáticas sobre PostgreSQL real; el CI de GitHub las corre en cada PR.
 - Los arranques se **adelantaron** respecto a las fechas propuestas (el calendario real de la asignatura manda).
 
