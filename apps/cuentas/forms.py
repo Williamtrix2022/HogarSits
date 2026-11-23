@@ -1,6 +1,11 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    SetPasswordForm,
+    UserCreationForm,
+)
 
 from apps.comun.formularios import AccesibleFormMixin
 
@@ -37,6 +42,25 @@ class LoginForm(AuthenticationForm):
             bloqueo.limpiar(self.request, username)
             return datos
         return super().clean()
+
+
+class CambiarClaveForm(AccesibleFormMixin, PasswordChangeForm):
+    """Cambio de contraseña propio (#61): pide la actual y valida la nueva."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["old_password"].label = "Contraseña actual"
+        self.fields["new_password1"].label = "Contraseña nueva"
+        self.fields["new_password2"].label = "Repita la contraseña nueva"
+
+
+class RestablecerClaveForm(AccesibleFormMixin, SetPasswordForm):
+    """El administrador fija una contraseña nueva para otro usuario (#61)."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["new_password1"].label = "Contraseña nueva"
+        self.fields["new_password2"].label = "Repita la contraseña nueva"
 
 
 class UsuarioCrearForm(AccesibleFormMixin, UserCreationForm):

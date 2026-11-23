@@ -34,5 +34,10 @@ def registrar_fallo(request, username):
     intento.save()
 
 
+def limpiar_usuario(username):
+    """Levanta el bloqueo de un usuario desde cualquier IP (lo usa el restablecimiento)."""
+    IntentoAcceso.objects.filter(usuario=(username or "").strip().lower()).delete()
+
+
 def limpiar(request, username):
     IntentoAcceso.objects.filter(**_clave(request, username)).delete()

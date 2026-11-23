@@ -26,6 +26,7 @@
       {% if user.is_authenticated %}
       <div class="topbar-usuario">
         <p class="usuario"><strong>{{ user.get_full_name|default:user.username }}</strong>{% if rol_usuario %}<span>{{ rol_usuario }}</span>{% endif %}</p>
+        <a class="boton secundario" href="{% url 'cuentas:clave_cambiar' %}">Mi contraseña</a>
         <form method="post" action="{% url 'cuentas:logout' %}">{% csrf_token %}
           <button class="boton secundario" type="submit">{% include "componentes/icono.html" with nombre="salir" %}Salir</button>
         </form>

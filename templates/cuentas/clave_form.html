@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block titulo_pagina %}{{ titulo }}{% endblock %}
+{% block contenido %}
+{% include "componentes/resumen_errores.html" with form=form %}
+<form method="post" class="tarjeta" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}{% include "componentes/campo.html" with campo=campo %}{% endfor %}
+  <div class="acciones">
+    <a class="boton secundario" href="{{ volver }}">Cancelar</a>
+    <button class="boton" type="submit">Guardar contraseña</button>
+  </div>
+</form>
+{% endblock %}

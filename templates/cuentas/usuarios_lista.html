@@ -17,6 +17,7 @@
         <td>
           <div class="acciones">
             <a class="boton secundario" href="{% url 'cuentas:usuario_editar' u.pk %}">Editar</a>
+            <a class="boton secundario" href="{% url 'cuentas:usuario_clave' u.pk %}">Restablecer clave</a>
             {% if u.pk != user.pk %}
             <form method="post" action="{% url 'cuentas:usuario_estado' u.pk %}">{% csrf_token %}
               <button class="boton {% if u.is_active %}peligro{% else %}secundario{% endif %}" type="submit">{% if u.is_active %}Desactivar{% else %}Activar{% endif %}</button>

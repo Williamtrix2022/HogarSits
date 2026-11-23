@@ -18,6 +18,12 @@ urlpatterns = [
         name="login",
     ),
     path("salir/", auth_views.LogoutView.as_view(), name="logout"),
+    path("cuenta/clave/", views.CambiarClaveView.as_view(), name="clave_cambiar"),
+    path(
+        "administracion/usuarios/<int:pk>/clave/",
+        views.UsuarioRestablecerClaveView.as_view(),
+        name="usuario_clave",
+    ),
     path("administracion/usuarios/", views.UsuarioListView.as_view(), name="usuarios"),
     path("administracion/componentes/", views.GuiaComponentesView.as_view(), name="componentes"),
     path("administracion/usuarios/nuevo/", views.UsuarioCrearView.as_view(), name="usuario_nuevo"),
