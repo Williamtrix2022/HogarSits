@@ -105,5 +105,5 @@ El CSV contiene notas libres de los entrevistados y está pensado como material 
 ## 9. Pendientes
 
 - [ ] Aplicar la encuesta a más inmobiliarias hasta llegar al menos a 8 (faltan 5) y aclarar el estado de **I03**.
-- [ ] Segunda ronda corta con I02 (piloto): E2 (etapas reales), E3 (seguimientos sin avance), E4 (reservas), E5 (visitas grupales/varias solicitudes), E7 (días para considerar perdida una solicitud).
+- [ ] Segunda ronda corta con I02 (piloto): E2 (etapas reales), E3 (seguimientos sin avance), E4 (reservas), E5 (visitas grupales/varias solicitudes), E7 (días para considerar perdida una solicitud). **Guion y plantilla de registro listos:** [`../GUION_RONDA_2.md`](../GUION_RONDA_2.md). Mientras tanto, los parámetros sin dato están en [`../SUPUESTOS_DE_TRABAJO.md`](../SUPUESTOS_DE_TRABAJO.md), rotulados como supuestos.
 - [ ] Decidir los cambios de la tabla §7 y reflejarlos en `REQUERIMIENTOS.md` v0.2 y en el backlog.
