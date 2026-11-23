@@ -1,6 +1,6 @@
 # ADR-003 — Modelo de datos con integridad en la base de datos
 
-**Estado:** aceptada · **Fecha:** 2026-11-08 · **Relacionadas:** ADR-001 (stack), ADR-002 (pendiente: autotransiciones de Markov, #20) · **Detalle:** [`docs/diseno/ER.md`](../diseno/ER.md)
+**Estado:** aceptada · **Fecha:** 2026-11-08 · **Relacionadas:** ADR-001 (stack), ADR-002 (autotransiciones de Markov, #20) · **Detalle:** [`docs/diseno/ER.md`](../diseno/ER.md)
 
 ## Contexto
 Los modelos estocásticos solo valen lo que valen los datos que los alimentan (hora de llegada, inicio y fin de atención, transiciones de etapa). La encuesta (ronda 1) muestra que las inmobiliarias ya sufren inconsistencias: visitas cruzadas, inmuebles ofrecidos cuando ya estaban cerrados, solicitudes perdidas. El sistema tiene pocos usuarios pero **varios puntos de escritura** (formularios, admin, comandos de carga, futuros scripts), por lo que validar solo en la interfaz no basta.
@@ -12,7 +12,7 @@ Los modelos estocásticos solo valen lo que valen los datos que los alimentan (h
 4. `on_delete=PROTECT` en relaciones que preservan historial; los inmuebles se desactivan.
 5. `etapa_actual` es una copia denormalizada; `SeguimientoEtapa` es la fuente de verdad.
 6. El asesor es `AUTH_USER_MODEL`; su disponibilidad se modela con `HorarioAsesor` y las `Visita`.
-7. `SeguimientoEtapa` **no** prohíbe `origen = destino` hasta que ADR-002 decida.
+7. `SeguimientoEtapa` **no** prohíbe `origen = destino`: ADR-002 decidió que una autotransición es un seguimiento sin cambio de etapa.
 8. Una sola inmobiliaria por instalación (sin multi-tenant).
 
 ## Alternativas descartadas
