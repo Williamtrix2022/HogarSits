@@ -105,7 +105,7 @@ $$\mathbf{P} = \begin{pmatrix}
 | 1 Requerimientos | F1 | 🚧 6/7. Falta la segunda ronda de entrevistas (#55); el Budget de AWS (#14) ya está creado |
 | 2 Diseño | F2 | ✅ 5/5. ADR-002 de Markov aceptado (revisable con la segunda ronda) |
 | 3 Gestión, entrega 1 | F3 | 🚧 7/8. Falta solo las fotos en S3 (#27) |
-| 4 | F3 | 🚧 2/7. Hechas la agenda sin cruces (#30) y el bloqueo de inmuebles cerrados (#31) |
+| 4 | F3 | 🚧 3/7. Hechos la agenda sin cruces (#30), el bloqueo de inmuebles cerrados (#31) y el seguimiento de etapas (#32) |
 | 5 y 6 | F4 a F6 | ⏳ Analítica (Poisson, M/M/c, Markov), pruebas y despliegue en AWS |
 
 **Ya funciona:** inicio de sesión con roles (Administrador y Asesor), administración de usuarios, gestión de inmuebles (lista con búsqueda y filtros, alta, edición, historial de estado, desactivar), generador de datos simulados y una interfaz con la identidad visual de HogarSits.
