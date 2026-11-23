@@ -230,3 +230,10 @@ a { color: var(--hs-navy); }
 .lista-pendientes { list-style: none; margin: 0 0 .75rem; padding: 0; }
 .lista-pendientes .pendiente { padding: .6rem .75rem; border-bottom: 1px solid var(--hs-line, #E6EBF4); }
 .lista-pendientes .sin-seguimiento { background: #F3E6DA; border-left: 4px solid #8F5622; }
+
+/* Horario semanal de un asesor (W14) */
+.lista-turnos { list-style: none; margin: 0; padding: 0; }
+.lista-turnos li { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; padding: .5rem 0; border-bottom: 1px solid var(--hs-line, #E6EBF4); }
+.lista-turnos strong { min-width: 6.5rem; }
+.turno { display: inline-flex; align-items: center; gap: .5rem; }
+.en-linea { display: inline; }

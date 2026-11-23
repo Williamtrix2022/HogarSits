@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Asesores disponibles{% endblock %}
+{% block titulo_pagina %}Administración · Asesores disponibles{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{{ url_horarios }}">Horarios</a>{% endblock %}
+{% block contenido %}
+<form class="filtros" method="get" aria-label="Elegir fecha">
+  <div class="filtros-campos">
+    <div class="campo">
+      <label for="f-fecha">Fecha</label>
+      <input type="date" id="f-fecha" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
+    </div>
+    <div class="acciones filtros-acciones"><button class="boton" type="submit">Ver</button></div>
+  </div>
+</form>
+
+{% if franjas %}
+<p class="resumen-resultados" role="status">Promedio del día: {{ promedio }} asesores disponibles por franja. Un asesor en visita no cuenta como disponible.</p>
+<div class="tabla-contenedor">
+  <table class="tabla">
+    <caption class="solo-lectores">Asesores disponibles por franja el {{ fecha|date:"j \d\e F" }}</caption>
+    <thead><tr><th scope="col">Franja</th><th scope="col" class="num">Con turno</th><th scope="col" class="num">En visita</th><th scope="col" class="num">Disponibles</th><th scope="col">Quiénes</th></tr></thead>
+    <tbody>
+    {% for f in franjas %}
+      <tr>
+        <td>{{ f.inicio|time:"H:i" }}–{{ f.fin|time:"H:i" }}</td>
+        <td class="num">{{ f.con_turno|length }}</td>
+        <td class="num">{{ f.en_visita|length }}</td>
+        <td class="num"><strong>{{ f.c }}</strong></td>
+        <td>{% for a in f.disponibles %}{{ a.get_full_name|default:a.username }}{% if not forloop.last %}, {% endif %}{% empty %}<span class="sub">Nadie</span>{% endfor %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+{% include "componentes/vacio.html" with icono="agenda" titulo="Nadie tiene turno ese día" texto="Cargue los horarios de los asesores para calcular cuántos hay disponibles." accion_url=url_horarios accion_texto="Ir a los horarios" %}
+{% endif %}
+{% endblock %}

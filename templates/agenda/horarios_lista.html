@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Horarios de asesores{% endblock %}
+{% block titulo_pagina %}Administración · Horarios de asesores{% endblock %}
+{% block acciones %}
+<a class="boton secundario" href="{% url 'cuentas:usuarios' %}">Usuarios</a>
+<a class="boton" href="{% url 'horarios:disponibilidad' %}">Asesores disponibles</a>
+{% endblock %}
+{% block contenido %}
+<p>El horario semanal define cuántos asesores hay disponibles en cada franja; una visita programada saca al asesor de la oficina. Ese número alimenta el análisis de colas.</p>
+{% if filas %}
+<div class="tabla-contenedor">
+  <table class="tabla">
+    <caption class="solo-lectores">Asesores y sus horas semanales</caption>
+    <thead><tr><th scope="col">Asesor</th><th scope="col" class="num">Turnos</th><th scope="col" class="num">Horas por semana</th><th scope="col">Acciones</th></tr></thead>
+    <tbody>
+    {% for f in filas %}
+      <tr>
+        <td><a class="enlace-fila" href="{% url 'horarios:asesor' f.asesor.pk %}">{{ f.asesor.get_full_name|default:f.asesor.username }}</a></td>
+        <td class="num">{{ f.turnos }}</td>
+        <td class="num">{{ f.horas }}</td>
+        <td><div class="acciones"><a class="boton secundario" href="{% url 'horarios:asesor' f.asesor.pk %}">Ver horario</a></div></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+{% url 'cuentas:usuario_nuevo' as url_nuevo %}
+{% include "componentes/vacio.html" with icono="administracion" titulo="Aún no hay asesores" texto="Cree un usuario con rol Asesor para asignarle un horario." accion_url=url_nuevo accion_texto="Nuevo usuario" %}
+{% endif %}
+{% endblock %}
