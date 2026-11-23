@@ -9,4 +9,6 @@ urlpatterns = [
     path("nuevo/", views.InmuebleCrearView.as_view(), name="crear"),
     path("<int:pk>/", views.InmuebleEditarView.as_view(), name="editar"),
     path("<int:pk>/activo/", views.InmuebleActivoView.as_view(), name="activo"),
+    path("<int:pk>/fotos/", views.FotoSubirView.as_view(), name="foto_subir"),
+    path("fotos/<int:pk>/borrar/", views.FotoBorrarView.as_view(), name="foto_borrar"),
 ]

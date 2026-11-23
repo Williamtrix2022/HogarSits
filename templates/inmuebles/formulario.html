@@ -35,6 +35,33 @@
 </form>
 
 {% if object %}
+<section class="seccion" aria-labelledby="fotos-titulo">
+  <h2 id="fotos-titulo">Fotos <span class="sub">({{ fotos|length }} de {{ max_fotos }})</span></h2>
+  {% if fotos %}
+  <ul class="galeria">
+    {% for f in fotos %}
+    <li>
+      <img src="{{ f.imagen.url }}" alt="Foto {{ forloop.counter }} de {{ object.titulo }}" loading="lazy">
+      <form method="post" action="{% url 'inmuebles:foto_borrar' f.pk %}">{% csrf_token %}
+        <button class="boton peligro" type="submit" aria-label="Quitar la foto {{ forloop.counter }}">Quitar</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Este inmueble aún no tiene fotos.</p>
+  {% endif %}
+  {% if caben_fotos %}
+  <form method="post" action="{% url 'inmuebles:foto_subir' object.pk %}" enctype="multipart/form-data" class="tarjeta">
+    {% csrf_token %}
+    {% include "componentes/campo.html" with campo=foto_form.imagenes %}
+    <div class="acciones"><button class="boton" type="submit">Subir fotos</button></div>
+  </form>
+  {% else %}
+  <p>Llegó al máximo de {{ max_fotos }} fotos. Quite alguna para subir otra.</p>
+  {% endif %}
+</section>
+
 <section class="seccion" aria-labelledby="historial-titulo">
   <h2 id="historial-titulo">Historial de estado</h2>
   {% if historial %}

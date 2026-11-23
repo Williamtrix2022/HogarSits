@@ -6,7 +6,8 @@ from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView
 
 from .forms import FiltroInmuebleForm, InmuebleForm
-from .models import Inmueble
+from .fotos import MAX_FOTOS, FotosForm, agregar_fotos, borrar_foto
+from .models import FotoInmueble, Inmueble
 from .services import ESTADOS_CERRADOS, cambiar_activo, guardar_inmueble, solicitudes_abiertas
 
 
@@ -56,6 +57,11 @@ class InmuebleEditarView(UpdateView):
         ctx = super().get_context_data(**kwargs)
         ctx["titulo"] = f"Inmueble: {self.object.titulo}"
         ctx["historial"] = self.object.historial_estados.select_related("cambiado_por")[:20]
+        fotos = list(self.object.fotos.all())
+        ctx["fotos"] = fotos
+        ctx["foto_form"] = FotosForm(inmueble=self.object)
+        ctx["caben_fotos"] = max(MAX_FOTOS - len(fotos), 0)
+        ctx["max_fotos"] = MAX_FOTOS
         return ctx
 
     def form_valid(self, form):
@@ -91,3 +97,37 @@ class InmuebleActivoView(View):
         if not url_has_allowed_host_and_scheme(destino, allowed_hosts={request.get_host()}):
             destino = reverse("inmuebles:lista")  # nunca se redirige fuera del sitio
         return redirect(destino)
+
+
+class FotoSubirView(View):
+    """Agrega una o varias fotos al inmueble (RF-13)."""
+
+    http_method_names = ["post"]
+
+    def post(self, request, pk):
+        inmueble = get_object_or_404(Inmueble, pk=pk)
+        form = FotosForm(request.POST, request.FILES, inmueble=inmueble)
+        if form.is_valid():
+            cantidad = len(agregar_fotos(inmueble, form.cleaned_data["imagenes"]))
+            messages.success(request, f"{cantidad} foto(s) agregada(s) a «{inmueble.titulo}».")
+        else:
+            for error in form.errors["imagenes"]:
+                messages.error(request, error)
+        return redirect("inmuebles:editar", pk=pk)
+
+
+class FotoBorrarView(View):
+    http_method_names = ["post"]
+
+    def post(self, request, pk):
+        foto = get_object_or_404(FotoInmueble.objects.select_related("inmueble"), pk=pk)
+        inmueble_pk = foto.inmueble_id
+        if borrar_foto(foto):
+            messages.success(request, "Foto eliminada.")
+        else:
+            messages.warning(
+                request,
+                "La foto se quitó del inmueble, pero el archivo no pudo borrarse del "
+                "almacenamiento. Avise al administrador.",
+            )
+        return redirect("inmuebles:editar", pk=inmueble_pk)

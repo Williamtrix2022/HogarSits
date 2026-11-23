@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
@@ -26,3 +28,7 @@ urlpatterns = [
     path('administracion/horarios/', include('apps.agenda.urls_horario')),
     path('', include('apps.cuentas.urls')),
 ]
+
+# En desarrollo con disco local, Django sirve las fotos (siguen exigiendo sesión). Con S3 no aplica.
+if settings.DEBUG and not settings.AWS_STORAGE_BUCKET_NAME:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
