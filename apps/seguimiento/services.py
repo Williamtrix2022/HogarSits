@@ -9,9 +9,20 @@ from datetime import timedelta
 from django.db import transaction
 from django.utils import timezone
 
-from .models import SolicitudAtencion
+from .models import Etapa, SeguimientoEtapa, SolicitudAtencion
 
 Estado = SolicitudAtencion.Estado
+
+
+# RN-30: transiciones válidas. Quedarse en la misma etapa (autotransición) es un seguimiento sin
+# avance y cuenta como un paso de la cadena de Markov (ADR-002). RN-31: Cierre y Abandono son
+# absorbentes, así que no tienen salidas.
+TRANSICIONES = {
+    Etapa.CONSULTA: (Etapa.CONSULTA, Etapa.VISITA, Etapa.ABANDONO),
+    Etapa.VISITA: (Etapa.VISITA, Etapa.NEGOCIACION, Etapa.ABANDONO),
+    Etapa.NEGOCIACION: (Etapa.NEGOCIACION, Etapa.CIERRE, Etapa.ABANDONO),
+}
+ETAPAS_FINALES = (Etapa.CIERRE, Etapa.ABANDONO)
 
 
 class TransicionInvalida(Exception):
@@ -85,3 +96,51 @@ def cancelar(solicitud: SolicitudAtencion) -> SolicitudAtencion:
     s.estado = Estado.CANCELADO
     s.save(update_fields=["estado"])
     return s
+
+
+# --- Etapas comerciales (HU-06, RF-40 a RF-42, RN-30 a RN-33) --------------------------------
+def destinos_permitidos(solicitud: SolicitudAtencion) -> list[Etapa]:
+    """Etapas a las que puede pasar desde la actual; vacío si la solicitud ya terminó."""
+    if solicitud.estado == Estado.CANCELADO:
+        return []
+    return list(TRANSICIONES.get(Etapa(solicitud.etapa_actual), ()))
+
+
+@transaction.atomic
+def registrar_etapa(solicitud: SolicitudAtencion, destino: int, usuario, nota: str = ""):
+    """Guarda una transición (origen, destino, fecha, quién) y actualiza la etapa actual.
+
+    Si `destino` es la etapa actual se registra una autotransición: un seguimiento sin avance
+    (ADR-002). El historial no se edita ni se borra (RN-33).
+    """
+    s = _bloquear(solicitud)
+    if s.estado == Estado.CANCELADO:
+        raise TransicionInvalida("Una solicitud cancelada no admite seguimiento de etapas.")
+    origen = Etapa(s.etapa_actual)
+    if origen in ETAPAS_FINALES:  # RN-31
+        raise TransicionInvalida(
+            f"La solicitud ya está en {origen.label}: es una etapa final y no admite cambios."
+        )
+    try:
+        destino = Etapa(int(destino))
+    except (ValueError, TypeError):
+        raise TransicionInvalida("Elija una etapa válida.") from None
+    if destino not in TRANSICIONES[origen]:  # RN-30
+        raise TransicionInvalida(
+            f"No se puede pasar de {origen.label} a {destino.label}. "
+            "Solo se avanza a la etapa siguiente o se abandona."
+        )
+    transicion = SeguimientoEtapa.objects.create(
+        solicitud=s,
+        estado_origen=origen,
+        estado_destino=destino,
+        registrado_por=usuario,
+        nota=nota.strip(),
+    )
+    s.etapa_actual = destino
+    s.save(update_fields=["etapa_actual"])
+    return transicion
+
+
+def es_autotransicion(transicion: SeguimientoEtapa) -> bool:
+    return transicion.estado_origen == transicion.estado_destino

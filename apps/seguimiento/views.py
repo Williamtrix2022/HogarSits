@@ -3,13 +3,14 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, DetailView, ListView
 
 from apps.cuentas.roles import es_admin
+from apps.inmuebles import services as inmuebles_services
 
 from . import services
-from .forms import FiltroSolicitudForm, SolicitudForm
-from .models import SolicitudAtencion
+from .forms import EtapaForm, FiltroSolicitudForm, SolicitudForm
+from .models import Etapa, SolicitudAtencion
 
 
 class ColaListView(ListView):
@@ -102,3 +103,83 @@ class CancelarView(TransicionView):
 
     def ejecutar(self, request, solicitud):
         services.cancelar(solicitud)
+
+
+class SolicitudDetalleView(DetailView):
+    """W9: etapa actual, historial de transiciones, visitas y registro de un seguimiento."""
+
+    model = SolicitudAtencion
+    template_name = "seguimiento/detalle.html"
+    context_object_name = "solicitud"
+
+    def get_queryset(self):
+        return SolicitudAtencion.objects.select_related("cliente", "inmueble", "asesor")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        s = self.object
+        ctx["form"] = kwargs.get("form") or EtapaForm(solicitud=s)
+        ctx["puede_registrar"] = bool(services.destinos_permitidos(s))
+        ctx["etapas"] = [
+            {
+                "etapa": e,
+                "hecha": e.value < s.etapa_actual and s.etapa_actual != Etapa.ABANDONO,
+                "actual": e.value == s.etapa_actual,
+            }
+            for e in (Etapa.CONSULTA, Etapa.VISITA, Etapa.NEGOCIACION, Etapa.CIERRE)
+        ]
+        ctx["abandonada"] = s.etapa_actual == Etapa.ABANDONO
+        historial = list(
+            s.seguimientos.select_related("registrado_por").order_by("-fecha_transicion", "-id")
+        )
+        for t in historial:
+            t.sin_avance = services.es_autotransicion(t)
+        ctx["historial"] = historial
+        ctx["visitas"] = s.visitas.select_related("inmueble", "asesor").order_by("-inicio")
+        return ctx
+
+
+class RegistrarEtapaView(View):
+    """Registra el seguimiento. Si falla la validación, vuelve a mostrar el detalle con errores."""
+
+    http_method_names = ["post"]
+
+    def post(self, request, pk):
+        solicitud = get_object_or_404(
+            SolicitudAtencion.objects.select_related("cliente", "inmueble"), pk=pk
+        )
+        form = EtapaForm(request.POST, solicitud=solicitud)
+        if form.is_valid():
+            datos = form.cleaned_data
+            try:
+                transicion = services.registrar_etapa(
+                    solicitud, datos["etapa"], request.user, datos["nota"]
+                )
+            except services.TransicionInvalida as error:
+                messages.error(request, str(error))
+            else:
+                self._avisar(request, solicitud, transicion, datos.get("marcar_inmueble"))
+            return redirect("seguimiento:detalle", pk=pk)
+        vista = SolicitudDetalleView()
+        vista.setup(request, pk=pk)
+        vista.object = solicitud
+        return vista.render_to_response(vista.get_context_data(form=form), status=200)
+
+    def _avisar(self, request, solicitud, transicion, marcar_inmueble):
+        destino = Etapa(transicion.estado_destino)
+        if services.es_autotransicion(transicion):
+            messages.success(request, f"Seguimiento registrado: sigue en {destino.label}.")
+        else:
+            messages.success(request, f"{solicitud.cliente.nombre}: ahora en {destino.label}.")
+        inmueble = solicitud.inmueble
+        if destino != Etapa.CIERRE or inmueble is None:
+            return
+        nuevo = inmuebles_services.estado_de_cierre(inmueble)
+        if marcar_inmueble:  # RN-05 / RF-43
+            inmuebles_services.cambiar_estado(inmueble, nuevo, request.user)
+            messages.success(request, f"«{inmueble.titulo}» quedó como {nuevo.label}.")
+        else:
+            messages.warning(
+                request,
+                f"Cierre registrado. Recuerde actualizar «{inmueble.titulo}» a {nuevo.label}.",
+            )
