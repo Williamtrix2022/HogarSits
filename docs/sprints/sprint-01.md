@@ -19,10 +19,11 @@
 - 2026-11-03: backlog de Sprints 2-6 creado: 29 issues (#19–#47) en sus milestones y `docs/sprints/BACKLOG.md` (#11).
 - 2026-11-07: ronda 1 de encuestas (n=3) analizada (#50); requerimientos v0.2, backlog ajustado (#52–#55 nuevos), identidad visual documentada en `docs/diseno/IDENTIDAD_VISUAL.md`.
 - 2026-11-17: AWS Budget creado (`hogarsits-cero-gasto`, límite 1,00 US$, estado ACEPTAR) y verificado en la consola (#14). Se desbloquea #27 (fotos en S3) y el Sprint 6. Aviso de AWS: los destinatarios añadidos desde el 30-sep-2026 deben verificar su correo para recibir alertas.
+- 2026-11-23: #55 — preparados el guion de la ronda 2 (E2, E3, E4, E5, E7, pregunta nueva sobre quién hace las visitas, I03; con plantilla de registro y tabla respuesta → decisión) y el documento de supuestos de trabajo, que separa datos reales (n = 3) de hipótesis y propone escenarios de sensibilidad. **No se simularon resultados de entrevistas**: el issue sigue abierto hasta aplicarlas.
 
 ## Estado (8-nov-2026)
 Entregado: requerimientos v0.2, casos de uso y reglas, instrumento de encuesta, backlog de los sprints 2 a 6 y el análisis de la primera ronda (n = 3).
-**Pendiente para cerrar el sprint** (depende de personas): #55 segunda ronda de entrevistas (con I02; completar hasta 8; aclarar I03). El Budget de AWS (#14) se cerró el 17-nov-2026.
+**Pendiente para cerrar el sprint** (depende de personas): #55 segunda ronda de entrevistas (con I02; completar hasta 8; aclarar I03). Preparado el 23-nov-2026: [guion con plantilla de registro](../investigacion/GUION_RONDA_2.md) y [supuestos de trabajo](../investigacion/SUPUESTOS_DE_TRABAJO.md) (hipótesis rotuladas, no resultados). Falta **aplicar las entrevistas**. El Budget de AWS (#14) se cerró el 17-nov-2026.
 
 ## Review / Retro
 _Se completan al cerrar el sprint._
