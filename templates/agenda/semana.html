@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block titulo %}Agenda{% endblock %}
+{% block titulo_pagina %}Agenda de visitas{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'agenda:crear' %}">Agendar visita</a>{% endblock %}
+
+{% block contenido %}
+<form class="filtros" method="get" aria-label="Elegir semana y asesor">
+  <div class="filtros-campos">
+    <div class="campo">
+      <label for="f-asesor">Asesor</label>
+      <select id="f-asesor" name="asesor">
+        <option value="">Todos los asesores</option>
+        {% for a in asesores %}<option value="{{ a.pk }}"{% if asesor_elegido == a.pk|stringformat:"s" %} selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>{% endfor %}
+      </select>
+    </div>
+    <input type="hidden" name="fecha" value="{{ lunes|date:'Y-m-d' }}">
+    <div class="acciones filtros-acciones">
+      <button class="boton" type="submit">Filtrar</button>
+    </div>
+  </div>
+</form>
+
+<nav class="paginacion" aria-label="Semana">
+  <a class="boton secundario" rel="prev" href="?fecha={{ anterior }}{% if asesor_elegido %}&amp;asesor={{ asesor_elegido }}{% endif %}">Semana anterior</a>
+  <p>{{ lunes|date:"j M" }} – {{ domingo|date:"j M Y" }}</p>
+  <a class="boton secundario" rel="next" href="?fecha={{ siguiente }}{% if asesor_elegido %}&amp;asesor={{ asesor_elegido }}{% endif %}">Semana siguiente</a>
+</nav>
+
+<p class="resumen-resultados" role="status">{% if total == 1 %}1 visita{% else %}{{ total }} visitas{% endif %} esta semana.</p>
+
+{% for d in dias %}
+<section class="tarjeta" aria-labelledby="dia-{{ d.fecha|date:'Y-m-d' }}">
+  <h2 id="dia-{{ d.fecha|date:'Y-m-d' }}">{{ d.nombre|capfirst }} {{ d.fecha|date:"j" }}{% if d.es_hoy %} <span class="chip ok">Hoy</span>{% endif %}</h2>
+  {% if d.visitas %}
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <caption class="solo-lectores">Visitas del {{ d.nombre }} {{ d.fecha|date:"j" }}</caption>
+      <thead><tr><th scope="col">Hora</th><th scope="col">Inmueble</th><th scope="col">Cliente</th><th scope="col">Asesor</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
+      <tbody>
+      {% for v in d.visitas %}
+        <tr{% if v.estado == 'CANCELADA' %} class="tachada"{% endif %}>
+          <td>{{ v.inicio|time:"H:i" }}–{{ v.fin|time:"H:i" }}</td>
+          <td>{{ v.inmueble.titulo }}</td>
+          <td>{{ v.solicitud.cliente.nombre }}</td>
+          <td>{{ v.asesor.get_full_name|default:v.asesor.username }}</td>
+          <td><span class="chip{% if v.estado == 'REALIZADA' %} ok{% elif v.estado == 'PROGRAMADA' %} reservado{% endif %}">{{ v.get_estado_display }}</span></td>
+          <td>
+            {% if v.estado == 'PROGRAMADA' %}
+            <div class="acciones">
+              <a class="boton secundario" href="{% url 'agenda:reprogramar' v.pk %}">Reprogramar</a>
+              {% if v.inicio <= ahora %}
+              <form method="post" action="{% url 'agenda:realizar' v.pk %}">{% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button class="boton" type="submit">Marcar realizada</button>
+              </form>
+              {% endif %}
+              <form method="post" action="{% url 'agenda:cancelar' v.pk %}">{% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button class="boton peligro" type="submit">Cancelar</button>
+              </form>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>Sin visitas.</p>
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}
