@@ -1,0 +1,13 @@
+from django.urls import path
+
+from . import views
+
+app_name = "seguimiento"
+
+urlpatterns = [
+    path("", views.ColaListView.as_view(), name="cola"),
+    path("nueva/", views.SolicitudCrearView.as_view(), name="crear"),
+    path("<int:pk>/tomar/", views.TomarView.as_view(), name="tomar"),
+    path("<int:pk>/finalizar/", views.FinalizarView.as_view(), name="finalizar"),
+    path("<int:pk>/cancelar/", views.CancelarView.as_view(), name="cancelar"),
+]

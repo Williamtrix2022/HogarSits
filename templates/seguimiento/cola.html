@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block titulo %}Solicitudes{% endblock %}
+{% block titulo_pagina %}Solicitudes de atención{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'seguimiento:crear' %}">Nueva solicitud</a>{% endblock %}
+
+{% block contenido %}
+<form class="filtros" method="get" role="search" aria-label="Filtrar solicitudes">
+  <div class="filtros-campos">
+    <div class="filtro-buscar">{% include "componentes/campo.html" with campo=filtro.q sin_opcional=True %}</div>
+    {% include "componentes/campo.html" with campo=filtro.estado sin_opcional=True %}
+    <div class="acciones filtros-acciones">
+      <button class="boton" type="submit">Filtrar</button>
+      {% if hay_filtros %}<a class="boton secundario" href="{% url 'seguimiento:cola' %}">Limpiar filtros</a>{% endif %}
+    </div>
+  </div>
+</form>
+
+<p class="resumen-resultados" role="status">
+  {% with total=paginator.count %}{% if total == 1 %}1 solicitud{% else %}{{ total }} solicitudes{% endif %}{% if hay_filtros %} con estos filtros{% endif %}.{% endwith %}
+</p>
+
+{% if solicitudes %}
+<div class="tabla-contenedor">
+  <table class="tabla">
+    <caption class="solo-lectores">Cola de solicitudes de atención, por orden de llegada</caption>
+    <thead>
+      <tr>
+        <th scope="col">Cliente</th><th scope="col">Llegó</th><th scope="col">Estado</th>
+        <th scope="col" class="num">Espera</th><th scope="col" class="num">Servicio</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for s in solicitudes %}
+      <tr>
+        <td>
+          <a class="enlace-fila" href="{% url 'clientes:editar' s.cliente_id %}">{{ s.cliente.nombre }}</a>
+          <span class="sub">{{ s.get_tipo_interes_display }}{% if s.inmueble %} · {{ s.inmueble.titulo }}{% endif %}{% if s.presupuesto %} · hasta {{ s.presupuesto|pesos }}{% endif %}</span>
+        </td>
+        <td>{{ s.timestamp_llegada|date:"d/m/Y H:i" }}</td>
+        <td>
+          <span class="chip{% if s.estado == 'EN_ATENCION' %} ok{% elif s.estado == 'EN_ESPERA' %} reservado{% endif %}">{{ s.get_estado_display }}</span>
+          {% if s.asesor %}<span class="sub">{{ s.asesor.get_full_name|default:s.asesor.username }}</span>{% endif %}
+        </td>
+        <td class="num">{{ s.espera|duracion }}</td>
+        <td class="num">{{ s.servicio|duracion }}</td>
+        <td>
+          <div class="acciones">
+            {% if s.estado == 'EN_ESPERA' %}
+            <form method="post" action="{% url 'seguimiento:tomar' s.pk %}">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="boton" type="submit">Atender</button>
+            </form>
+            <form method="post" action="{% url 'seguimiento:cancelar' s.pk %}">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="boton peligro" type="submit">Cancelar</button>
+            </form>
+            {% elif s.estado == 'EN_ATENCION' %}
+            <form method="post" action="{% url 'seguimiento:finalizar' s.pk %}">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="boton" type="submit">Finalizar</button>
+            </form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "componentes/paginacion.html" %}
+{% elif hay_filtros %}
+{% url 'seguimiento:cola' as url_cola %}
+{% include "componentes/vacio.html" with icono="solicitudes" titulo="No hay solicitudes con esos filtros" texto="Pruebe con otro estado o busque con menos letras." accion_url=url_cola accion_texto="Limpiar filtros" %}
+{% else %}
+{% url 'seguimiento:crear' as url_nueva %}
+{% include "componentes/vacio.html" with icono="solicitudes" titulo="No hay solicitudes abiertas" texto="Cuando llegue un cliente, regístrelo para empezar a medir su tiempo de espera." accion_url=url_nueva accion_texto="Nueva solicitud" %}
+{% endif %}
+{% endblock %}
