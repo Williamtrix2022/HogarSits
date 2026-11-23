@@ -37,7 +37,7 @@ python manage.py seed_datos_simulados --limpiar               # solo borra lo si
 1. **Llegadas:** Poisson **no homogéneo**: por cada hora, `Poisson(clientes_por_dia × peso_hora)`, con hora de llegada uniforme dentro de la hora.
 2. **Atención:** cola con c asesores; cada cliente va con el asesor que pueda empezar antes; tiempo de servicio exponencial. Hay espera cuando todos están ocupados.
 3. **Visitas:** al pasar de Consulta a Visita se agenda una visita (30–120 min) en el primer hueco de 30 min **libre para ese asesor y para ese inmueble**, dentro del horario. La visita **ocupa al asesor**, así que reduce los asesores disponibles para atender (el hallazgo de la ronda 1).
-4. **Etapas:** cadena de Markov con la matriz dada, con tiempos exponenciales entre etapas ajustados a horario laboral. Los pasos sin avance (Consulta→Consulta) se guardan como transición con origen = destino y nota «sin avance» (**provisional hasta ADR-002**).
+4. **Etapas:** cadena de Markov con la matriz dada, con tiempos exponenciales entre etapas ajustados a horario laboral. Los pasos sin avance (Consulta→Consulta) se guardan como transición con origen = destino y nota «sin avance» (confirmado por ADR-002).
 5. **Censura:** las trayectorias se cortan al terminar el periodo (quedan «en curso»), como en datos reales.
 
 ## 4. Qué se verifica (tests)

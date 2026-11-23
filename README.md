@@ -103,7 +103,7 @@ $$\mathbf{P} = \begin{pmatrix}
 |---|---|---|
 | 0 Fundaciones | — | ✅ Cerrado (7/7) |
 | 1 Requerimientos | F1 | 🚧 6/7. Falta la segunda ronda de entrevistas (#55); el Budget de AWS (#14) ya está creado |
-| 2 Diseño | F2 | 🚧 4/5. Falta el ADR de Markov (#20), que espera la segunda ronda |
+| 2 Diseño | F2 | ✅ 5/5. ADR-002 de Markov aceptado (revisable con la segunda ronda) |
 | 3 Gestión, entrega 1 | F3 | 🚧 7/8. Falta solo las fotos en S3 (#27) |
 | 4 | F3 | 🚧 2/7. Hechas la agenda sin cruces (#30) y el bloqueo de inmuebles cerrados (#31) |
 | 5 y 6 | F4 a F6 | ⏳ Analítica (Poisson, M/M/c, Markov), pruebas y despliegue en AWS |
