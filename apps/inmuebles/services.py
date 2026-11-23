@@ -4,6 +4,27 @@ from django.db import transaction
 
 from .models import HistorialEstadoInmueble, Inmueble
 
+# RN-03: un inmueble cerrado ya no se ofrece en solicitudes ni visitas.
+ESTADOS_CERRADOS = (Inmueble.Estado.VENDIDO, Inmueble.Estado.ARRENDADO)
+
+MENSAJE_NO_OFRECIBLE = (
+    "Ese inmueble no se puede ofrecer: está vendido, arrendado o inactivo. Elija otro."
+)
+
+
+def inmuebles_ofrecibles():
+    """Inmuebles que pueden usarse en una solicitud o visita (activos y no cerrados)."""
+    return Inmueble.objects.filter(activo=True).exclude(estado__in=ESTADOS_CERRADOS)
+
+
+def se_puede_ofrecer(inmueble: Inmueble) -> bool:
+    return inmueble.activo and inmueble.estado not in ESTADOS_CERRADOS
+
+
+def solicitudes_abiertas(inmueble: Inmueble) -> int:
+    """Solicitudes En espera o En atención que apuntan a este inmueble."""
+    return inmueble.solicitudes.filter(estado__in=["EN_ESPERA", "EN_ATENCION"]).count()
+
 
 @transaction.atomic
 def guardar_inmueble(form, usuario) -> Inmueble:

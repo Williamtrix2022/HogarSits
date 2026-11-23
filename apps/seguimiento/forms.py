@@ -3,7 +3,7 @@ from django import forms
 from apps.clientes.models import Cliente
 from apps.comun.campos import PesosField
 from apps.comun.formularios import AccesibleFormMixin
-from apps.inmuebles.models import Inmueble
+from apps.inmuebles.services import MENSAJE_NO_OFRECIBLE, inmuebles_ofrecibles
 
 from .models import SolicitudAtencion
 
@@ -18,10 +18,11 @@ class SolicitudForm(AccesibleFormMixin, forms.ModelForm):
         error_messages={"required": "Elija el cliente que llegó."},
     )
     inmueble = forms.ModelChoiceField(
-        queryset=Inmueble.objects.none(),
+        queryset=inmuebles_ofrecibles().none(),
         label="Inmueble de interés",
         required=False,
         empty_label="Sin inmueble definido",
+        error_messages={"invalid_choice": MENSAJE_NO_OFRECIBLE},  # RN-03
     )
     presupuesto = PesosField(
         label="Presupuesto (COP)", required=False, min_value=1, decimal_places=0,
@@ -36,7 +37,7 @@ class SolicitudForm(AccesibleFormMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["inmueble"].queryset = Inmueble.objects.filter(activo=True).order_by("titulo")
+        self.fields["inmueble"].queryset = inmuebles_ofrecibles().order_by("titulo")
         self.fields["presupuesto"].widget.attrs.update({"placeholder": "Ej. 240.000.000"})
 
 
