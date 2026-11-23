@@ -22,5 +22,6 @@ urlpatterns = [
     path('inmuebles/', include('apps.inmuebles.urls')),
     path('clientes/', include('apps.clientes.urls')),
     path('solicitudes/', include('apps.seguimiento.urls')),
+    path('agenda/', include('apps.agenda.urls')),
     path('', include('apps.cuentas.urls')),
 ]
