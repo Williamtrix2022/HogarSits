@@ -7,7 +7,7 @@ from django.views.generic import CreateView, ListView, UpdateView
 
 from .forms import FiltroInmuebleForm, InmuebleForm
 from .models import Inmueble
-from .services import cambiar_activo, guardar_inmueble
+from .services import ESTADOS_CERRADOS, cambiar_activo, guardar_inmueble, solicitudes_abiertas
 
 
 class InmuebleListView(ListView):
@@ -61,6 +61,13 @@ class InmuebleEditarView(UpdateView):
     def form_valid(self, form):
         self.object = guardar_inmueble(form, self.request.user)
         messages.success(self.request, f"Inmueble «{self.object.titulo}» actualizado.")
+        abiertas = solicitudes_abiertas(self.object)
+        if self.object.estado in ESTADOS_CERRADOS and abiertas:  # RF-15
+            messages.warning(
+                self.request,
+                f"Este inmueble ya está {self.object.get_estado_display().lower()} y tiene "
+                f"{abiertas} solicitud(es) abierta(s). Conviene avisar a esos clientes.",
+            )
         return redirect(self.get_success_url())
 
 
