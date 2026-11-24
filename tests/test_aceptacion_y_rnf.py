@@ -77,6 +77,7 @@ def test_el_acceso_exige_sesion_por_defecto_con_el_middleware():
 
 def test_la_produccion_exige_https_y_cookies_seguras(monkeypatch):
     monkeypatch.delenv("SECURE_SSL_REDIRECT", raising=False)
+    monkeypatch.setenv("ALLOWED_HOSTS", "hogarsits.example.com")  # obligatoria en producción
     import importlib
 
     from config.settings import prod

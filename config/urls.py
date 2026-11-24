@@ -27,6 +27,7 @@ urlpatterns = [
     path('agenda/', include('apps.agenda.urls')),
     path('administracion/horarios/', include('apps.agenda.urls_horario')),
     path('analisis/', include('apps.analitica.urls')),
+    path('salud/', include('apps.comun.urls')),
     path('', include('apps.cuentas.urls')),
 ]
 
