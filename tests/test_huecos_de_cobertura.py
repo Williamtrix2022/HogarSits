@@ -113,3 +113,17 @@ def test_el_administrador_ve_la_pantalla_de_restablecer_clave(client, asesor):
     client.force_login(jefe)
     r = client.get(reverse("cuentas:usuario_clave", args=[asesor.pk]))
     assert r.status_code == 200 and f"Restablecer contraseña: {asesor.username}" in r.content.decode()
+
+
+# --- #43: ninguna pantalla debe mostrar la opcion vacia en ingles ---------------------------------
+@pytest.mark.parametrize("nombre_url", ["seguimiento:crear", "inmuebles:crear", "cuentas:usuario_nuevo"])
+def test_los_formularios_no_muestran_texto_en_ingles(client, django_user_model, nombre_url):
+    from django.urls import reverse
+
+    from apps.cuentas.roles import ROL_ADMIN, asignar_rol
+
+    jefe = django_user_model.objects.create_user("jefe_i18n", password="Clave-Larga-2026")
+    asignar_rol(jefe, ROL_ADMIN)
+    client.force_login(jefe)
+    html = client.get(reverse(nombre_url)).content.decode()
+    assert "Select an option" not in html
