@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block titulo %}Indicadores por asesor{% endblock %}
+{% block titulo_pagina %}{% if solo_propios %}Mis indicadores{% else %}Indicadores por asesor{% endif %}{% endblock %}
+{% block acciones %}
+{% if es_admin %}
+<a class="boton secundario" href="{% url 'analitica:inicio' %}">Análisis</a>
+<a class="boton" href="{% url 'analitica:exportar' %}?tabla=asesores&amp;{{ qs_exportar }}">Exportar CSV</a>
+{% endif %}
+{% endblock %}
+
+{% block contenido %}
+<form class="filtros" method="get" aria-label="Periodo">
+  <div class="filtros-campos">
+    {% include "componentes/campo.html" with campo=form.desde sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=form.hasta sin_opcional=True %}
+    <div class="acciones filtros-acciones"><button class="boton" type="submit">Actualizar</button></div>
+  </div>
+</form>
+{% include "componentes/resumen_errores.html" with form=form %}
+
+<p class="resumen-resultados" role="status">
+  Del {{ desde|date:"j \d\e F" }} al {{ hasta|date:"j \d\e F \d\e Y" }}.
+  {% if solo_propios %}Solo usted ve estas cifras: son las suyas.{% endif %}
+</p>
+
+{% if hay_simulados %}
+<ul class="avisos" aria-label="Advertencias">
+  {% include "componentes/aviso.html" with tipo="aviso" texto="Este periodo incluye datos simulados (asesores sim_asesorN). Las cifras no describen a ninguna persona real." %}
+</ul>
+{% endif %}
+
+{% if filas %}
+<div class="tabla-contenedor">
+  <table class="tabla">
+    <caption class="solo-lectores">Indicadores por asesor en el periodo</caption>
+    <thead>
+      <tr>
+        <th scope="col">Asesor</th>
+        <th scope="col" class="num">Solicitudes atendidas</th>
+        <th scope="col" class="num">Visitas realizadas</th>
+        <th scope="col" class="num">Cierres</th>
+        <th scope="col" class="num">Atención media</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in filas %}
+      <tr>
+        <th scope="row">{{ i.nombre }}</th>
+        <td class="num">{{ i.atendidas }}</td>
+        <td class="num">{{ i.visitas_realizadas }}</td>
+        <td class="num">{{ i.cierres }}</td>
+        <td class="num">{% if i.atencion_media_min is None %}—{% else %}{{ i.atencion_media_min|floatformat:0 }} min{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    {% if total %}
+    <tfoot>
+      <tr>
+        <th scope="row">Equipo</th>
+        <td class="num">{{ total.atendidas }}</td>
+        <td class="num">{{ total.visitas_realizadas }}</td>
+        <td class="num">{{ total.cierres }}</td>
+        <td class="num">{% if total.atencion_media_min is None %}—{% else %}{{ total.atencion_media_min|floatformat:0 }} min{% endif %}</td>
+      </tr>
+    </tfoot>
+    {% endif %}
+  </table>
+</div>
+<details class="detalle-tecnico">
+  <summary>¿Cómo se cuenta cada cifra?</summary>
+  <ul>
+    <li><strong>Solicitudes atendidas:</strong> las que el asesor empezó a atender dentro del periodo.</li>
+    <li><strong>Visitas realizadas:</strong> visitas marcadas como realizadas cuyo inicio cae en el periodo.</li>
+    <li><strong>Cierres:</strong> solicitudes del asesor que pasaron a la etapa Cierre en el periodo.</li>
+    <li><strong>Atención media:</strong> promedio de lo que duraron sus atenciones terminadas. Con pocas atenciones el promedio no es firme; «—» significa que no hubo ninguna terminada.</li>
+  </ul>
+</details>
+{% else %}
+{% include "componentes/vacio.html" with icono="analisis" titulo="No hay asesores con actividad" texto="Pruebe con otro rango de fechas." %}
+{% endif %}
+{% endblock %}

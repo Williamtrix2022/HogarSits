@@ -35,6 +35,8 @@
   {% endif %}
 </section>
 
+<p class="exportar"><a href="{% url 'analitica:asesores' %}">{% if es_admin %}Indicadores por asesor{% else %}Mis indicadores{% endif %}</a></p>
+
 <section class="tarjeta" aria-labelledby="t-visitas">
   <h2 id="t-visitas">Mis visitas</h2>
   {% if visitas %}

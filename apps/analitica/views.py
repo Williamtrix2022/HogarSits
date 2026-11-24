@@ -5,11 +5,12 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from apps.analitica.services.markov import NOMBRES
+from apps.cuentas.roles import es_admin
 from apps.cuentas.views import AdminRequeridoMixin
 
-from . import analisis, exportar, graficas, textos
+from . import analisis, datos, exportar, graficas, indicadores, textos
 from .analisis import UMBRAL_ESPERA_MIN
-from .forms import FiltroAnalisisForm
+from .forms import FiltroAnalisisForm, FiltroPeriodoForm
 
 
 def parametros_del_filtro(request):
@@ -109,18 +110,66 @@ class ExportarView(AdminRequeridoMixin, View):
 
     def get(self, request):
         nombre = request.GET.get("tabla", "")
-        if nombre not in exportar.TABLAS:
+        if nombre not in exportar.TABLAS and nombre != "asesores":
             raise Http404("Tabla desconocida.")
-        form, desde, hasta, umbral = parametros_del_filtro(request)
+        if nombre == "asesores":  # solo necesita el periodo, no el umbral de espera
+            form, desde, hasta = _periodo_del_filtro(request)
+            umbral = UMBRAL_ESPERA_MIN
+        else:
+            form, desde, hasta, umbral = parametros_del_filtro(request)
         if request.GET.get("desde") or request.GET.get("hasta") or request.GET.get("espera_max"):
             if not form.is_valid():  # un filtro inválido no debe exportar datos de otro periodo
                 errores = "; ".join(e for lista in form.errors.values() for e in lista)
                 return HttpResponseBadRequest(f"Filtro no válido: {errores}")
-        resumen = analisis.analizar_periodo(desde, hasta, umbral)
-        encabezados, filas = exportar.tabla(resumen, nombre)
+        if nombre == "asesores":
+            encabezados, filas = exportar.tabla_asesores(
+                indicadores.indicadores_por_asesor(desde, hasta), datos.hay_simulados(desde, hasta)
+            )
+        else:
+            resumen = analisis.analizar_periodo(desde, hasta, umbral)
+            encabezados, filas = exportar.tabla(resumen, nombre)
         respuesta = HttpResponse(content_type="text/csv; charset=utf-8")
         respuesta["Content-Disposition"] = (
             f'attachment; filename="{exportar.nombre_de_archivo(nombre, desde, hasta)}"'
         )
         exportar.escribir(respuesta, encabezados, filas)
         return respuesta
+
+
+def _periodo_del_filtro(request):
+    """El filtro de fechas de la URL, o el rango por defecto. Devuelve (form, desde, hasta)."""
+    desde, hasta = analisis.rango_por_defecto()
+    if request.GET:
+        form = FiltroPeriodoForm(request.GET)
+        if form.is_valid():
+            return form, form.cleaned_data["desde"], form.cleaned_data["hasta"]
+        return form, desde, hasta
+    return FiltroPeriodoForm(initial={"desde": desde, "hasta": hasta}), desde, hasta
+
+
+class AsesoresView(TemplateView):
+    """Indicadores por asesor (HU-13, W13).
+
+    El administrador ve a todo el equipo. Un asesor **solo ve su propia fila** (CA2): no hay
+    parámetro de la URL que le permita ver la de otro.
+    """
+
+    template_name = "analitica/asesores.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        usuario = self.request.user
+        admin = es_admin(usuario)
+        form, desde, hasta = _periodo_del_filtro(self.request)
+        lista = indicadores.indicadores_por_asesor(desde, hasta, asesor=None if admin else usuario)
+        ctx.update(
+            form=form,
+            desde=desde,
+            hasta=hasta,
+            filas=lista,
+            total=indicadores.totales(lista) if admin else None,
+            solo_propios=not admin,
+            hay_simulados=datos.hay_simulados(desde, hasta),
+            qs_exportar=urlencode({"desde": desde.isoformat(), "hasta": hasta.isoformat()}),
+        )
+        return ctx
