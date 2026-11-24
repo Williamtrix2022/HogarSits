@@ -67,7 +67,7 @@ def test_numeros_con_coma_decimal(valor, dec, esperado):
 
 @pytest.mark.parametrize(
     ("horas", "esperado"),
-    [(0.001, "menos de 1 minuto"), (1 / 60, "unos 1 minuto"), (29 / 60, "unos 29 minutos"),
+    [(0.001, "menos de 1 minuto"), (1 / 60, "alrededor de 1 minuto"), (29 / 60, "unos 29 minutos"),
      (1.0, "1 h"), (1.5, "1 h 30 min")],
 )
 def test_duraciones_dichas_como_una_persona(horas, esperado):
@@ -95,8 +95,9 @@ def test_frase_de_esperas_como_en_el_wireframe_w11():
     assert "alrededor de 5 de cada 10 clientes" in dos
     assert "unos 4 minutos" in tres
     rec = textos.frase_recomendacion(3, 20, 2)
-    assert "al menos 3 asesores" in rec and "Hoy hay 2 asesores." in rec
-    assert "Hoy hay 1 asesor." in textos.frase_recomendacion(3, 20, 1)
+    assert "al menos 3 asesores" in rec and "En la hora pico suele haber 2 asesores libres." in rec
+    assert "suele haber 1 asesor libre." in textos.frase_recomendacion(3, 20, 1)
+    assert "Hoy hay" not in rec  # es un promedio histórico, no lo de hoy
 
 
 def test_frase_de_inestabilidad_no_da_cifras():

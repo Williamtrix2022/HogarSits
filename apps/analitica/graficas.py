@@ -23,6 +23,7 @@ def construir(r: Resumen) -> dict:
         ajuste = {
             "hora": f"{r.franja_pico.hora:02d}:00",
             "ks": list(a.ks),
+            "etiquetas": list(a.etiquetas),
             "observada": [_pct(x) for x in a.observada],
             "esperada": [_pct(x) for x in a.esperada],
         }

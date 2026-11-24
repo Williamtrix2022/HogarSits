@@ -74,7 +74,10 @@ def _filas_ajuste(r):
     a = r.ajuste_pico
     if a is None:
         return []
-    return [(k, o * 100, e * 100) for k, o, e in zip(a.ks, a.observada, a.esperada, strict=True)]
+    return [
+        (etiqueta, o * 100, e * 100)
+        for etiqueta, o, e in zip(a.etiquetas, a.observada, a.esperada, strict=True)
+    ]
 
 
 def _filas_absorcion(r):

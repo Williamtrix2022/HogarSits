@@ -64,18 +64,21 @@ def tabla(r: Resumen, nombre: str) -> tuple[list[str], list[list]]:
                "poisson_pct", "datos_simulados"]
         a, pico = r.ajuste_pico, r.franja_pico
         filas = [] if a is None else [
-            [f"{pico.hora:02d}:00", k, o * 100, e * 100, sim]
-            for k, o, e in zip(a.ks, a.observada, a.esperada, strict=True)
+            [f"{pico.hora:02d}:00", etiqueta, o * 100, e * 100, sim]
+            for etiqueta, o, e in zip(a.etiquetas, a.observada, a.esperada, strict=True)
         ]
 
     elif nombre == "colas":
-        enc = ["asesores", "rho", "estable", "prob_esperar", "Lq_clientes",
-               "Wq_min", "W_min", "datos_simulados"]
+        enc = ["asesores", "rho", "estable", "prob_esperar", "Lq_clientes", "Wq_min", "W_min",
+               "lambda_pico_clientes_hora", "mu_clientes_hora_por_asesor", "hora_pico",
+               "umbral_espera_min", "datos_simulados"]
+        hora_pico = f"{r.franja_pico.hora:02d}:00" if r.franja_pico else None
         filas = [
             [q.c, q.rho, q.estable, q.p_espera,
              q.Lq if q.estable else None,
              q.Wq * 60 if q.estable else None,
-             q.W * 60 if q.estable else None, sim]
+             q.W * 60 if q.estable else None,
+             r.lam_pico, r.mu_hora, hora_pico, r.umbral_min, sim]
             for q in r.tabla_c
         ]
 
