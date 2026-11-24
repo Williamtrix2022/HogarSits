@@ -1,0 +1,42 @@
+# Despliegue de demostración en Render (https://render.com): la app y su base PostgreSQL.
+# Usa la imagen de producción (Dockerfile.prod). Capa gratuita: el servicio se "duerme" tras un
+# rato sin visitas (la primera petición tarda ~1 min en despertarlo) y la base gratuita caduca a
+# los 30 días. Guía: docs/aws/DESPLIEGUE_RENDER.md
+databases:
+  - name: hogarsits-db
+    plan: free
+    region: ohio
+    postgresMajorVersion: "17"
+    databaseName: hogarsits_db
+    user: hogarsits_db_user
+
+services:
+  - type: web
+    name: hogarsits
+    runtime: docker
+    dockerfilePath: ./Dockerfile.prod
+    plan: free
+    region: ohio
+    healthCheckPath: /salud/
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hogarsits-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: RUN_MIGRATIONS
+        value: "1"
+      - key: PREPARAR_DEMO
+        value: "1"
+      - key: WEB_CONCURRENCY
+        value: "1"
+      # Contraseñas de la demostración: se escriben en el panel de Render, nunca en el repositorio.
+      - key: DEMO_ADMIN_PASSWORD
+        sync: false
+      - key: DEMO_ASESOR_PASSWORD
+        sync: false
