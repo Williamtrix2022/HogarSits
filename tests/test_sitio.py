@@ -154,3 +154,9 @@ def test_la_calculadora_reproduce_el_ejemplo_de_la_propuesta():
 
 def test_la_calculadora_dice_que_no_es_un_pronostico():
     assert "comparar escenarios" in HTML and "no para prometer minutos" in HTML
+
+
+def test_el_workflow_de_pages_construye_y_despliega_en_jobs_separados():
+    flujo = (RAIZ / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+    assert "construir:" in flujo and "desplegar:" in flujo and "needs: construir" in flujo
+    assert flujo.index("upload-pages-artifact") < flujo.index("deploy-pages")

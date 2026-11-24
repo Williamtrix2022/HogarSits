@@ -1,7 +1,8 @@
 name: Sitio de la presentacion
 
-# Publica site/ en GitHub Pages. Requiere activar en el repositorio:
-# Settings > Pages > Source: "GitHub Actions". Sin eso, este despliegue falla sin afectar a main.
+# Publica site/ en GitHub Pages. Requiere Settings > Pages > Source: "GitHub Actions".
+# Se construye y se despliega en dos jobs (como en la plantilla oficial): en un solo job, GitHub
+# a veces aun no ve el artefacto cuando el despliegue lo pide y falla con "Found 0 artifact(s)".
 on:
   push:
     branches: [main]
@@ -18,16 +19,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  desplegar:
+  construir:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.despliegue.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+
+  desplegar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
       - id: despliegue
         uses: actions/deploy-pages@v4
