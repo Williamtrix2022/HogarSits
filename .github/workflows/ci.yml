@@ -33,3 +33,40 @@ jobs:
       - run: ruff check .
       - run: python manage.py makemigrations --check --dry-run
       - run: pytest
+
+  imagen:
+    # Construye la imagen de producción y comprueba que arranca y responde (#45).
+    # No usa la base de datos: la salud simple y los estáticos no la tocan.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir la imagen de producción
+        run: docker build -f Dockerfile.prod -t hogarsits:ci .
+      - name: Arrancar el contenedor
+        run: |
+          docker run -d --name web -p 8000:8000 \
+            -e SECRET_KEY=solo-para-ci -e DATABASE_URL=sqlite:////tmp/ci.sqlite3 \
+            -e ALLOWED_HOSTS=localhost hogarsits:ci
+          for i in $(seq 1 30); do
+            curl -fs -H "X-Forwarded-Proto: https" http://localhost:8000/salud/ > /dev/null && exit 0
+            sleep 2
+          done
+          docker logs web
+          exit 1
+      - name: Salud, estáticos públicos y acceso protegido
+        run: |
+          H='X-Forwarded-Proto: https'
+          test "$(curl -s -H "$H" http://localhost:8000/salud/)" = '{"estado": "ok"}'
+          # el balanceador consulta por HTTP: la salud no debe redirigir a HTTPS
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/salud/)" = 200
+          # lo demás sí redirige a HTTPS
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/ingresar/)" = 301
+          # los estáticos se sirven sin sesión (el CSS del login) y el login los enlaza con hash
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$H" http://localhost:8000/static/css/tokens.css)" = 200
+          curl -s -H "$H" http://localhost:8000/ingresar/ | grep -Eq 'css/tokens\.[0-9a-f]+\.css'
+          # una pantalla de gestión sin sesión manda al login
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$H" http://localhost:8000/)" = 302
+      - name: La imagen no corre como root
+        run: test "$(docker exec web id -u)" != 0
+      - if: always()
+        run: docker logs web

@@ -27,6 +27,12 @@
 
 > Los datos crudos de las encuestas (`docs/*.csv`) **no se versionan**: el repositorio es público.
 
+## Despliegue en AWS (Sprint 6)
+| Documento | Contenido |
+|---|---|
+| [`aws/FOTOS_S3.md`](aws/FOTOS_S3.md) | Bucket privado, usuario IAM de mínimo privilegio y verificación de las fotos |
+| [`aws/IMAGEN_DOCKER.md`](aws/IMAGEN_DOCKER.md) | Imagen de producción: qué hace, cómo probarla, qué se verificó y cómo subirla a ECR |
+
 ## Pruebas (Sprint 6)
 | Documento | Contenido |
 |---|---|

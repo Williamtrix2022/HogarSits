@@ -1,0 +1,4 @@
+*.sh text eol=lf
+Dockerfile* text eol=lf
+# Bibliotecas de terceros copiadas tal cual: Git no debe convertir sus saltos de linea (invalidaria la huella SHA-256)
+static/js/vendor/** -text
