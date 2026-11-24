@@ -78,7 +78,8 @@ def indicadores_por_asesor(desde: date, hasta: date, asesor=None) -> list[Indica
     finalizadas = {
         f["asesor"]: f
         for f in atendidas_qs.filter(
-            estado=SolicitudAtencion.Estado.FINALIZADO, timestamp_fin_atencion__isnull=False
+            estado=SolicitudAtencion.Estado.FINALIZADO,
+            timestamp_fin_atencion__gt=F("timestamp_inicio_atencion"),  # igual que la de μ
         )
         .values("asesor")
         .annotate(media=Avg(duracion), n=Count("pk"))

@@ -102,7 +102,7 @@ Prioridad con MoSCoW: **M** (debe), **S** (debería), **C** (podría). Sprint = 
 
 | ID | Categoría | Requerimiento |
 |---|---|---|
-| RNF-01 | Corrección matemática | Los cálculos reproducen los ejemplos de la Propuesta: M/M/1 con λ=2, μ=3 → ρ≈0,67, L=2, W=1 h, Lq≈1,33, Wq≈0,67 h; matriz P del README → P(cierre desde Consulta)≈22,8 %, pasos esperados≈2,4. |
+| RNF-01 | Corrección matemática | Los cálculos reproducen los ejemplos de la Propuesta: M/M/1 con λ=2, μ=3 → ρ≈0,67, L=2, W=1 h, Lq≈1,33, Wq≈0,67 h; matriz P del README → P(cierre desde Consulta)≈22,75 % (exacto: 22,748 %; el «22,8 %» es un doble redondeo), pasos esperados≈2,4 (exacto: 2,3989). |
 | RNF-02 | Calidad | Lógica estocástica en funciones puras con tests automáticos; CI verde antes de integrar a `main`. |
 | RNF-03 | Integridad de datos | La BD impide por restricción (no solo por la interfaz) los cruces de agenda y los correos duplicados. |
 | RNF-04 | Seguridad | Autenticación obligatoria; contraseñas con hash de Django; secretos fuera del repositorio; HTTPS en producción. |
@@ -231,25 +231,31 @@ Formato: *Como … quiero … para …* con criterios de aceptación (CA). Estas
 | Requerimiento | Estado | Dónde / nota |
 |---|---|---|
 | RF-01 inicio y cierre de sesión | ✅ | #24; toda vista exige sesión por defecto |
-| RF-02 administrar usuarios | ✅ | #24; crear, editar, activar y desactivar |
-| RF-03 permisos por rol | ✅ | #24; la analítica por rol llega en el Sprint 5 |
+| RF-02 administrar usuarios | ✅ | #24; crear, editar, activar y desactivar; #61 cambio y restablecimiento de contraseña |
+| RF-03 permisos por rol | ✅ | #24; análisis solo para el administrador (#38); un asesor solo ve sus indicadores (#54) |
 | RF-10 CRUD de inmuebles | ✅ | #26; desactivar en lugar de borrar |
-| RF-11 estados del inmueble | ✅ | #26; coherentes con la operación |
+| RF-11 estados del inmueble | ✅ | #26; coherentes con la operación. Solo el formulario valida los valores: la BD no tiene un `CHECK` (hallazgo abierto, ver el informe de pruebas) |
 | RF-12 historial de estado | ✅ | #26 (adelantado del Sprint 4) |
-| RF-13 fotos | ◐ | modelo `FotoInmueble`; subida y S3 en #27 |
+| RF-13 fotos | ◐ | #27: subida, galería y borrado listos y probados con almacenamiento local y en memoria; **falta verificarlo contra un bucket real de S3** |
 | RF-14 búsqueda y filtros | ✅ | #26; título, dirección, barrio, estado, operación, tipo y precio |
-| RF-15 inmuebles cerrados | ⏳ | #31 |
-| RF-20 a RF-25 clientes y solicitudes | ◐ | modelos y restricciones listos; pantallas en #28, #29, #33 |
-| RF-26, RF-35 recordatorios | ⏳ | #33, #52 |
-| RF-30 a RF-34 agenda | ◐ | modelo `Visita` con restricciones de cruce; pantallas en el Sprint 4 (#30) |
-| RF-36 horario del asesor | ◐ | modelo `HorarioAsesor`; pantalla en #53 |
-| RF-40 a RF-43 etapas | ◐ | modelo `SeguimientoEtapa`; servicio en #32 (depende del ADR-002) |
-| RF-50 a RF-59, RF-62 analítica | ⏳ | Sprint 5 |
+| RF-15 inmuebles cerrados | ✅ | #31; no se ofrecen en solicitudes ni visitas, y se avisa al cerrar uno con solicitudes abiertas |
+| RF-20, RF-21 clientes sin duplicados | ✅ | #28; el teléfono repetido solo avisa (RN-10 lo deja a revisión) |
+| RF-22 a RF-24 solicitudes y atención | ✅ | #29; llegada automática, tomar, finalizar y cancelar, con tiempos de espera y servicio |
+| RF-25, RF-26, RF-35 seguimiento y recordatorios | ✅ | #33, #52; N = 3 días es provisional hasta E7 |
+| RF-30 a RF-34 agenda | ✅ | #30; sin cruces, reprogramar y cancelar, vista semanal por asesor |
+| RF-36 horario del asesor | ✅ | #53; también calcula el `c` efectivo |
+| RF-40 a RF-43 etapas | ◐ | #32; cada cambio queda con fecha y autor, y al cerrar se ofrece marcar el inmueble. **RN-33 pendiente: el historial aún se puede editar y borrar** (4 pruebas `xfail`) |
+| RF-50 a RF-57 analítica | ✅ | #35 a #38; las esperas M/M/c son de **orden de magnitud**, no un pronóstico (ver la validación) |
+| RF-58 exportar resultados | ✅ | #40, en CSV (el PDF no se hizo; el requisito admitía uno u otro) |
+| RF-59 lenguaje de negocio | ✅ | #38; una frase por cada cifra |
 | RF-60 datos simulados | ✅ | #23 |
-| RF-61 validación de modelos | ⏳ | Sprint 6 |
-| RNF-02 calidad automatizada | ✅ | CI con `ruff`, migraciones y 152 pruebas |
-| RNF-03 integridad en la BD | ✅ | cruces de agenda, tiempos, correo único, estado/operación |
-| RNF-04 seguridad | ◐ | sesión, roles y salvaguardas listos; faltan fuerza bruta (#60) y cambio de contraseña (#61) |
-| RNF-05 español y usabilidad | ✅ | interfaz en es-CO, accesibilidad AA verificada con capturas |
-| RNF-07 zona horaria | ✅ | UTC en BD, America/Bogota en pantalla |
-| RNF-09 portabilidad | ◐ | Docker Compose local; AWS en el Sprint 6 |
+| RF-61 validación de modelos | ✅ | #41; `docs/diseno/VALIDACION_MODELOS.md` |
+| RF-62 indicadores por asesor | ✅ | #54 |
+| RNF-01 corrección matemática | ✅ | los ejemplos de la Propuesta se reproducen (`test_colas`, `test_markov`) y se validan con una simulación (`test_validacion`) |
+| RNF-02 calidad automatizada | ✅ | CI con `ruff`, migraciones y la suite de pruebas; cobertura de código del 98,2 % (ver el informe de pruebas) |
+| RNF-03 integridad en la BD | ◐ | cruces de agenda, tiempos, correo único y estado/operación, probados. **Falta un `CHECK` para los valores del estado** (hallazgo abierto) |
+| RNF-04 seguridad | ◐ | sesión, roles, contraseñas con hash, bloqueo por intentos (#60) y cambio de contraseña (#61) listos; la configuración de producción exige HTTPS, pero **se verifica al desplegar** (#46) |
+| RNF-05 español y usabilidad | ◐ | interfaz en es-CO y accesibilidad AA verificada con capturas; «utilizable sin formación técnica» **requiere probarlo con personas** (piloto) |
+| RNF-06 rendimiento | ✅ | medido con 10 262 solicitudes: la peor pantalla tarda 532 ms (límite 3 s) |
+| RNF-07 zona horaria | ✅ | UTC en BD, America/Bogota en pantalla y en las franjas |
+| RNF-09 portabilidad | ◐ | Docker Compose local; imagen de producción en #45 |

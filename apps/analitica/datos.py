@@ -95,11 +95,19 @@ def horario_de_atencion() -> tuple[int, int, tuple[int, ...]]:
 
 
 def hay_simulados(desde: date, hasta: date) -> bool:
-    """¿Hay clientes simulados con solicitudes en el periodo? Se avisa en pantalla (honestidad)."""
+    """¿Hay clientes simulados con llegadas o transiciones en el periodo? Se avisa en pantalla."""
     inicio, fin = limites(desde, hasta)
-    return Cliente.objects.filter(
+    por_llegada = Cliente.objects.filter(
         correo__endswith=DOMINIO,
         solicitudes__timestamp_llegada__gte=inicio,
         solicitudes__timestamp_llegada__lt=fin,
     ).exists()
+    # Un cliente simulado que llegó antes del periodo pero avanzó de etapa dentro de él también
+    # alimenta la matriz P.
+    por_transicion = SeguimientoEtapa.objects.filter(
+        solicitud__cliente__correo__endswith=DOMINIO,
+        fecha_transicion__gte=inicio,
+        fecha_transicion__lt=fin,
+    ).exists()
+    return por_llegada or por_transicion
 

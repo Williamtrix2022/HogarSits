@@ -27,6 +27,12 @@
 
 > Los datos crudos de las encuestas (`docs/*.csv`) **no se versionan**: el repositorio es público.
 
+## Pruebas (Sprint 6)
+| Documento | Contenido |
+|---|---|
+| [`pruebas/PLAN_DE_PRUEBAS.md`](pruebas/PLAN_DE_PRUEBAS.md) | Estrategia, trazabilidad de los 31 criterios de aceptación y de los RNF a pruebas que existen |
+| [`pruebas/INFORME_DE_PRUEBAS.md`](pruebas/INFORME_DE_PRUEBAS.md) | Resultados medidos: 700 pruebas, cobertura 98,2 %, rendimiento con 10 000 solicitudes, defectos y qué no se probó |
+
 ## Fase 2: diseño
 | Documento | Contenido |
 |---|---|

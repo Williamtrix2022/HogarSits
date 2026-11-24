@@ -134,6 +134,12 @@ class AjustePoisson:
     rechaza: bool | None  # True si p < α (no parece Poisson); None si no hay prueba
 
     @property
+    def etiquetas(self) -> tuple[str, ...]:
+        """Rótulo de cada clase: «0», «1», … y la última «k o más», porque su esperada es la cola
+        P(X ≥ k) (no P(X = k)); la observada de esa clase coincide, pues nadie superó el máximo."""
+        return tuple(str(k) for k in self.ks[:-1]) + (f"{self.ks[-1]} o más",)
+
+    @property
     def probado(self) -> bool:
         """¿Hubo datos suficientes para hacer la prueba χ²? (RN-40: si no, no hay veredicto)."""
         return self.chi2 is not None

@@ -62,7 +62,7 @@
   if (a && c2) {
     new Chart(c2, {
       data: {
-        labels: a.ks.map(String),
+        labels: a.etiquetas,
         datasets: [
           { type: "bar", label: "Observada (%)", data: a.observada, backgroundColor: NAVY },
           { type: "line", label: "Poisson (%)", data: a.esperada, borderColor: COBRE,

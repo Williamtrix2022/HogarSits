@@ -55,7 +55,7 @@
         <thead><tr><th scope="col">Hora</th><th scope="col" class="num">Días observados</th><th scope="col" class="num">Llegadas</th><th scope="col" class="num">λ (clientes/hora)</th><th scope="col">Datos</th></tr></thead>
         <tbody>
         {% for f in r.franjas %}
-          <tr><td>{{ f.hora }}:00</td><td class="num">{{ f.dias_observados }}</td><td class="num">{{ f.llegadas }}</td><td class="num">{{ f.lam|floatformat:2 }}</td><td>{% if f.suficiente %}Suficientes{% else %}<span class="chip peligro">Pocos</span>{% endif %}</td></tr>
+          <tr><td>{{ f.hora|stringformat:"02d" }}:00</td><td class="num">{{ f.dias_observados }}</td><td class="num">{{ f.llegadas }}</td><td class="num">{{ f.lam|floatformat:2 }}</td><td>{% if f.suficiente %}Suficientes{% else %}<span class="chip peligro">Pocos</span>{% endif %}</td></tr>
         {% endfor %}
         </tbody>
       </table>
@@ -77,10 +77,10 @@
     <div class="tabla-contenedor">
       <table class="tabla">
         <caption class="solo-lectores">Frecuencia observada y esperada</caption>
-        <thead><tr><th scope="col" class="num">Llegadas en la hora (k)</th><th scope="col" class="num">Observada</th><th scope="col" class="num">Poisson P(X = k)</th></tr></thead>
+        <thead><tr><th scope="col" class="num">Llegadas en la hora (k)</th><th scope="col" class="num">Observada</th><th scope="col" class="num">Poisson</th></tr></thead>
         <tbody>
-        {% for k, o, e in ajuste_filas %}
-          <tr><td class="num">{{ k }}</td><td class="num">{{ o|floatformat:1 }} %</td><td class="num">{{ e|floatformat:1 }} %</td></tr>
+        {% for etiqueta, o, e in ajuste_filas %}
+          <tr><td class="num">{{ etiqueta }}</td><td class="num">{{ o|floatformat:1 }} %</td><td class="num">{{ e|floatformat:1 }} %</td></tr>
         {% endfor %}
         </tbody>
       </table>
@@ -93,27 +93,30 @@
 <section class="tarjeta" id="esperas" aria-labelledby="t-esperas">
   <h2 id="t-esperas">Asesores y esperas</h2>
   {% if r.cola %}
-  <ul class="indicadores" aria-label="Resumen de esperas">
-    <li><strong>{{ r.c_promedio|floatformat:1 }}</strong> asesores disponibles (promedio)</li>
+  <ul class="indicadores" aria-label="Resumen de esperas del periodo">
+    <li><strong>{{ r.c_promedio|floatformat:1 }}</strong> asesores disponibles (promedio del periodo)</li>
     {% if r.cola.estable %}<li><strong>{{ espera_min|floatformat:0 }}</strong> min de espera media</li>
     <li><strong>{{ r.servicio_medio_min|floatformat:0 }}</strong> min de atención media</li>
     <li><strong>{{ ocupacion|floatformat:0 }}</strong> % de ocupación</li>{% endif %}
   </ul>
+  {% endif %}
   <p class="frase-negocio">{{ frase_colas }}</p>
   {% if r.cola_pico %}<p class="frase-negocio">En la hora pico: {{ frase_colas_pico }}</p>{% endif %}
+  {% if r.tabla_c %}
   <p class="frase-negocio"><strong>{{ frase_recomendacion }}</strong></p>
-  <p class="ayuda">El modelo trabaja con asesores completos, así que el promedio de asesores disponibles se redondea al entero más cercano (1,8 → 2). Por eso la espera de la hora pico puede diferir mucho de la media: con un promedio cercano a la mitad (como 1,5) basta un asesor más o menos para pasar de minutos a horas.</p>
+  <p class="ayuda"><strong>Cómo leer estas esperas.</strong> Son una aproximación de <em>orden de magnitud</em>, no un pronóstico: al validar el modelo con datos simulados, la espera que predice se desvió mucho de la real cuando los asesores salen a visitas (ver <code>docs/diseno/VALIDACION_MODELOS.md</code>). Sirven para comparar «con más asesores, ¿baja la espera?», cuya dirección sí es correcta.</p>
+  <p class="ayuda">El modelo trabaja con asesores completos, así que el promedio de asesores disponibles se redondea al entero más cercano, con las mitades hacia arriba (1,5 → 2): cerca de la mitad, un asesor más o menos cambia la espera de minutos a horas. Además solo cuenta como disponible quien tiene turno durante la hora completa (un turno que empieza a las 8:30 no cuenta de 8:00 a 9:00).</p>
   {% if graficas.colas %}
   <div class="grafica grafica-corta">
     <canvas id="graf-colas" role="img" aria-label="Espera media en minutos según el número de asesores disponibles en la hora pico, con el umbral aceptable"></canvas>
   </div>
   <p class="ayuda">Un triángulo es una espera mayor que el tope del gráfico (el valor exacto está en la tabla del detalle técnico). Un punto que falta significa que con ese número de asesores la carga es inestable: la fila crecería sin límite.</p>
   {% endif %}
-  {% if r.tabla_c %}<p class="exportar">Exportar a CSV: <a href="{% url 'analitica:exportar' %}?tabla=colas&amp;{{ qs_exportar }}">esperas según el número de asesores</a></p>{% endif %}
+  <p class="exportar">Exportar a CSV: <a href="{% url 'analitica:exportar' %}?tabla=colas&amp;{{ qs_exportar }}">esperas según el número de asesores</a></p>
   <details class="detalle-tecnico">
     <summary>Detalle técnico: ρ, L, Lq, W, Wq del modelo M/M/c</summary>
     <ul>
-      <li>λ promedio: {{ r.lam_hora|floatformat:2 }} clientes por hora laboral · μ: {{ r.mu_hora|floatformat:2 }} clientes por hora por asesor ({{ r.n_servicios }} atenciones) · c: {{ r.c_usado }}.</li>
+      <li>λ promedio: {{ r.lam_hora|floatformat:2 }} clientes por hora laboral · μ: {{ r.mu_hora|floatformat:2 }} clientes por hora por asesor ({{ r.n_servicios }} atenciones) · c: {{ r.c_usado|default_if_none:"sin dato" }}.</li>
     </ul>
     <div class="tabla-contenedor">
       <table class="tabla">
@@ -131,8 +134,6 @@
       </table>
     </div>
   </details>
-  {% else %}
-  <p class="frase-negocio">{{ frase_colas }}</p>
   {% endif %}
 </section>
 

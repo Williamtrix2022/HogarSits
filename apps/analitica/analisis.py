@@ -59,7 +59,15 @@ class Resumen:
 
 
 def _redondear_c(promedio: float | None) -> int | None:
-    return None if promedio is None else max(1, round(promedio))
+    """Asesores enteros (el modelo no admite fracciones), con mitades hacia arriba: 1,5 → 2.
+
+    Si el promedio es menor que 0,5 no hay ni un asesor «típicamente» libre: devuelve None y no se
+    calculan esperas, en vez de fingir que hay uno.
+    """
+    if promedio is None:
+        return None
+    n = int(promedio + 0.5)
+    return n if n >= 1 else None
 
 
 def analizar_periodo(desde: date, hasta: date, umbral_min: float = UMBRAL_ESPERA_MIN) -> Resumen:
@@ -122,10 +130,15 @@ def analizar_periodo(desde: date, hasta: date, umbral_min: float = UMBRAL_ESPERA
             "No hay horarios de asesores cargados: no se sabe cuántos asesores hay disponibles "
             "y no se calculan las esperas. Cárguelos en Administración → Horarios."
         )
+    elif c_prom is not None and c_prom < 0.5:
+        advertencias.append(
+            f"En promedio hay menos de medio asesor libre ({num(c_prom, 2)}): casi siempre "
+            "están en visita o fuera de turno. No se calculan las esperas."
+        )
     elif c_prom is not None and c_prom < 1:
         advertencias.append(
-            f"En promedio hay menos de un asesor libre ({num(c_prom, 2)}): casi siempre "
-            "están en visita o fuera de turno."
+            f"En promedio hay menos de un asesor libre ({num(c_prom, 2)}): las esperas se "
+            "calculan como si hubiera uno, así que son optimistas."
         )
     c_usado = _redondear_c(c_prom)
 
