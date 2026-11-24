@@ -20,11 +20,17 @@
 - 2026-11-23: #54 — indicadores por asesor; el asesor ve solo su fila (HU-13 CA2) y el administrador ve al equipo, con exportación.
 
 ## Estado (23-nov-2026)
-**7 de 7 hechos** (584 pruebas, 4 `xfail` a propósito). **Siguiente:** Sprint 6 (pruebas, informe, despliegue en AWS y sustentación). Pendientes que no son de código: #55 (entrevistas) y #27 (bucket de S3). Deuda conocida: **RN-33** (el historial de etapas se puede editar y borrar) afecta la fiabilidad de la matriz P y conviene resolverla antes del piloto.
+**7 de 7 hechos** (584 pruebas, 4 `xfail` a propósito). **Siguiente:** Sprint 6 (pruebas, informe, despliegue en AWS y sustentación). Pendientes que no son de código: #55 (entrevistas) y #27 (bucket de S3). Deuda conocida: las correcciones E1 a E3 de la revisión (arriba) y **RN-33** (el historial de etapas se puede editar y borrar) afecta la fiabilidad de la matriz P y conviene resolverla antes del piloto.
 
 ## Review / Retro
 **Review:** la matemática estocástica está completa, con cuatro tipos de prueba por modelo (ejemplo conocido, comprobación independiente, recuperación de parámetros simulados y bordes) y un panel que traduce cada cifra a lenguaje de negocio.
 **Retro:** *bien:* escribir el ejemplo conocido antes del código y comprobar por un segundo camino; mirar las capturas del panel (destapó textos con «unos 1» y un gráfico aplastado por un valor atípico); el revisor como segundo par de ojos. *Mejorar:* varias de mis expectativas eran erróneas y las corrigió una prueba (ver Aprendizajes), así que conviene calcular el valor a mano **antes** de escribir el `assert`; la suite pasó de 4 a 14 minutos por corrida y conviene investigarlo; y quedó pendiente validar con datos reales (la ronda 2).
+
+**Revisión independiente de la capa del panel** (agente `revisor-estocastico`, 23-nov-2026): ⚠️ *correcto con reservas*. Sin errores de unidades, de RN-22 ni de RN-42, y `c_efectivo_por_hora` coincide con `disponibilidad()` en 78 franjas (0 diferencias). **Hallazgos verificados en el código y pendientes de corrección** (se atienden en el Sprint 6, dentro de #42):
+- **E1:** la última fila del ajuste de Poisson se rotula «P(X = k)» pero es «k o más».
+- **E2:** `_redondear_c` fuerza c ≥ 1 aunque el promedio sea < 0,5, y contradice la advertencia «menos de un asesor libre».
+- **E3:** «Hoy hay N asesores» es en realidad el promedio histórico de la hora pico.
+- Riesgos y observaciones: promedio de c diluido por turnos que no empiezan en hora exacta (R1); frases que afirman más de lo que respalda el número (R3, R4, O1); `hay_simulados` no mira las transiciones (R5); dos «tiempos medios» con filtros distintos (R6); el CSV de colas no lleva sus parámetros (O2).
 
 ## Aprendizajes
 - **Una expectativa que falla puede estar mal ella.** Esperé que mezclar horas con picos rechazara Poisson siempre; con picos suaves la dispersión es 1,05 y no se rechaza. La prueba correcta usa la dispersión teórica `1 + Var(λ)/E(λ)`.
