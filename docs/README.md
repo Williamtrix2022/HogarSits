@@ -32,6 +32,7 @@
 |---|---|
 | [`diseno/ER.md`](diseno/ER.md) | Diagrama entidad-relación y decisiones de datos |
 | [`diseno/DATOS_SIMULADOS.md`](diseno/DATOS_SIMULADOS.md) | Generador de datos de prueba y sus límites |
+| [`diseno/VALIDACION_MODELOS.md`](diseno/VALIDACION_MODELOS.md) | Parámetros estimados frente a simulados: error medido y límites (incluye el límite del modelo de esperas) |
 | [`diseno/WIREFRAMES.md`](diseno/WIREFRAMES.md) | Mapa del sitio, flujos y 14 pantallas |
 | [`diseno/IDENTIDAD_VISUAL.md`](diseno/IDENTIDAD_VISUAL.md) | Paleta, tipografía, componentes, accesibilidad |
 | [`diseno/MOVIMIENTO.md`](diseno/MOVIMIENTO.md) | Plan de movimiento (qué se anima y qué no) |
