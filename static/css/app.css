@@ -250,3 +250,4 @@ a { color: var(--hs-navy); }
 .grafica-corta { height: 14rem; }
 .detalle-tecnico { margin-top: 1rem; border-top: 1px solid var(--hs-line, #DAD6CE); padding-top: .75rem; }
 .detalle-tecnico summary { cursor: pointer; font-weight: 600; color: var(--hs-navy, #001F5B); }
+.exportar { font-size: .9rem; margin: .75rem 0 0; }

@@ -1,9 +1,13 @@
+from urllib.parse import urlencode
+
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.views import View
 from django.views.generic import TemplateView
 
 from apps.analitica.services.markov import NOMBRES
 from apps.cuentas.views import AdminRequeridoMixin
 
-from . import analisis, graficas, textos
+from . import analisis, exportar, graficas, textos
 from .analisis import UMBRAL_ESPERA_MIN
 from .forms import FiltroAnalisisForm
 
@@ -49,6 +53,9 @@ class PanelView(AdminRequeridoMixin, TemplateView):
             tabla_c=_filas_colas(r),
             espera_min=r.cola.Wq * 60 if r.cola and r.cola.estable else None,
             ocupacion=r.cola.rho * 100 if r.cola else None,
+            qs_exportar=urlencode(
+                {"desde": desde.isoformat(), "hasta": hasta.isoformat(), "espera_max": umbral}
+            ),
         )
         return ctx
 
@@ -93,3 +100,27 @@ def _filas_colas(r):
         }
         for q in r.tabla_c
     ]
+
+
+class ExportarView(AdminRequeridoMixin, View):
+    """Descarga una tabla del análisis como CSV (RF-58). Mismo filtro que el panel."""
+
+    http_method_names = ["get"]
+
+    def get(self, request):
+        nombre = request.GET.get("tabla", "")
+        if nombre not in exportar.TABLAS:
+            raise Http404("Tabla desconocida.")
+        form, desde, hasta, umbral = parametros_del_filtro(request)
+        if request.GET.get("desde") or request.GET.get("hasta") or request.GET.get("espera_max"):
+            if not form.is_valid():  # un filtro inválido no debe exportar datos de otro periodo
+                errores = "; ".join(e for lista in form.errors.values() for e in lista)
+                return HttpResponseBadRequest(f"Filtro no válido: {errores}")
+        resumen = analisis.analizar_periodo(desde, hasta, umbral)
+        encabezados, filas = exportar.tabla(resumen, nombre)
+        respuesta = HttpResponse(content_type="text/csv; charset=utf-8")
+        respuesta["Content-Disposition"] = (
+            f'attachment; filename="{exportar.nombre_de_archivo(nombre, desde, hasta)}"'
+        )
+        exportar.escribir(respuesta, encabezados, filas)
+        return respuesta

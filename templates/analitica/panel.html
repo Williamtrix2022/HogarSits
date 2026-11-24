@@ -45,6 +45,7 @@
   </div>
   <p class="ayuda">Las barras claras tienen pocos datos (menos de 30 llegadas en esa hora): no son confiables.</p>
   {% endif %}
+  <p class="exportar">Exportar a CSV: <a href="{% url 'analitica:exportar' %}?tabla=lambda&amp;{{ qs_exportar }}">λ por hora</a>{% if r.ajuste_pico %} · <a href="{% url 'analitica:exportar' %}?tabla=poisson&amp;{{ qs_exportar }}">ajuste de Poisson</a>{% endif %}</p>
   <details class="detalle-tecnico">
     <summary>Detalle técnico: λ por hora y ajuste de Poisson</summary>
     <div class="tabla-contenedor">
@@ -107,6 +108,7 @@
   </div>
   <p class="ayuda">Un triángulo es una espera mayor que el tope del gráfico (el valor exacto está en la tabla del detalle técnico). Un punto que falta significa que con ese número de asesores la carga es inestable: la fila crecería sin límite.</p>
   {% endif %}
+  {% if r.tabla_c %}<p class="exportar">Exportar a CSV: <a href="{% url 'analitica:exportar' %}?tabla=colas&amp;{{ qs_exportar }}">esperas según el número de asesores</a></p>{% endif %}
   <details class="detalle-tecnico">
     <summary>Detalle técnico: ρ, L, Lq, W, Wq del modelo M/M/c</summary>
     <ul>
@@ -147,6 +149,7 @@
     <canvas id="graf-cierre" role="img" aria-label="Probabilidad de cierre y de abandono según la etapa en que está el cliente"></canvas>
   </div>
   {% endif %}
+  <p class="exportar">Exportar a CSV: <a href="{% url 'analitica:exportar' %}?tabla=matriz&amp;{{ qs_exportar }}">matriz P</a>{% if r.markov.absorcion %} · <a href="{% url 'analitica:exportar' %}?tabla=absorcion&amp;{{ qs_exportar }}">probabilidad de cierre</a>{% endif %}</p>
   <details class="detalle-tecnico">
     <summary>Detalle técnico: matriz de transición P y absorción</summary>
     <p>Un «paso» es un seguimiento registrado, no un día (ADR-002): quedarse en la misma etapa también cuenta.</p>
