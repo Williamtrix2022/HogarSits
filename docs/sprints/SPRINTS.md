@@ -16,8 +16,8 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 | [2](sprint-02.md) | 30-nov → 13-dic | F2 | Diseño: ER, wireframes, ADRs, modelos, datos simulados | ✅ Cerrado | 5/5 |
 | [3](sprint-03.md) | 14-dic → 27-dic | F3 | Gestión (Entrega 1): CRUD inmuebles y clientes/solicitudes, auth | 🚧 En curso | 7/8 |
 | [4](sprint-04.md) | 28-dic → 10-ene | F3 | Gestión (Entrega 2): agenda sin cruces, seguimiento de etapas | ✅ Cerrado | 7/7 |
-| 5 | 11-ene → 24-ene | F4 | Analítica (Entrega 3): Poisson, M/M/c, Markov, dashboard | 🚧 Siguiente | 0/7 |
-| 6 | 25-ene → 07-feb | F5-F6 | Pruebas, despliegue AWS, informe y sustentación | ⏳ | 0/7 |
+| [5](sprint-05.md) | 11-ene → 24-ene | F4 | Analítica (Entrega 3): Poisson, M/M/c, Markov, dashboard | ✅ Cerrado | 7/7 |
+| 6 | 25-ene → 07-feb | F5-F6 | Pruebas, despliegue AWS, informe y sustentación | 🚧 Siguiente | 0/7 |
 
 > Las fechas son una propuesta: ajústalas al calendario real de la asignatura.
 
@@ -27,7 +27,8 @@ Seguimiento: este archivo + [Milestones e Issues en GitHub](https://github.com/W
 - **Sprint 2** (diseño) completo: el **ADR-002 de Markov (#20)** se aceptó el 23-nov-2026 y es revisable al completar #55.
 - **Sprint 3** (gestión, entrega 1) casi completo (7/8): acceso con roles, plantilla base, inmuebles, clientes, solicitudes y la seguridad del login (#60, #61). Falta solo **#27, fotos en S3** (necesita bucket y credenciales de AWS).
 - **Sprint 4** (gestión, entrega 2) **completo (7/7)**: agenda sin cruces (#30), inmuebles cerrados (#31), etapas con historial (#32), «a quién contactar hoy» (#33), recordatorio de visitas (#52), horarios de asesores con `c` efectivo (#53) y el subagente `tester` (#34). El `tester` destapó un hueco: **RN-33, el historial de etapas se puede editar y borrar**; está descrito en pruebas `xfail` y falta decidir el mecanismo antes del Sprint 5.
-- **Pruebas:** 342 automáticas sobre PostgreSQL real; el CI de GitHub las corre en cada PR.
+- **Sprint 5** (analítica, entrega 3) **completo (7/7)**: servicios puros de Poisson (#35), colas M/M/c (#36) y Markov (#37), panel de **Análisis** con Chart.js y frases en lenguaje de negocio (#38), exportar a CSV (#40), indicadores por asesor (#54) y el subagente `revisor-estocastico` con la skill `/modelo-estocastico` (#39). Todo verificado contra los ejemplos de la Propuesta y con comprobaciones independientes.
+- **Pruebas:** 584 automáticas (4 de ellas `xfail` a propósito: RN-33) sobre PostgreSQL real; el CI de GitHub las corre en cada PR.
 - Los arranques se **adelantaron** respecto a las fechas propuestas (el calendario real de la asignatura manda).
 
 ## Aprendizaje por sprint

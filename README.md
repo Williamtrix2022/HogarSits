@@ -106,7 +106,8 @@ $$\mathbf{P} = \begin{pmatrix}
 | 2 Diseño | F2 | ✅ 5/5. ADR-002 de Markov aceptado (revisable con la segunda ronda) |
 | 3 Gestión, entrega 1 | F3 | 🚧 7/8. Falta solo las fotos en S3 (#27) |
 | 4 | F3 | ✅ 7/7. Agenda, inmuebles cerrados, etapas, alertas de seguimiento, recordatorio de visitas, horarios de asesores y subagente `tester` |
-| 5 y 6 | F4 a F6 | 🚧 Siguiente: analítica (Poisson, M/M/c, Markov), pruebas y despliegue en AWS |
+| 5 | F4 | ✅ 7/7. Poisson, colas M/M/c y Markov, panel de Análisis, exportar a CSV, indicadores por asesor y subagente revisor |
+| 6 | F5 a F6 | 🚧 Siguiente: pruebas, informe, despliegue en AWS y sustentación |
 
 **Ya funciona:** inicio de sesión con roles (Administrador y Asesor), administración de usuarios, gestión de inmuebles (lista con búsqueda y filtros, alta, edición, historial de estado, desactivar), generador de datos simulados y una interfaz con la identidad visual de HogarSits.
 **En construcción:** clientes, solicitudes de atención, agenda de visitas, seguimiento de etapas y el módulo analítico.
