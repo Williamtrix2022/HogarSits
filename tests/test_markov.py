@@ -209,3 +209,19 @@ def test_validar_matriz_exige_estados_absorbentes():
 def test_sin_transiciones_no_hay_nada_que_estimar():
     e = mk.estimar_matriz([])
     assert e.faltan == (1, 2, 3) and mk.analizar([]).absorcion is None
+
+
+# --- Matriz casi singular (hallazgo de la revisión estocástica) ----------------------------
+def test_una_etapa_que_casi_nunca_sale_no_da_pasos_absurdos():
+    casi = [list(f) for f in README]
+    casi[0] = [1 - 1e-14, 1e-14, 0, 0, 0]  # Consulta casi nunca sale
+    with pytest.raises(ValueError, match="nunca sale"):
+        mk.analizar_absorcion(casi)
+
+
+def test_una_etapa_que_casi_nunca_sale_no_rompe_analizar():
+    pares = [(1, 1)] * 5000 + [(2, 3)] * 40 + [(3, 4)] * 40
+    # una sola salida en 5001: la fila no es singular y sí se analiza, con muchos pasos
+    pares += [(1, 2)]
+    r = mk.analizar(pares)
+    assert r.absorcion is not None and r.absorcion.pasos[0] > 1000

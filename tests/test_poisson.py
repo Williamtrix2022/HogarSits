@@ -214,3 +214,16 @@ def test_entradas_invalidas():
         po.ajuste_poisson([])
     with pytest.raises(ValueError):
         po.ajuste_poisson([1, -1])
+
+
+# --- Hallazgo de la revisión estocástica: gl nunca negativo y marca «probado» --------------
+@pytest.mark.parametrize("datos", [[0, 0, 0], [1, 2, 1], [0, 1, 0, 1, 2, 0, 1, 0, 0, 1]])
+def test_los_grados_de_libertad_nunca_son_negativos(datos):
+    a = po.ajuste_poisson(datos)
+    assert a.grados_libertad >= 0
+    assert a.probado is (a.chi2 is not None)
+
+
+def test_con_datos_suficientes_el_ajuste_queda_probado(conteos):
+    a = po.ajuste_poisson([n for (_, h), n in conteos.items() if h == 10])
+    assert a.probado is True and a.grados_libertad >= 1

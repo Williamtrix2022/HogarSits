@@ -242,3 +242,11 @@ a { color: var(--hs-navy); }
 .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 1rem; list-style: none; margin: 0 0 1rem; padding: 0; }
 .galeria li { display: flex; flex-direction: column; gap: .5rem; }
 .galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: .5rem; background: #E6EBF4; }
+
+/* Panel de análisis (W10 a W12) */
+.sub-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: 0 0 1rem; }
+.frase-negocio { font-size: 1.05rem; max-width: 70ch; }
+.grafica { position: relative; height: 18rem; margin: 1rem 0 .25rem; }
+.grafica-corta { height: 14rem; }
+.detalle-tecnico { margin-top: 1rem; border-top: 1px solid var(--hs-line, #DAD6CE); padding-top: .75rem; }
+.detalle-tecnico summary { cursor: pointer; font-weight: 600; color: var(--hs-navy, #001F5B); }

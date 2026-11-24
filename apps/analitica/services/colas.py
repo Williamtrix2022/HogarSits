@@ -18,6 +18,8 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+RHO_AL_LIMITE = 0.95  # por encima, el sistema es estable pero la espera se dispara
+
 
 @dataclass(frozen=True)
 class Cola:
@@ -31,6 +33,12 @@ class Cola:
     Lq: float | None  # clientes en la fila
     W: float | None  # tiempo en el sistema
     Wq: float | None  # tiempo en la fila
+
+    @property
+    def al_limite(self) -> bool:
+        """Estable pero con ρ > 0,95: λ y μ se estiman con error, y a esa carga una pequeña
+        diferencia cambia la espera de minutos a horas. Conviene advertirlo en pantalla."""
+        return self.estable and self.rho > RHO_AL_LIMITE
 
 
 def _validar(lam: float, mu: float, c: int) -> None:
