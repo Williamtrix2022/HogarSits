@@ -100,6 +100,19 @@ def tabla(r: Resumen, nombre: str) -> tuple[list[str], list[list]]:
     return enc, filas
 
 
+def tabla_asesores(indicadores, simulado: bool) -> tuple[list[str], list[list]]:
+    """Indicadores por asesor (RF-62). Una atención media sin finalizadas sale vacía."""
+    enc = ["asesor", "solicitudes_atendidas", "visitas_realizadas", "cierres",
+           "atencion_media_min", "atenciones_finalizadas", "datos_simulados"]
+    sim = "sí" if simulado else "no"
+    filas = [
+        [i.nombre, i.atendidas, i.visitas_realizadas, i.cierres, i.atencion_media_min,
+         i.n_finalizadas, sim]
+        for i in indicadores
+    ]
+    return enc, filas
+
+
 def escribir(respuesta, encabezados: list[str], filas: list[list]) -> None:
     """Escribe el CSV (con BOM) en un objeto con `write`, p. ej. un HttpResponse."""
     respuesta.write("﻿")

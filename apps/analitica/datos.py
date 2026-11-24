@@ -18,7 +18,7 @@ from apps.seguimiento.models import SeguimientoEtapa, SolicitudAtencion
 HORARIO_POR_DEFECTO = (8, 18, LUNES_A_SABADO)
 
 
-def _limites(desde: date, hasta: date) -> tuple[datetime, datetime]:
+def limites(desde: date, hasta: date) -> tuple[datetime, datetime]:
     """[desde 00:00, hasta + 1 día 00:00) en hora local de Bogotá (RN-42)."""
     zona = timezone.get_current_timezone()
     inicio = datetime.combine(desde, time.min, tzinfo=zona)
@@ -31,7 +31,7 @@ def llegadas(desde: date, hasta: date) -> list[datetime]:
 
     Cuentan **todas**, también las canceladas: el cliente llegó aunque luego se fuera.
     """
-    inicio, fin = _limites(desde, hasta)
+    inicio, fin = limites(desde, hasta)
     return list(
         SolicitudAtencion.objects.filter(timestamp_llegada__gte=inicio, timestamp_llegada__lt=fin)
         .values_list("timestamp_llegada", flat=True)
@@ -40,7 +40,7 @@ def llegadas(desde: date, hasta: date) -> list[datetime]:
 
 def duraciones_de_servicio_en_horas(desde: date, hasta: date) -> list[float]:
     """RN-22: solo las **finalizadas** con inicio y fin aportan a μ; las canceladas se excluyen."""
-    inicio, fin = _limites(desde, hasta)
+    inicio, fin = limites(desde, hasta)
     pares = SolicitudAtencion.objects.filter(
         estado=SolicitudAtencion.Estado.FINALIZADO,
         timestamp_inicio_atencion__isnull=False,
@@ -60,7 +60,7 @@ def transiciones(desde: date, hasta: date) -> list[tuple[int, int]]:
 
     Incluye las autotransiciones (seguimientos sin avance), que el ADR-002 manda contar.
     """
-    inicio, fin = _limites(desde, hasta)
+    inicio, fin = limites(desde, hasta)
     return list(
         SeguimientoEtapa.objects.filter(fecha_transicion__gte=inicio, fecha_transicion__lt=fin)
         .values_list("estado_origen", "estado_destino")
@@ -96,7 +96,7 @@ def horario_de_atencion() -> tuple[int, int, tuple[int, ...]]:
 
 def hay_simulados(desde: date, hasta: date) -> bool:
     """¿Hay clientes simulados con solicitudes en el periodo? Se avisa en pantalla (honestidad)."""
-    inicio, fin = _limites(desde, hasta)
+    inicio, fin = limites(desde, hasta)
     return Cliente.objects.filter(
         correo__endswith=DOMINIO,
         solicitudes__timestamp_llegada__gte=inicio,

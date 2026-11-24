@@ -2,6 +2,7 @@
 {% load static %}
 {% block titulo %}Análisis{% endblock %}
 {% block titulo_pagina %}Análisis{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'analitica:asesores' %}">Indicadores por asesor</a>{% endblock %}
 
 {% block contenido %}
 <form class="filtros" method="get" aria-label="Periodo y umbral de espera">
