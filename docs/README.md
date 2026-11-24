@@ -1,11 +1,16 @@
 # Documentación de HogarSits
 
-Índice de todo lo que hay en `docs/`. **Última actualización: 8-nov-2026** (Sprint 3 en curso).
+Índice de todo lo que hay en `docs/`. **Última actualización: 24-nov-2026** (Sprint 6 en curso).
 
 ## Para empezar
 | Qué | Dónde |
 |---|---|
-| **Guion para exponer el avance** (resumen, cómo correrlo, demo paso a paso, preguntas probables) | [`presentacion/AVANCE.md`](presentacion/AVANCE.md) |
+| **Sustentación corta** (una página: lista previa, demo en orden, cifras y preguntas) | [`presentacion/SUSTENTACION_CORTA.md`](presentacion/SUSTENTACION_CORTA.md) |
+| Guion de sustentación completo | [`presentacion/GUION_SUSTENTACION.md`](presentacion/GUION_SUSTENTACION.md) |
+| **Manual de usuario** (asesores y administradores, con capturas) | [`manual/MANUAL_DE_USUARIO.md`](manual/MANUAL_DE_USUARIO.md) |
+| **Informe final** | [`informe/INFORME_FINAL.md`](informe/INFORME_FINAL.md) |
+| Sitio de presentación | [williamtrix2022.github.io/HogarSits](https://williamtrix2022.github.io/HogarSits/) (código en `../site/`) |
+| Sistema en vivo (demostración, datos simulados) | [hogarsits.onrender.com](https://hogarsits.onrender.com/) |
 | Qué es el proyecto, fases y cómo correrlo | [`../README.md`](../README.md) |
 | Estado de los sprints (tablero maestro) | [`sprints/SPRINTS.md`](sprints/SPRINTS.md) |
 | Convenciones para trabajar con Claude Code | [`../CLAUDE.md`](../CLAUDE.md) |
@@ -30,6 +35,7 @@
 ## Despliegue en AWS (Sprint 6)
 | Documento | Contenido |
 |---|---|
+| [`aws/DESPLIEGUE_RENDER.md`](aws/DESPLIEGUE_RENDER.md) | Demostración en Render: qué se despliega, contraseñas, qué esperar de la capa gratuita y limitaciones |
 | [`aws/FOTOS_S3.md`](aws/FOTOS_S3.md) | Bucket privado, usuario IAM de mínimo privilegio y verificación de las fotos |
 | [`aws/IMAGEN_DOCKER.md`](aws/IMAGEN_DOCKER.md) | Imagen de producción: qué hace, cómo probarla, qué se verificó y cómo subirla a ECR |
 

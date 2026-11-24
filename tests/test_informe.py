@@ -53,5 +53,6 @@ def test_los_documentos_del_anexo_existen():
 
 def test_el_equipo_coincide_con_el_readme():
     readme = _leer("README.md")
-    for nombre in ("William Moya Santana", "Natalia Durango", "Camilo Diaz", "Elizabeth Camaño"):
+    for nombre in ("William Moya Santana", "Natalia Durango", "Camilo Diaz"):
         assert nombre in readme and nombre in INFORME
+    assert "Elizabeth" not in readme and "Elizabeth" not in INFORME  # ya no integra el equipo

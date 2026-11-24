@@ -5,189 +5,325 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HogarSits · Gestión y análisis inmobiliario</title>
   <meta name="description" content="HogarSits: gestión de inmuebles, clientes y visitas, y análisis estocástico de la atención (Poisson, colas M/M/c y Markov). Proyecto de Procesos Estocásticos, Universidad de Córdoba, 2026.">
+  <meta name="theme-color" content="#001F5B">
+  <link rel="icon" type="image/png" href="img/logo-hogarsits.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700;800&family=Open+Sans:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800&family=Open+Sans:wght@400;600&display=swap">
   <link rel="stylesheet" href="css/sitio.css">
 </head>
 <body>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-<nav class="indice" aria-label="Secciones">
-  <a href="#portada" class="marca">HogarSits</a>
-  <ul>
-    <li><a href="#problema">Problema</a></li>
-    <li><a href="#solucion">Qué hace</a></li>
-    <li><a href="#analisis">Análisis</a></li>
-    <li><a href="#matematica">Matemática</a></li>
-    <li><a href="#calidad">Calidad</a></li>
-    <li><a href="#limites">Límites</a></li>
-    <li><a class="en-vivo" href="https://hogarsits.onrender.com/" rel="noopener">Sistema en vivo ↗</a></li>
-  </ul>
-</nav>
+<header class="barra">
+  <a class="logo" href="#portada" aria-label="HogarSits, inicio"><img src="img/logo-hogarsits.png" width="849" height="283" alt="HogarSits, gestión y análisis inmobiliario"></a>
+  <nav aria-label="Secciones">
+    <ul>
+      <li><a href="#problema">Problema</a></li>
+      <li><a href="#que-hace">Qué hace</a></li>
+      <li><a href="#analisis">Análisis</a></li>
+      <li><a href="#matematica">Matemática</a></li>
+      <li><a href="#calidad">Calidad</a></li>
+      <li><a href="#limites">Límites</a></li>
+      <li><a href="#equipo">Equipo</a></li>
+    </ul>
+  </nav>
+  <a class="boton boton-barra" href="https://hogarsits.onrender.com/" rel="noopener">Abrir el sistema</a>
+</header>
 
 <main id="contenido">
 
-<section class="diapositiva portada" id="portada" aria-labelledby="t-portada">
-  <p class="etiqueta">Procesos Estocásticos · Universidad de Córdoba · 2026</p>
-  <h1 id="t-portada">Hogar<span>Sits</span></h1>
-  <p class="lema">Gestión y análisis inmobiliario</p>
-  <p class="resumen">Un sistema web para que una inmobiliaria organice sus inmuebles, clientes y visitas, y entienda cuándo llegan los clientes, cuántos asesores necesita y cuántos terminan cerrando.</p>
-  <ul class="equipo" aria-label="Equipo">
-    <li><strong>William Moya Santana</strong><span>Líder de proyecto</span></li>
-    <li><strong>Natalia Durango</strong><span>Analista de requerimientos</span></li>
-    <li><strong>Camilo Diaz</strong><span>Desarrollo y base de datos</span></li>
-    <li><strong>Elizabeth Camaño</strong><span>Analista estocástico</span></li>
-  </ul>
-  <p class="en-vivo-portada"><a class="boton" href="https://hogarsits.onrender.com/" rel="noopener">Abrir el sistema en vivo ↗</a> <span>Demostración con datos simulados. Si estaba dormido, tarda hasta 1 minuto en despertar.</span></p>
-  <p class="ayuda-nav">Puede navegar con las flechas <kbd>←</kbd> <kbd>→</kbd> del teclado.</p>
+<section class="portada" id="portada" aria-labelledby="t-portada">
+  <div class="portada-texto">
+    <p class="contexto">Procesos Estocásticos · Universidad de Córdoba · 2026</p>
+    <h1 id="t-portada">Cada visita agendada, cada cliente seguido, cada asesor contado.</h1>
+    <p class="resumen">HogarSits ordena el trabajo diario de una inmobiliaria y le dice cuándo llegan los clientes, cuántos asesores necesita y cuántos terminan cerrando.</p>
+    <p class="acciones">
+      <a class="boton boton-cobre" href="https://hogarsits.onrender.com/" rel="noopener">Abrir el sistema en vivo</a>
+      <a class="enlace-claro" href="#que-hace">Ver cómo funciona</a>
+    </p>
+    <p class="aviso-vivo">Demostración con datos simulados. Si estaba dormida, tarda hasta 1 minuto en despertar.</p>
+  </div>
+
+  <figure class="plano">
+    <svg viewBox="0 0 460 420" role="img" aria-label="Plano de una casa de tres alcobas. Cada espacio nombra un módulo del sistema: agenda sin cruces, cierre con Markov, llegadas con Poisson y esperas con colas M/M/c.">
+      <g class="cota" style="--i:0">
+        <path pathLength="1" d="M40 28 H400 M40 22 V34 M400 22 V34"/>
+        <path pathLength="1" d="M22 40 V350 M16 40 H28 M16 350 H28"/>
+      </g>
+      <text class="rotulo-cota" x="220" y="20" text-anchor="middle">11,00 m</text>
+      <text class="rotulo-cota" x="9" y="195" text-anchor="middle" transform="rotate(-90 9 195)">9,50 m</text>
+
+      <path class="muro" pathLength="1" style="--i:1" d="M40 40 H400 V350 H40 Z"/>
+      <path class="muro" pathLength="1" style="--i:2" d="M40 160 H140 M170 160 H400"/>
+      <path class="muro" pathLength="1" style="--i:3" d="M140 40 V160 M250 40 V160"/>
+      <path class="muro" pathLength="1" style="--i:4" d="M250 160 V210 M250 250 V350"/>
+      <path class="ventana" pathLength="1" style="--i:5" d="M70 40 H120 M290 40 H370 M40 230 V290 M400 230 V290"/>
+      <path class="fino" pathLength="1" style="--i:5" d="M140 160 V130 A30 30 0 0 1 170 160"/>
+      <path class="fino" pathLength="1" style="--i:5" d="M250 210 H220 A30 30 0 0 0 250 250"/>
+      <path class="entrada" pathLength="1" style="--i:7" d="M95 350 V318 A32 32 0 0 1 127 350"/>
+
+      <g class="nombres" style="--i:8">
+        <text class="sec" x="195" y="104" text-anchor="middle">Baño</text>
+        <text x="90" y="98" text-anchor="middle">Agenda</text>
+        <text x="90" y="114" text-anchor="middle">sin cruces</text>
+        <text x="325" y="98" text-anchor="middle">Cierre</text>
+        <text x="325" y="114" text-anchor="middle">Markov</text>
+        <text x="145" y="262" text-anchor="middle">Llegadas</text>
+        <text x="145" y="278" text-anchor="middle">Poisson</text>
+        <text x="325" y="262" text-anchor="middle">Esperas</text>
+        <text x="325" y="278" text-anchor="middle">Colas M/M/c</text>
+      </g>
+
+      <g class="rotulacion" style="--i:9">
+        <rect x="226" y="366" width="174" height="46"/>
+        <path d="M226 389 H400 M316 389 V412"/>
+        <text x="233" y="382">Sistema en operación</text>
+        <text x="233" y="405">Plano de ejemplo</text>
+        <text x="323" y="405">Escala 1:50</text>
+      </g>
+      <text class="rotulo-entrada" style="--i:9" x="111" y="372" text-anchor="middle">Entrada</text>
+    </svg>
+  </figure>
 </section>
 
-<section class="diapositiva" id="problema" aria-labelledby="t-problema">
+<section class="seccion" id="problema" aria-labelledby="t-problema">
   <h2 id="t-problema">El problema</h2>
-  <p class="intro">Entrevistamos a <strong>3 inmobiliarias de Montería</strong> (muestra por conveniencia: son conteos, no porcentajes representativos). Las tres trabajan con <strong>Excel y WhatsApp</strong>.</p>
-  <div class="cifras">
-    <p class="cifra"><strong>3 de 3</strong><span>han perdido una solicitud por falta de seguimiento</span></p>
-    <p class="cifra"><strong>2 de 3</strong><span>han ofrecido un inmueble que ya estaba vendido o arrendado</span></p>
-    <p class="cifra"><strong>2 de 3</strong><span>han tenido dos visitas cruzadas</span></p>
-    <p class="cifra"><strong>2 de 3</strong><span>han tenido clientes esperando por falta de asesores</span></p>
+  <div class="contenido">
+    <p class="dato"><strong>3 de 3</strong> inmobiliarias de Montería han perdido una solicitud por falta de seguimiento.</p>
+    <ul class="filas">
+      <li><strong>2 de 3</strong> ofrecieron un inmueble que ya estaba vendido o arrendado.</li>
+      <li><strong>2 de 3</strong> tuvieron dos visitas cruzadas.</li>
+      <li><strong>2 de 3</strong> dejaron clientes esperando por falta de asesores.</li>
+      <li><strong>3 de 3</strong> trabajan con Excel y WhatsApp.</li>
+    </ul>
+    <p class="nota">Primera ronda de encuestas, n = 3, muestra por conveniencia: son conteos, no porcentajes representativos. Las tres quieren probar un prototipo. La segunda ronda de entrevistas <strong>aún no se ha hecho</strong> (ver «Límites»).</p>
   </div>
-  <p class="nota">Fuente: primera ronda de encuestas (n = 3). Las tres quieren probar un prototipo. La segunda ronda de entrevistas <strong>aún no se ha hecho</strong> (ver «Límites»).</p>
 </section>
 
-<section class="diapositiva" id="solucion" aria-labelledby="t-solucion">
-  <h2 id="t-solucion">Qué hace: dos pilares</h2>
-  <div class="dos">
-    <div>
-      <h3>1 · Gestión</h3>
-      <ul>
-        <li>Inmuebles con estados, filtros, historial y fotos.</li>
-        <li>Clientes sin duplicados; solicitudes con hora de llegada automática.</li>
-        <li><strong>Agenda sin cruces:</strong> lo impide la propia base de datos, no solo la pantalla.</li>
-        <li>Etapas del cliente con historial; <em>«a quién contactar hoy»</em>.</li>
-      </ul>
+<section class="seccion" id="que-hace" aria-labelledby="t-hace">
+  <h2 id="t-hace">Qué hace</h2>
+  <div class="contenido">
+    <p class="intro">Dos partes: la gestión del día a día y el análisis de lo que ocurre. Las capturas son de la aplicación real con <strong>datos simulados</strong> (clientes «Simulado 0145», inmuebles «[SIM]»); no son de ninguna inmobiliaria.</p>
+
+    <article class="funcion">
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/</div>
+        <img src="img/inicio.webp" width="1280" height="760" loading="lazy" alt="Pantalla de inicio con la lista «A quién contactar hoy»: solicitudes sin movimiento marcadas en rojo, cada una con el asesor responsable.">
+      </figure>
+      <div class="funcion-texto">
+        <h3>Quién necesita una llamada hoy</h3>
+        <p>El inicio pone primero a los clientes que llevan más de 3 días sin movimiento, con el asesor responsable. Es la defensa contra la solicitud olvidada.</p>
+      </div>
+    </article>
+
+    <article class="funcion invertida">
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/agenda/nueva/</div>
+        <img src="img/visita-cruce.webp" width="1280" height="1000" loading="lazy" alt="Formulario para agendar una visita con un aviso en rojo: el asesor ya tiene una visita en ese horario y se pide elegir otra hora u otro asesor.">
+      </figure>
+      <div class="funcion-texto">
+        <h3>Una agenda que rechaza los cruces</h3>
+        <p>Si el asesor o el inmueble ya tienen una visita a esa hora, el sistema no guarda y dice con cuál se cruza. La regla vive también en la base de datos, no solo en la pantalla.</p>
+      </div>
+    </article>
+
+    <article class="funcion">
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/solicitudes/</div>
+        <img src="img/solicitud-atencion.webp" width="1280" height="1000" loading="lazy" alt="Detalle de una solicitud en atención: las etapas Consulta, Visita, Negociación y Cierre, y el formulario para registrar un seguimiento con una nota de contacto.">
+      </figure>
+      <div class="funcion-texto">
+        <h3>Un seguimiento a la vez, con historial</h3>
+        <p>Consulta, visita, negociación y cierre, sin saltos ni retrocesos. Seguir en la misma etapa también se registra: de ahí sale el análisis de cierre.</p>
+      </div>
+    </article>
+
+    <article class="funcion invertida">
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/administracion/horarios/disponibilidad/</div>
+        <img src="img/disponibilidad.webp" width="1280" height="860" loading="lazy" alt="Tabla de asesores disponibles por franja de una hora, con cuántos tienen turno, cuántos están en visita y cuántos quedan disponibles.">
+      </figure>
+      <div class="funcion-texto">
+        <h3>Cuántos asesores hay realmente</h3>
+        <p>Un asesor en visita deja de estar disponible. Ese número, hora por hora, es el que usa el modelo de colas.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="seccion" id="analisis" aria-labelledby="t-analisis">
+  <h2 id="t-analisis">El análisis, en palabras de negocio</h2>
+  <div class="contenido">
+    <p class="intro">En la encuesta, la analítica fue lo que menos valoraron. Por eso cada cifra llega con una frase y el detalle técnico queda plegado.</p>
+
+    <form class="calculadora" id="calculadora" aria-labelledby="t-calc" novalidate>
+      <h3 id="t-calc">Pruébelo: ¿cuántos asesores hacen falta?</h3>
+      <p class="calc-ayuda">Valores iniciales: el ejemplo de la Propuesta (20 clientes en 12 horas de atención, 45 minutos por cliente).</p>
+      <div class="calc-campos">
+        <label>Clientes por día
+          <input type="number" name="clientes" value="20" min="1" max="120" step="1" inputmode="numeric">
+        </label>
+        <label>Minutos de atención por cliente
+          <input type="number" name="minutos" value="45" min="5" max="180" step="5" inputmode="numeric">
+        </label>
+        <label><span>Asesores: <output name="cuantos" for="asesores">2</output></span>
+          <input type="range" id="asesores" name="asesores" value="2" min="1" max="6" step="1">
+        </label>
+      </div>
+      <div class="calc-resultado" aria-live="polite">
+        <p class="calc-frase" id="calc-frase"></p>
+        <dl class="calc-medidas">
+          <div><dt>Espera media</dt><dd id="calc-espera">—</dd></div>
+          <div><dt>Clientes que esperan</dt><dd id="calc-prob">—</dd></div>
+          <div><dt>Ocupación de los asesores</dt><dd id="calc-ocupacion">—</dd></div>
+        </dl>
+      </div>
+      <div class="calc-barras" id="calc-barras" role="img" aria-label="Espera media según el número de asesores, de 1 a 6."></div>
+      <p class="nota nota-honesta">Es el modelo teórico M/M/c. En la validación con visitas simuladas, la espera real se desvió mucho de la del modelo: sirve para <strong>comparar escenarios</strong> («¿baja la espera con un asesor más?»), no para prometer minutos.</p>
+    </form>
+
+    <div class="rejilla-capturas">
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/analisis/</div>
+        <img src="img/analisis-demanda.webp" width="1000" height="546" loading="lazy" alt="Gráfico de barras de clientes que llegan por hora, con picos entre las 9 y las 11 y entre las 16 y las 17; las horas con pocos datos aparecen en claro.">
+        <figcaption><strong>Demanda.</strong> Las barras claras tienen menos de 30 llegadas: el sistema avisa que no son confiables.</figcaption>
+      </figure>
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/analisis/</div>
+        <img src="img/analisis-cierre.webp" width="1000" height="463" loading="lazy" alt="Probabilidad de cierre y de abandono según la etapa: Consulta, Visita y Negociación, en barras apiladas.">
+        <figcaption><strong>Cierre.</strong> De cada 10 clientes que consultan, unos 2 terminan cerrando.</figcaption>
+      </figure>
+      <figure class="marco ancho">
+        <div class="direccion">hogarsits.onrender.com/analisis/</div>
+        <img src="img/analisis-esperas.webp" width="1000" height="963" loading="lazy" alt="Sección de asesores y esperas con frases en lenguaje de negocio y un gráfico de la espera media según el número de asesores, con el umbral aceptable en línea punteada.">
+        <figcaption><strong>Asesores y esperas.</strong> Con una recomendación y el aviso honesto: es un orden de magnitud, no un pronóstico.</figcaption>
+      </figure>
+      <figure class="marco">
+        <div class="direccion">hogarsits.onrender.com/analisis/asesores/</div>
+        <img src="img/asesores.webp" width="1280" height="640" loading="lazy" alt="Indicadores por asesor: solicitudes atendidas, visitas realizadas, cierres y atención media, con el total del equipo.">
+        <figcaption><strong>Indicadores por asesor.</strong> Cada asesor ve solo los suyos.</figcaption>
+      </figure>
     </div>
-    <div>
-      <h3>2 · Análisis estocástico</h3>
-      <ul>
-        <li><strong>Poisson:</strong> cuándo llegan los clientes, por hora.</li>
-        <li><strong>Colas M/M/c:</strong> cuántos asesores hacen falta.</li>
-        <li><strong>Markov:</strong> qué porcentaje cierra y en cuántos pasos.</li>
-        <li>Cada cifra con una frase que un gerente entienda.</li>
-      </ul>
-    </div>
-  </div>
-  <p class="nota aviso">Todas las capturas de este sitio usan <strong>datos simulados</strong> (clientes «Simulado 0145», inmuebles «[SIM]»). No son de ninguna inmobiliaria real.</p>
-  <div class="galeria">
-    <figure><img src="img/login.webp" width="1280" height="760" loading="lazy" alt="Pantalla de acceso: plano de una casa a la izquierda y el formulario para iniciar sesión a la derecha."><figcaption>Acceso con roles de Administrador y Asesor</figcaption></figure>
-    <figure><img src="img/inicio.webp" width="1280" height="760" loading="lazy" alt="Pantalla de inicio con la lista «A quién contactar hoy»: solicitudes sin movimiento marcadas en rojo, con el asesor responsable."><figcaption>«A quién contactar hoy»: lo olvidado, primero</figcaption></figure>
-    <figure><img src="img/cola.webp" width="1280" height="900" loading="lazy" alt="Cola de solicitudes de atención por orden de llegada, con estado, espera y servicio de cada una."><figcaption>Cola de atención con tiempos de espera y servicio</figcaption></figure>
-    <figure><img src="img/detalle.webp" width="1280" height="1000" loading="lazy" alt="Detalle de una solicitud: etapa actual, historial de transiciones con las de «sin avance» y sus visitas."><figcaption>Etapas con historial; seguir en la misma etapa también cuenta</figcaption></figure>
-    <figure><img src="img/agenda.webp" width="1280" height="1100" loading="lazy" alt="Agenda semanal de visitas agrupada por día, con hora, inmueble, cliente, asesor y estado."><figcaption>Agenda semanal: no admite visitas que se crucen</figcaption></figure>
-    <figure><img src="img/disponibilidad.webp" width="1280" height="860" loading="lazy" alt="Tabla de asesores disponibles por franja de una hora: con turno, en visita y disponibles."><figcaption>Un asesor en visita deja de estar disponible: es el «c efectivo»</figcaption></figure>
   </div>
 </section>
 
-<section class="diapositiva" id="analisis" aria-labelledby="t-analisis">
-  <h2 id="t-analisis">El análisis, en lenguaje de negocio</h2>
-  <p class="intro">La encuesta mostró que la analítica fue lo menos valorado. Por eso cada resultado va con una frase, y la parte técnica queda plegada.</p>
-  <div class="galeria uno">
-    <figure><img src="img/analisis-demanda.webp" width="1000" height="546" loading="lazy" alt="Gráfico de barras de clientes que llegan por hora: picos entre las 9 y las 11 y entre las 16 y las 17; las horas con pocos datos aparecen en claro."><figcaption><strong>Demanda (Poisson).</strong> Las barras claras tienen menos de 30 llegadas: el sistema avisa que no son confiables.</figcaption></figure>
-    <figure><img src="img/analisis-esperas.webp" width="1000" height="963" loading="lazy" alt="Sección de asesores y esperas con frases en lenguaje de negocio y un gráfico de la espera media según el número de asesores, con el umbral aceptable en línea punteada."><figcaption><strong>Asesores y esperas (M/M/c).</strong> Con una recomendación y un aviso honesto: es un orden de magnitud, no un pronóstico.</figcaption></figure>
-    <figure><img src="img/analisis-cierre.webp" width="1000" height="463" loading="lazy" alt="Probabilidad de cierre y de abandono según la etapa: Consulta, Visita y Negociación, en barras apiladas."><figcaption><strong>Probabilidad de cierre (Markov).</strong> De cada 10 que consultan, unos 2 cierran.</figcaption></figure>
-    <figure><img src="img/asesores.webp" width="1280" height="640" loading="lazy" alt="Indicadores por asesor: solicitudes atendidas, visitas realizadas, cierres y atención media, con el total del equipo."><figcaption><strong>Indicadores por asesor.</strong> Cada asesor ve solo los suyos.</figcaption></figure>
-  </div>
-</section>
-
-<section class="diapositiva" id="matematica" aria-labelledby="t-mate">
+<section class="seccion" id="matematica" aria-labelledby="t-mate">
   <h2 id="t-mate">La matemática, comprobada</h2>
-  <p class="intro">Los tres modelos son funciones puras y se verifican contra los ejemplos de la Propuesta <strong>y</strong> contra un segundo método de cálculo.</p>
-  <div class="tabla-envoltorio">
-  <table>
-    <caption class="solo-lectores">Verificaciones de los modelos</caption>
-    <thead><tr><th scope="col">Modelo</th><th scope="col">Ejemplo de referencia</th><th scope="col">Resultado</th><th scope="col">Segunda comprobación</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">Cola M/M/1</th><td>λ = 2, μ = 3</td><td>ρ = 0,667 · L = 2 · W = 1 h · Lq = 1,333 · Wq = 0,667 h</td><td>Cadena de nacimiento y muerte</td></tr>
-      <tr><th scope="row">Cola M/M/c</th><td>λ = 20 clientes en 12 h, μ = 1 por 45 min</td><td>2 asesores: 28,8 min de espera · 3 asesores: 4,0 min</td><td>Cadena de nacimiento y muerte resuelta aparte</td></tr>
-      <tr><th scope="row">Cadena de Markov</th><td>Matriz P del README</td><td>P(cierre desde Consulta) = <strong>22,748 %</strong> · 2,3989 pasos</td><td>Potencias de la matriz P</td></tr>
-      <tr><th scope="row">Poisson</th><td>Datos simulados de 120 días, λ = 12 clientes/día</td><td>λ estimada 11,99 (error medio 1,7 %); χ² rechaza 3,8 a 5,5 % con datos que sí son Poisson</td><td>Comparación con los parámetros que el simulador conoce</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p class="nota">Detalle curioso: la Propuesta dice «≈ 22,8 %». El valor exacto es 22,748 %: sale de redondear dos veces (22,748 → 22,75 → 22,8). Las pruebas afirman el valor exacto.</p>
+  <div class="contenido">
+    <p class="intro">Los tres modelos son funciones puras y se verifican contra los ejemplos de la Propuesta <strong>y</strong> contra un segundo método de cálculo.</p>
+    <div class="tabla-envoltorio">
+      <table>
+        <caption class="solo-lectores">Verificaciones de los modelos</caption>
+        <thead><tr><th scope="col">Modelo</th><th scope="col">Ejemplo de referencia</th><th scope="col">Resultado</th><th scope="col">Segunda comprobación</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Cola M/M/1</th><td>λ = 2, μ = 3</td><td>ρ = 0,667 · L = 2 · W = 1 h · Lq = 1,333 · Wq = 0,667 h</td><td>Cadena de nacimiento y muerte</td></tr>
+          <tr><th scope="row">Cola M/M/c</th><td>λ = 20 clientes en 12 h, μ = 1 por 45 min</td><td>2 asesores: 28,8 min de espera · 3 asesores: 4,0 min</td><td>Cadena de nacimiento y muerte resuelta aparte</td></tr>
+          <tr><th scope="row">Cadena de Markov</th><td>Matriz P del README</td><td>P(cierre desde Consulta) = <strong>22,748 %</strong> · 2,3989 pasos</td><td>Potencias de la matriz P</td></tr>
+          <tr><th scope="row">Poisson</th><td>Datos simulados de 120 días, λ = 12 clientes/día</td><td>λ estimada 11,99 (error medio 1,7 %); el χ² rechaza 3,8 a 5,5 % con datos que sí son Poisson</td><td>Comparación con los parámetros que el simulador conoce</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota">Un detalle: la Propuesta dice «≈ 22,8 %». El valor exacto es 22,748 %: sale de redondear dos veces (22,748 → 22,75 → 22,8). Las pruebas afirman el valor exacto.</p>
 
-  <h3>¿Recuperan los parámetros verdaderos? (validación con simulación)</h3>
-  <div class="cifras">
-    <p class="cifra"><strong>1 a 2 %</strong><span>error de λ, μ y pasos esperados (120 días)</span></p>
-    <p class="cifra"><strong>2,6 a 6,5 %</strong><span>error de la probabilidad de cierre</span></p>
-    <p class="cifra"><strong>10 % → 2 %</strong><span>error de P(cierre) con 30 → 300 días de datos</span></p>
-    <p class="cifra"><strong>≈ 5 %</strong><span>rechazos del χ² con datos que sí son de Poisson (bien calibrado)</span></p>
+    <h3>¿Recuperan los parámetros verdaderos?</h3>
+    <p>Se corren los mismos servicios del panel sobre datos simulados cuyos parámetros se conocen y se mide el error.</p>
+    <div class="validacion">
+      <ul class="libro">
+        <li><strong>1 a 2 %</strong><span>error de λ, μ y pasos esperados (120 días)</span></li>
+        <li><strong>2,6 a 6,5 %</strong><span>error de la probabilidad de cierre</span></li>
+        <li><strong>≈ 5 %</strong><span>de rechazos del χ² con datos que sí son de Poisson: bien calibrado</span></li>
+      </ul>
+      <div class="error-dias" role="img" aria-label="Error de la probabilidad de cierre según los días de datos: 10,2 % con 30 días, 5,0 % con 90 y 2,2 % con 300.">
+        <p class="error-titulo">Error de la probabilidad de cierre según los datos disponibles</p>
+        <div class="error-fila"><span>30 días</span><i style="--v:10.2"></i><b>10,2 %</b></div>
+        <div class="error-fila"><span>90 días</span><i style="--v:5.0"></i><b>5,0 %</b></div>
+        <div class="error-fila"><span>300 días</span><i style="--v:2.2"></i><b>2,2 %</b></div>
+      </div>
+    </div>
+
+    <div class="hallazgo">
+      <h3>El hallazgo incómodo</h3>
+      <p>Los parámetros se estiman bien, pero la <em>espera</em> que predice M/M/c <strong>no</strong> coincide con la simulada: simulada 9,7 min; el modelo da 0,15, 1,6 o 12,3 según cómo se defina el número de asesores. Acierta la dirección (más asesores, menos espera), no la magnitud, porque las visitas sacan a los asesores de la oficina. El panel lo avisa en pantalla.</p>
+    </div>
   </div>
-  <p class="nota aviso"><strong>El hallazgo incómodo:</strong> los parámetros se estiman bien, pero la <em>espera</em> que predice M/M/c <strong>no</strong> coincide con la simulada (simulada 9,7 min; el modelo da 0,15, 1,6 o 12,3 según cómo se defina el número de asesores). Acierta la dirección (más asesores, menos espera), no la magnitud, porque las visitas sacan a los asesores de la oficina. El panel lo avisa en pantalla.</p>
 </section>
 
-<section class="diapositiva" id="calidad" aria-labelledby="t-calidad">
+<section class="seccion" id="calidad" aria-labelledby="t-calidad">
   <h2 id="t-calidad">Calidad y construcción</h2>
-  <div class="cifras">
-    <p class="cifra"><strong>&gt; 700</strong><span>pruebas automáticas contra PostgreSQL real</span></p>
-    <p class="cifra"><strong>31 de 31</strong><span>criterios de aceptación de 13 historias, con prueba</span></p>
-    <p class="cifra"><strong>98,2 %</strong><span>cobertura de código (3 052 sentencias)</span></p>
-    <p class="cifra"><strong>532 ms</strong><span>la pantalla más lenta con 10 262 solicitudes (límite: 3 s)</span></p>
-  </div>
-  <div class="dos">
-    <div>
-      <h3>Cómo se trabajó</h3>
-      <ul>
-        <li>Sprints de dos semanas con tablero, una rama y un PR por historia, y <strong>CI obligatorio</strong> para entrar a <code>main</code>.</li>
-        <li>Decisiones documentadas (ADR) y un informe de pruebas con lo que <em>no</em> se probó.</li>
-        <li>Las pruebas encontraron errores reales (cierres contados dos veces, un horario por defecto confundido con «sin horario», un build que fallaba por un archivo de terceros) y todos quedaron corregidos y documentados.</li>
-        <li>Una revisión independiente de la matemática encontró reservas que se corrigieron.</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Tecnología</h3>
-      <ul>
-        <li>Django 6 y PostgreSQL 17; reglas de integridad en la base de datos.</li>
-        <li>Matemática en Python puro (NumPy, SciPy); gráficos con Chart.js.</li>
-        <li>Imagen Docker de producción (gunicorn, usuario sin privilegios): <strong>145 MB comprimida</strong>, probada con la base de datos caída y recuperada.</li>
-        <li>Fotos en S3 con enlaces firmados (código listo y probado en local).</li>
-      </ul>
+  <div class="contenido">
+    <ul class="libro grande">
+      <li><strong>&gt; 700</strong><span>pruebas automáticas contra PostgreSQL real</span></li>
+      <li><strong>31 de 31</strong><span>criterios de aceptación de 13 historias, cada uno con prueba</span></li>
+      <li><strong>98,2 %</strong><span>de cobertura de código (3 052 sentencias)</span></li>
+      <li><strong>532 ms</strong><span>la pantalla más lenta con 10 262 solicitudes (el límite es 3 s)</span></li>
+    </ul>
+    <div class="dos">
+      <div>
+        <h3>Cómo se trabajó</h3>
+        <ul>
+          <li>Sprints de dos semanas, una rama y un PR por historia, y <strong>CI obligatorio</strong> para entrar a <code>main</code>.</li>
+          <li>Decisiones documentadas (ADR) y un informe de pruebas que dice qué <em>no</em> se probó.</li>
+          <li>Las pruebas encontraron errores reales (cierres contados dos veces, un horario por defecto confundido con «sin horario», un build que fallaba por un archivo de terceros) y todos quedaron corregidos y documentados.</li>
+          <li>Una revisión independiente de la matemática encontró reservas que se corrigieron.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tecnología</h3>
+        <ul>
+          <li>Django 6 y PostgreSQL 17; reglas de integridad en la base de datos.</li>
+          <li>Matemática en Python puro (NumPy, SciPy); gráficos con Chart.js.</li>
+          <li>Imagen Docker de producción (gunicorn, usuario sin privilegios): <strong>145 MB comprimida</strong>, probada con la base de datos caída y recuperada.</li>
+          <li>Fotos en S3 con enlaces firmados (código listo y probado en local).</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="diapositiva" id="limites" aria-labelledby="t-limites">
+<section class="seccion" id="limites" aria-labelledby="t-limites">
   <h2 id="t-limites">Lo que no hicimos, dicho con claridad</h2>
-  <p class="intro">Presentamos un prototipo académico. Esto es lo que <strong>no</strong> está demostrado:</p>
-  <ul class="limites">
-    <li><strong>Datos reales.</strong> Todo el análisis se probó con <em>datos simulados</em>. Con 3 inmobiliarias entrevistadas no se puede generalizar; la segunda ronda de entrevistas está preparada pero <strong>no se ha realizado</strong>.</li>
-    <li><strong>Las esperas</strong> del modelo M/M/c son de orden de magnitud (ver la validación).</li>
-    <li><strong>El historial de etapas aún no es inmutable</strong> (regla RN-33): se puede editar y borrar. Hay pruebas que lo declaran y una solución recomendada.</li>
-    <li><strong>El estado de un inmueble</strong> se valida en el formulario pero la base de datos no lo impone.</li>
-    <li><strong>Despliegue.</strong> El sistema corre en una <strong>demostración en Render</strong> (capa gratuita, datos simulados, se duerme tras un rato sin visitas). La subida a ECR, el despliegue en AWS y las fotos en un bucket real de S3 <strong>no se han verificado</strong> contra una cuenta de AWS.</li>
-    <li><strong>Usabilidad con personas</strong> y concurrencia real: pendientes del piloto.</li>
-  </ul>
-  <p class="nota">Cada uno de estos puntos está documentado en el informe de pruebas del repositorio, con su estado.</p>
+  <div class="contenido">
+    <p class="intro">Es un prototipo académico. Esto es lo que <strong>no</strong> está demostrado:</p>
+    <ul class="limites">
+      <li><strong>Datos reales.</strong> Todo el análisis se probó con <em>datos simulados</em>. Con 3 inmobiliarias entrevistadas no se puede generalizar; la segunda ronda de entrevistas está preparada pero <strong>no se ha realizado</strong>.</li>
+      <li><strong>Las esperas</strong> del modelo M/M/c son de orden de magnitud (ver la validación).</li>
+      <li><strong>El historial de etapas aún no es inmutable</strong> (regla RN-33): se puede editar y borrar. Hay pruebas que lo declaran y una solución recomendada.</li>
+      <li><strong>El estado de un inmueble</strong> se valida en el formulario, pero la base de datos no lo impone.</li>
+      <li><strong>Despliegue.</strong> El sistema corre en una <strong>demostración en Render</strong> (capa gratuita, datos simulados, se duerme tras un rato sin visitas). La subida a ECR, el despliegue en AWS y las fotos en un bucket real de S3 <strong>no se han verificado</strong> contra una cuenta de AWS.</li>
+      <li><strong>Usabilidad con personas</strong> y concurrencia real: pendientes del piloto.</li>
+    </ul>
+    <p class="nota">Cada punto está documentado en el informe de pruebas del repositorio, con su estado.</p>
+  </div>
 </section>
 
-<section class="diapositiva cierre" id="siguiente" aria-labelledby="t-sig">
-  <h2 id="t-sig">Siguientes pasos</h2>
-  <ol>
-    <li>Aplicar la segunda ronda de entrevistas (guion y plantilla listos) y reemplazar los supuestos por datos reales.</li>
-    <li>Hacer inmutable el historial de etapas (RN-33) con una restricción en PostgreSQL.</li>
-    <li>Piloto con una inmobiliaria: usabilidad y calibración de los modelos.</li>
-    <li>Despliegue en AWS con integración continua sin claves guardadas.</li>
-  </ol>
-  <p class="repo"><a href="https://github.com/Williamtrix2022/HogarSits">github.com/Williamtrix2022/HogarSits</a></p>
-  <p class="nota">Código, documentación, decisiones, informe de pruebas y validación de los modelos están en el repositorio.</p>
+<section class="seccion" id="equipo" aria-labelledby="t-equipo">
+  <h2 id="t-equipo">Equipo</h2>
+  <div class="contenido">
+    <ul class="equipo">
+      <li><strong>William Moya Santana</strong><span>Líder de proyecto</span></li>
+      <li><strong>Natalia Durango</strong><span>Análisis de requerimientos</span></li>
+      <li><strong>Camilo Diaz</strong><span>Desarrollo y base de datos</span></li>
+    </ul>
+    <h3 class="siguiente">Lo que sigue</h3>
+    <ol class="pasos">
+      <li>Aplicar la segunda ronda de entrevistas y reemplazar los supuestos por datos reales.</li>
+      <li>Hacer inmutable el historial de etapas con una restricción en PostgreSQL.</li>
+      <li>Piloto con una inmobiliaria: usabilidad y calibración de los modelos.</li>
+      <li>Despliegue en AWS con integración continua sin claves guardadas.</li>
+    </ol>
+    <p class="repo"><a href="https://github.com/Williamtrix2022/HogarSits">github.com/Williamtrix2022/HogarSits</a></p>
+  </div>
 </section>
 
 </main>
 
-<footer>
-  <p>HogarSits · Procesos Estocásticos · Universidad de Córdoba · 2026</p>
+<footer class="pie">
+  <img src="img/logo-hogarsits.png" width="849" height="283" alt="" aria-hidden="true">
+  <p>Procesos Estocásticos · Universidad de Córdoba · 2026</p>
 </footer>
-<p class="contador" id="contador" aria-live="polite" hidden></p>
+
+<script src="js/erlang.js" defer></script>
 <script src="js/sitio.js" defer></script>
 </body>
 </html>
