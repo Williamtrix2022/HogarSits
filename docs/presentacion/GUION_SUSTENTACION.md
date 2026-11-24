@@ -8,9 +8,8 @@ Duración sugerida: **12 minutos** de exposición + **5 de preguntas**. Apoyo vi
 | Tramo | Min | Quién (según su rol) | Sección del sitio |
 |---|---|---|---|
 | Problema y encuesta | 2 | Natalia Durango | Problema |
-| Qué hace el sistema + demo | 3 | Camilo Diaz | Qué hace |
-| Modelos y validación | 4 | Elizabeth Camaño | Análisis, Matemática |
-| Calidad, límites, siguientes pasos | 3 | William Moya Santana | Calidad, Límites |
+| Qué hace el sistema + demo + calidad | 5 | Camilo Diaz | Qué hace, Calidad |
+| Modelos y validación + límites y siguientes pasos | 5 | William Moya Santana | Análisis, Matemática, Límites |
 
 ## Guion
 1. **(0:00) Portada.** «HogarSits: gestión y análisis para inmobiliarias, con tres modelos estocásticos.»

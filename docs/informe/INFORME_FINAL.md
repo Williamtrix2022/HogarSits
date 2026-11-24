@@ -2,7 +2,7 @@
 
 **Sistema de gestión y análisis de ventas y alquiler de inmuebles**
 Procesos Estocásticos · Universidad de Córdoba · 2026
-**Equipo:** William Moya Santana (líder), Natalia Durango (requerimientos), Camilo Diaz (desarrollo y BD), Elizabeth Camaño (analista estocástico). Pruebas e informe: equipo compartido.
+**Equipo:** William Moya Santana (líder), Natalia Durango (requerimientos), Camilo Diaz (desarrollo y BD). Modelos estocásticos, pruebas e informe: equipo compartido.
 **Versión:** 0.9 (borrador para revisión del equipo) · **Fecha:** 24-nov-2026 · **Issue:** #43
 
 > **Cómo leer este informe.** Todas las cifras se *midieron* en el repositorio (ver el anexo A para la fuente de cada una). Se distingue tres cosas: lo **demostrado** (pruebas y validaciones reproducibles), lo **simulado** (todo el análisis estocástico se probó con datos simulados) y lo **pendiente** (§9 y §12). La sección 7 está reservada a los resultados con datos reales, que **todavía no existen** porque la segunda ronda de entrevistas no se ha hecho.

@@ -1,128 +1,155 @@
-# Instrucciones del Proyecto: HogarSits
+<p align="center">
+  <img src="static/img/logo-hogarsits.png" alt="HogarSits, gestión y análisis inmobiliario" width="360">
+</p>
 
-**Sistema de gestión y análisis de ventas y alquiler de inmuebles para una inmobiliaria**  
-*Asignatura: Procesos Estocásticos — Universidad de Córdoba (2026)*
+<p align="center">
+  <strong>Sistema de gestión y análisis de ventas y alquiler de inmuebles para una inmobiliaria</strong><br>
+  <em>Procesos Estocásticos · Universidad de Córdoba · 2026</em>
+</p>
 
----
+<p align="center">
+  <a href="https://github.com/Williamtrix2022/HogarSits/actions/workflows/ci.yml"><img src="https://github.com/Williamtrix2022/HogarSits/actions/workflows/ci.yml/badge.svg" alt="Estado del CI"></a>
+  <img src="https://img.shields.io/badge/Django-6.1-0C4B33" alt="Django 6.1">
+  <img src="https://img.shields.io/badge/PostgreSQL-17-336791" alt="PostgreSQL 17">
+  <img src="https://img.shields.io/badge/Python-3.14-3776AB" alt="Python 3.14">
+</p>
 
-## 📋 Resumen del Proyecto
+<p align="center">
+  <a href="https://hogarsits.onrender.com/"><strong>Sistema en vivo</strong></a> ·
+  <a href="https://williamtrix2022.github.io/HogarSits/"><strong>Sitio de presentación</strong></a> ·
+  <a href="docs/manual/MANUAL_DE_USUARIO.md">Manual de usuario</a> ·
+  <a href="docs/informe/INFORME_FINAL.md">Informe final</a>
+</p>
 
-**HogarSits** es una plataforma orientada a resolver la gestión operativa de una inmobiliaria (inmuebles, clientes, citas y transacciones) combinándola con herramientas analíticas avanzadas basadas en **Procesos Estocásticos**. 
-
-El sistema cuenta con dos pilares:
-1. **Módulo de Gestión:** Centraliza la base de datos de propiedades, clientes, agendas de visitas y estados de venta/alquiler.
-2. **Módulo Analítico:** Aplica modelos estocásticos (Procesos de Poisson, Teoría de Colas y Cadenas de Markov) para estimar la demanda, calcular la capacidad optima del personal de ventas y predecir tasas de conversión de clientes.
-
----
-
-## 🎯 Objetivos de Desarrollo
-
-1. **Gestión Operativa:** Implementar un CRUD completo para inmuebles, clientes, solicitudes y agendamientos sin duplicidad ni solapamientos de horario.
-2. **Modelación de Llegadas (Poisson):** Estimar el parámetro $\lambda$ (llegadas/hora) para analizar los flujos de clientes por franjas horarias.
-3. **Teoría de Colas ($M/M/c$):** Determinar la utilización del sistema ($\rho$), la cantidad de clientes en espera ($L_q$) y el tiempo medio de espera ($W_q$) para optimizar la asignación de asesores.
-4. **Cadenas de Markov:** Construir matrices de transición $P$ con estados discretos ($\text{Consulta} \to \text{Visita} \to \text{Negociación} \to \text{Cierre} / \text{Abandono}$) y calcular la matriz fundamental $N = (I - Q)^{-1}$ para predecir probabilidades de absorción y tiempo esperado de cierre.
-
----
-
-## 🛠️ Stack Tecnológico Recomendado
-
-* **Lenguaje Principal:** Python 3.10+
-* **Framework Web:** Django (Backend / ORM / Admin)
-* **Base de Datos:** PostgreSQL o MySQL
-* **Librerías Científicas y Analíticas:** NumPy, SciPy, Pandas
-* **Visualización de Datos:** Chart.js / Matplotlib
-* **Frontend:** HTML5, CSS3 (Tailwind CSS o Bootstrap), JavaScript
-* **Control de Versiones:** Git & GitHub
+> **Demostración en vivo:** corre en la capa gratuita de Render con **datos simulados**. Si estaba dormida, la primera carga tarda hasta 1 minuto. Es un prototipo académico: no se ha usado con una inmobiliaria real (ver [límites](#-lo-que-no-está-demostrado)).
 
 ---
 
-## 👥 Roles y Responsabilidades del Equipo
+## 📋 Resumen del proyecto
 
-| Rol | Integrante | Responsabilidades Clave |
+**HogarSits** resuelve la gestión operativa de una inmobiliaria (inmuebles, clientes, visitas y seguimiento) y la combina con herramientas analíticas basadas en **Procesos Estocásticos**. Tiene dos pilares:
+
+1. **Módulo de gestión:** inmuebles con estados, clientes sin duplicados, solicitudes de atención, agenda de visitas **sin cruces** y seguimiento por etapas con historial.
+2. **Módulo analítico:** un **proceso de Poisson** (cuándo llegan los clientes), **colas M/M/c** (cuántos asesores hacen falta) y **cadenas de Markov** (qué porcentaje termina cerrando y en cuántos pasos), explicados en lenguaje de negocio.
+
+<p align="center">
+  <img src="site/img/analisis-demanda.webp" alt="Panel de análisis: clientes que llegan por hora" width="46%">
+  &nbsp;
+  <img src="site/img/analisis-cierre.webp" alt="Panel de análisis: probabilidad de cierre por etapa" width="46%">
+</p>
+<p align="center"><sub>Panel de Análisis con datos simulados.</sub></p>
+
+---
+
+## 🎯 Objetivos de desarrollo
+
+1. **Gestión operativa:** CRUD completo de inmuebles, clientes, solicitudes y agendamientos, sin duplicidad ni solapamientos de horario. ✅
+2. **Modelación de llegadas (Poisson):** estimar λ (llegadas/hora) por franja horaria. ✅ *(validado con datos simulados)*
+3. **Teoría de colas (M/M/c):** calcular ρ, Lq y Wq para dimensionar a los asesores. ⚠️ *(las esperas son de orden de magnitud)*
+4. **Cadenas de Markov:** construir la matriz P y calcular N = (I − Q)⁻¹, la probabilidad de absorción y el tiempo esperado de cierre. ✅ *(validado con datos simulados)*
+
+---
+
+## 🛠️ Tecnología
+
+| Capa | Qué se usa |
+|---|---|
+| Lenguaje y framework | Python 3.14 · Django 6.1 |
+| Base de datos | PostgreSQL 17 (reglas de integridad en la propia base) |
+| Matemática | NumPy y SciPy; funciones puras en `apps/analitica/services/` |
+| Interfaz | HTML, CSS y JavaScript propios (sin framework) con la identidad visual de HogarSits · gráficos con Chart.js 4.4.7 |
+| Producción | Imagen Docker (`Dockerfile.prod`, gunicorn, WhiteNoise) · demostración en Render (`render.yaml`) |
+| Calidad | pytest sobre PostgreSQL real · ruff · GitHub Actions |
+
+---
+
+## 👥 Equipo
+
+| Rol | Integrante | Responsabilidades clave |
 | :--- | :--- | :--- |
-| **Líder de Proyecto** | William Moya Santana | Coordinar entregables, cronograma y coherencia del sistema. |
-| **Analista de Requerimientos** | Natalia Durango | Entrevistas con la inmobiliaria, levantamiento de casos de uso y documentación. |
-| **Desarrollador Software / BD** | Camilo Diaz | Modelado Entidad-Relación, desarrollo backend/frontend e integración de la BD. |
-| **Analista Estocástico** | Elizabeth Camaño | Construcción de modelos matemáticos (Poisson, Colas, Markov) y validación de parámetros ($\lambda, \mu, P$). |
-| **Encargado de Pruebas** | *Equipo Compartido* | Diseño de pruebas funcionales, validación de modelos con datos simulados/reales e informe final. |
+| **Líder de proyecto** | William Moya Santana | Coordinar entregables, cronograma y coherencia del sistema. |
+| **Analista de requerimientos** | Natalia Durango | Entrevistas con la inmobiliaria, levantamiento de casos de uso y documentación. |
+| **Desarrollador de software y base de datos** | Camilo Diaz | Modelado entidad-relación, desarrollo backend y frontend e integración de la base de datos. |
+| **Modelos estocásticos y pruebas** | Equipo compartido | Modelos de Poisson, colas y Markov, validación de parámetros (λ, μ, P), diseño de pruebas e informe final. |
 
 ---
 
-## 🚀 Guía de Fases e Instrucciones de Trabajo
+## 🚀 Guía de fases
 
-### Fase 1: Levantamiento e Información
-* Realizar entrevistas preliminares para documentar la dinámica actual de atención y ventas de la inmobiliaria.
-* Entregable: **Documento de Requerimientos**.
-
-### Fase 2: Diseño de Arquitectura y Base de Datos
-* Diseñar el Diagrama Entidad-Relación (ER) incluyendo tablas para: `Inmuebles`, `Clientes`, `Solicitudes`, `Visitas` y `SeguimientoEtapas`.
-* Definir las variables clave a capturar en base de datos para los modelos matemáticos (ej. `timestamp_llegada`, `duracion_atencion`, `estado_actual`).
-* Entregable: **Diagrama ER y Prototipos UI (Wireframes)**.
-
-### Fase 3: Desarrollo del Módulo de Gestión
-* Implementar registro y control de estados de propiedades: *Disponible, Reservado, Vendido, Arrendado*.
-* Programar validación lógica en la agenda para evitar solapamientos de asesor e inmueble.
-* Entregable: **Módulo de Gestión Funcional (CRUD)**.
-
-### Fase 4: Implementación del Módulo Analítico
-* **Proceso de Poisson:** Implementar algoritmos para calcular $\lambda$ histórico y ajustar las curvas de probabilidad $P(X = k) = \frac{e^{-\lambda t}(\lambda t)^k}{k!}$.
-* **Teoría de Colas ($M/M/c$):** Calcular las métricas de rendimiento:
-  $$\rho = \frac{\lambda}{c\mu}$$
-  $$L, L_q, W, W_q$$
-* **Cadena de Markov:** 
-  1. Construir la matriz $P$ a partir de la frecuencia histórica de transición entre estados: $\{1: \text{Consulta}, 2: \text{Visita}, 3: \text{Negociación}, 4: \text{Cierre}, 5: \text{Abandono}\}$.
-  2. Implementar el cálculo de la matriz fundamental $N = (I - Q)^{-1}$ y las probabilidades de absorción.
-* Entregable: **Dashboard Analítico con Gráficos e Indicadores**.
-
-### Fase 5: Pruebas, Validación y Documentación
-* Ejecutar pruebas con datasets simulados y datos reales.
-* Validar la precisión de las estimaciones estocásticas frente a los tiempos/tasas reales observados.
-* Entregable: **Informe Final de Pruebas y Sustentación del Proyecto**.
+| Fase | Contenido | Entregable | Estado |
+|---|---|---|---|
+| 1. Levantamiento | Entrevistas y requerimientos | Documento de requerimientos | ✅ *(la segunda ronda de entrevistas no se hizo)* |
+| 2. Diseño | Modelo entidad-relación, wireframes, identidad visual | Diagrama ER y prototipos | ✅ |
+| 3. Gestión | Estados de inmuebles, agenda sin cruces | Módulo de gestión funcional | ✅ |
+| 4. Analítica | Poisson, colas M/M/c, Markov y panel | Dashboard analítico | ✅ |
+| 5. Pruebas y validación | Pruebas, validación de los modelos, informe | Informe de pruebas y validación | ✅ con datos simulados |
+| 6. Despliegue y entrega | Imagen de producción, despliegue, sustentación | Sistema desplegado | 🚧 demostración en Render; AWS pendiente |
 
 ---
 
-## 📐 Especificación de la Cadena de Markov (Ejemplo Modelo)
+## 📐 Especificación de la cadena de Markov (modelo de ejemplo)
 
-$$\mathbf{P} = \begin{pmatrix} 
-0.20 & 0.50 & 0.00 & 0.00 & 0.30 \\ 
-0.00 & 0.15 & 0.45 & 0.00 & 0.40 \\ 
-0.00 & 0.00 & 0.20 & 0.55 & 0.25 \\ 
-0.00 & 0.00 & 0.00 & 1.00 & 0.00 \\ 
-0.00 & 0.00 & 0.00 & 0.00 & 1.00 
+$$\mathbf{P} = \begin{pmatrix}
+0.20 & 0.50 & 0.00 & 0.00 & 0.30 \\
+0.00 & 0.15 & 0.45 & 0.00 & 0.40 \\
+0.00 & 0.00 & 0.20 & 0.55 & 0.25 \\
+0.00 & 0.00 & 0.00 & 1.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 & 1.00
 \end{pmatrix}$$
 
-* **Estados Transitorios:** Consulta (1), Visita (2), Negociación (3).
-* **Estados Absorbentes:** Cierre (4), Abandono (5).
+* **Estados transitorios:** Consulta (1), Visita (2), Negociación (3).
+* **Estados absorbentes:** Cierre (4), Abandono (5).
+* Con esta matriz: **P(cierre desde Consulta) = 22,748 %** y **2,3989 pasos** esperados hasta un resultado.
+
+---
+
+## ✅ Calidad
+
+| Medida | Resultado |
+|---|---|
+| Pruebas automáticas | **700** contra PostgreSQL real (681 pasan, 5 defectos conocidos declarados como `xfail` estricto y 14 de rendimiento opcionales) |
+| Criterios de aceptación con prueba | **31 de 31** (13 historias de usuario) |
+| Cobertura de código | **98,2 %** |
+| Pantalla más lenta | **532 ms** con 10 262 solicitudes (el límite es 3 s) |
+
+Detalle en el [informe de pruebas](docs/pruebas/INFORME_DE_PRUEBAS.md) y la [validación de los modelos](docs/diseno/VALIDACION_MODELOS.md).
+
+## 🔎 Lo que no está demostrado
+
+- **Datos reales:** todo el análisis se probó con datos simulados; la primera ronda de entrevistas fue de 3 inmobiliarias de Montería y la segunda no se hizo.
+- **Las esperas de M/M/c** son de orden de magnitud: la validación mostró que se desvían de la espera simulada porque las visitas sacan a los asesores de la oficina.
+- **El historial de etapas no es inmutable** (regla RN-33) y el estado de un inmueble no tiene restricción en la base de datos.
+- **AWS:** la imagen de producción se construye y se prueba, pero el despliegue en AWS y las fotos en S3 real no se han verificado.
+- **Usabilidad con personas** y concurrencia real: pendientes del piloto.
+
 ---
 
 ## 🧭 Desarrollo y seguimiento
 
-### Estado del proyecto (8-nov-2026)
+### Estado de los sprints
 
 | Sprint | Fase | Estado |
 |---|---|---|
-| 0 Fundaciones | — | ✅ Cerrado (7/7) |
-| 1 Requerimientos | F1 | 🚧 6/7. Falta la segunda ronda de entrevistas (#55); el Budget de AWS (#14) ya está creado |
-| 2 Diseño | F2 | ✅ 5/5. ADR-002 de Markov aceptado (revisable con la segunda ronda) |
-| 3 Gestión, entrega 1 | F3 | 🚧 7/8. Falta solo las fotos en S3 (#27) |
-| 4 | F3 | ✅ 7/7. Agenda, inmuebles cerrados, etapas, alertas de seguimiento, recordatorio de visitas, horarios de asesores y subagente `tester` |
-| 5 | F4 | ✅ 7/7. Poisson, colas M/M/c y Markov, panel de Análisis, exportar a CSV, indicadores por asesor y subagente revisor |
-| 6 | F5 a F6 | 🚧 Siguiente: pruebas, informe, despliegue en AWS y sustentación |
-
-**Ya funciona:** inicio de sesión con roles (Administrador y Asesor), administración de usuarios, gestión de inmuebles (lista con búsqueda y filtros, alta, edición, historial de estado, desactivar), generador de datos simulados y una interfaz con la identidad visual de HogarSits.
-**En construcción:** clientes, solicitudes de atención, agenda de visitas, seguimiento de etapas y el módulo analítico.
-**Calidad:** 152 pruebas automáticas sobre PostgreSQL; el CI de GitHub las corre en cada Pull Request.
+| 0 Fundaciones | — | ✅ Cerrado |
+| 1 Requerimientos | F1 | 🚧 Falta la segunda ronda de entrevistas (#55) |
+| 2 Diseño | F2 | ✅ Cerrado |
+| 3 Gestión, entrega 1 | F3 | 🚧 Falta verificar las fotos en un bucket real de S3 (#27) |
+| 4 Gestión, entrega 2 | F3 | ✅ Cerrado |
+| 5 Analítica | F4 | ✅ Cerrado |
+| 6 Pruebas, despliegue y entrega | F5 a F6 | 🚧 En curso: informe, manual y demostración listos; despliegue en AWS pendiente (#45, #46, #47) |
 
 ### Documentación
 
 Todo está indexado en [`docs/README.md`](docs/README.md). Lo principal:
 
-* **Para exponer el avance:** [`docs/presentacion/AVANCE.md`](docs/presentacion/AVANCE.md) (resumen, cómo correrlo y demostración paso a paso)
-
+* **Para presentar:** [sitio de presentación](https://williamtrix2022.github.io/HogarSits/) · [sustentación corta](docs/presentacion/SUSTENTACION_CORTA.md) · [guion completo](docs/presentacion/GUION_SUSTENTACION.md)
+* **Para usar el sistema:** [manual de usuario](docs/manual/MANUAL_DE_USUARIO.md)
+* **Informe final:** [`docs/informe/INFORME_FINAL.md`](docs/informe/INFORME_FINAL.md)
 * **Tablero de sprints:** [`docs/sprints/SPRINTS.md`](docs/sprints/SPRINTS.md) y [milestones en GitHub](https://github.com/Williamtrix2022/HogarSits/milestones)
 * **Requerimientos y estado de implementación:** [`docs/requerimientos/REQUERIMIENTOS.md`](docs/requerimientos/REQUERIMIENTOS.md)
 * **Diseño:** [modelo de datos](docs/diseno/ER.md) · [wireframes](docs/diseno/WIREFRAMES.md) · [identidad visual](docs/diseno/IDENTIDAD_VISUAL.md)
 * **Decisiones de arquitectura:** [`docs/decisiones/`](docs/decisiones/README.md) · **Aprendizaje:** [`docs/aprendizaje/`](docs/aprendizaje/README.md)
+* **Despliegue:** [demostración en Render](docs/aws/DESPLIEGUE_RENDER.md) · [imagen Docker y ECR](docs/aws/IMAGEN_DOCKER.md) · [fotos en S3](docs/aws/FOTOS_S3.md)
 * **Convenciones para Claude Code:** [`CLAUDE.md`](CLAUDE.md)
 
 ### Puesta en marcha local
@@ -158,4 +185,5 @@ python manage.py makemigrations --check --dry-run
 * `config/`: configuración por entorno (`base`, `dev`, `prod`)
 * `apps/cuentas` (acceso, roles, menú) · `apps/comun` (utilidades compartidas) · `apps/inmuebles` · `apps/clientes` · `apps/seguimiento` · `apps/agenda` · `apps/analitica` (con `services/` para Poisson, colas y Markov)
 * `templates/` y `static/`: interfaz (componentes en `templates/componentes/`; guía viva en `/administracion/componentes/`)
-* `docs/` documentación · `tests/` pruebas
+* `site/`: sitio de presentación (HTML estático, publicado con GitHub Pages)
+* `docs/` documentación · `tests/` pruebas · `Dockerfile.prod` y `render.yaml`: despliegue
