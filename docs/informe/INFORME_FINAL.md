@@ -22,7 +22,7 @@ HogarSits es una aplicación web que une dos cosas: la **gestión diaria** de un
 **Qué no se logró (y se dice con claridad).**
 - **Nunca se probó con datos reales** de una inmobiliaria: la segunda ronda de entrevistas no se hizo. Con 3 inmobiliarias entrevistadas no se puede generalizar.
 - **Las esperas que predice M/M/c solo son de orden de magnitud**: la validación mostró que se desvían mucho de la espera simulada porque las visitas sacan a los asesores de la oficina.
-- **No está desplegado en AWS**; no se verificó S3 con un bucket real ni la usabilidad con personas.
+- **No está desplegado en AWS** (hay una **demostración en Render**, con datos simulados); no se verificó S3 con un bucket real ni la usabilidad con personas.
 - El **historial de etapas no es inmutable** (regla RN-33) y el estado de un inmueble no tiene restricción en la base de datos.
 
 **Conclusión.** Es un **prototipo académico funcional y bien verificado en el código**, cuyo valor para una inmobiliaria real **no está demostrado todavía**: falta el piloto con datos reales (§12).
@@ -183,7 +183,7 @@ Resumen; el detalle está en `docs/pruebas/INFORME_DE_PRUEBAS.md`.
 | **RN-33:** el historial de etapas se puede editar y borrar | 4 pruebas `xfail(strict)` | Un *trigger* de PostgreSQL (recomendado) |
 | **El estado del inmueble no tiene `CHECK` en la BD** | 1 prueba `xfail(strict)` | Una restricción con su migración |
 | **Fotos en S3 sin verificar** (#27) | Código probado con almacenamiento local y en memoria | Crear el bucket y correr `probar_almacenamiento` |
-| **Imagen no subida a ECR ni desplegada** (#45, #46, #47) | Construida y probada en local | Credenciales de AWS del equipo |
+| **No está desplegado en AWS** (#45, #46, #47) | Imagen construida y probada en local; **demostración en Render** (capa gratuita, datos simulados, `render.yaml`; la base gratuita caduca a los 30 días) | Credenciales de AWS del equipo |
 | **Muestra de entrevistas muy pequeña** | n = 3, por conveniencia | Hasta 8 encuestas (#55) |
 | **Concurrencia no ejercitada** | Solo se simula con un parche | Prueba de carga real |
 

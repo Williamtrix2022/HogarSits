@@ -43,6 +43,11 @@ kbd { border: 1px solid var(--linea); }
 .equipo strong { color: var(--navy); font-family: var(--titulos); }
 .equipo span { font-size: .92rem; }
 .ayuda-nav { font-size: .9rem; margin-top: 1.5rem; }
+.en-vivo-portada { margin: 1.25rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }
+.en-vivo-portada span { font-size: .92rem; }
+.boton { display: inline-block; background: var(--navy); color: var(--blanco); font-family: var(--titulos); font-weight: 700; text-decoration: none; padding: .7rem 1.3rem; border-radius: .5rem; }
+.boton:hover { background: var(--navy-500); }
+.indice li a.en-vivo { color: var(--cobre-texto); }
 
 .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; margin: 1.5rem 0; }
 .cifra { background: var(--blanco); border: 1px solid var(--linea); border-radius: .75rem; padding: 1.1rem 1.2rem; margin: 0; }
