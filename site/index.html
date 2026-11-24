@@ -22,6 +22,7 @@
     <li><a href="#matematica">Matemática</a></li>
     <li><a href="#calidad">Calidad</a></li>
     <li><a href="#limites">Límites</a></li>
+    <li><a class="en-vivo" href="https://hogarsits.onrender.com/" rel="noopener">Sistema en vivo ↗</a></li>
   </ul>
 </nav>
 
@@ -38,6 +39,7 @@
     <li><strong>Camilo Diaz</strong><span>Desarrollo y base de datos</span></li>
     <li><strong>Elizabeth Camaño</strong><span>Analista estocástico</span></li>
   </ul>
+  <p class="en-vivo-portada"><a class="boton" href="https://hogarsits.onrender.com/" rel="noopener">Abrir el sistema en vivo ↗</a> <span>Demostración con datos simulados. Si estaba dormido, tarda hasta 1 minuto en despertar.</span></p>
   <p class="ayuda-nav">Puede navegar con las flechas <kbd>←</kbd> <kbd>→</kbd> del teclado.</p>
 </section>
 
@@ -162,7 +164,7 @@
     <li><strong>Las esperas</strong> del modelo M/M/c son de orden de magnitud (ver la validación).</li>
     <li><strong>El historial de etapas aún no es inmutable</strong> (regla RN-33): se puede editar y borrar. Hay pruebas que lo declaran y una solución recomendada.</li>
     <li><strong>El estado de un inmueble</strong> se valida en el formulario pero la base de datos no lo impone.</li>
-    <li><strong>AWS.</strong> La imagen de producción se construye y se prueba, pero la subida a ECR, el despliegue y las fotos en un bucket real de S3 <strong>no se han verificado</strong> contra una cuenta de AWS.</li>
+    <li><strong>Despliegue.</strong> El sistema corre en una <strong>demostración en Render</strong> (capa gratuita, datos simulados, se duerme tras un rato sin visitas). La subida a ECR, el despliegue en AWS y las fotos en un bucket real de S3 <strong>no se han verificado</strong> contra una cuenta de AWS.</li>
     <li><strong>Usabilidad con personas</strong> y concurrencia real: pendientes del piloto.</li>
   </ul>
   <p class="nota">Cada uno de estos puntos está documentado en el informe de pruebas del repositorio, con su estado.</p>

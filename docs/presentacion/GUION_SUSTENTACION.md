@@ -1,5 +1,7 @@
 # HogarSits — Guion de sustentación
 
+> **Versión corta de una página:** [`SUSTENTACION_CORTA.md`](SUSTENTACION_CORTA.md).
+
 Duración sugerida: **12 minutos** de exposición + **5 de preguntas**. Apoyo visual: el sitio `site/` (navegar con ← →). Todas las cifras salen de `docs/pruebas/INFORME_DE_PRUEBAS.md`, `docs/diseno/VALIDACION_MODELOS.md` y `docs/investigacion/resultados/RESULTADOS_ENCUESTA.md`.
 
 ## Reparto sugerido

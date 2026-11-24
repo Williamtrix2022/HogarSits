@@ -1,4 +1,5 @@
 """El sitio de la presentacion (site/) no debe tener enlaces rotos ni afirmar lo que no esta probado."""
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -82,3 +83,17 @@ def test_el_equipo_coincide_con_el_readme():
     readme = (RAIZ / "README.md").read_text(encoding="utf-8")
     for nombre in ("William Moya Santana", "Natalia Durango", "Camilo Diaz", "Elizabeth Camaño"):
         assert nombre in readme and nombre in HTML
+
+
+_CLAVE_ESCRITA = re.compile(r"(?i)(contrase(?:ñ|n)a|password|clave)\s*[:=]\s*[`'\"]?[A-Za-z0-9]{6,}")
+
+
+def test_el_sitio_enlaza_al_sistema_en_vivo_sin_credenciales():
+    assert "https://hogarsits.onrender.com/" in HTML
+    assert not _CLAVE_ESCRITA.search(HTML)
+
+
+def test_la_sustentacion_corta_remite_a_las_claves_sin_escribirlas():
+    texto = (RAIZ / "docs/presentacion/SUSTENTACION_CORTA.md").read_text(encoding="utf-8")
+    assert "hogarsits.onrender.com" in texto and "no están en el repositorio" in texto
+    assert not _CLAVE_ESCRITA.search(texto)
