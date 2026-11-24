@@ -1,3 +1,5 @@
+> **Documento histórico (17-nov-2026).** Describe el avance de ese día (152 pruebas, Sprint 3) y ya no es vigente. Para la sustentación use [`GUION_SUSTENTACION.md`](GUION_SUSTENTACION.md) y el sitio `site/`; el estado real está en `docs/sprints/SPRINTS.md` y `docs/pruebas/INFORME_DE_PRUEBAS.md`.
+
 # HogarSits — Guion de exposición de avance
 
 **Verificado el 17-nov-2026** (código sin cambios desde el 8-nov): 152 pruebas pasan, el lint está limpio, las migraciones están al día y el servidor arranca. Repositorio: https://github.com/Williamtrix2022/HogarSits

@@ -1,0 +1,87 @@
+/* Sitio de la presentación de HogarSits. Paleta y tipografía de docs/diseno/IDENTIDAD_VISUAL.md. */
+:root {
+  --navy: #001F5B; --navy-500: #2A4A82; --navy-100: #E6EBF4;
+  --cobre: #B87333; --cobre-texto: #8F5622; --cobre-100: #F3E6DA;
+  --pizarra: #4A4A4A; --blanco: #FFFFFF; --fondo: #F4F2EE; --linea: #DAD6CE;
+  --titulos: "Nunito Sans", "Avenir", system-ui, sans-serif;
+  --cuerpo: "Open Sans", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; font-family: var(--cuerpo); color: var(--pizarra); background: var(--fondo); line-height: 1.6; font-size: 1.05rem; }
+h1, h2, h3 { font-family: var(--titulos); color: var(--navy); line-height: 1.15; margin: 0 0 .75rem; }
+h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; }
+h3 { font-size: 1.25rem; margin-top: 1.5rem; }
+a { color: var(--navy); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--cobre); outline-offset: 3px; }
+code, kbd { font-family: ui-monospace, Consolas, monospace; font-size: .9em; background: var(--navy-100); padding: .1rem .35rem; border-radius: .25rem; color: var(--navy); }
+kbd { border: 1px solid var(--linea); }
+
+.saltar { position: absolute; left: -999px; top: 0; background: var(--navy); color: var(--blanco); padding: .75rem 1rem; z-index: 20; }
+.saltar:focus { left: 0; }
+.solo-lectores { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.indice { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: .6rem clamp(1rem, 4vw, 3rem); background: var(--blanco); border-bottom: 1px solid var(--linea); }
+.indice .marca { font-family: var(--titulos); font-weight: 800; color: var(--navy); text-decoration: none; font-size: 1.15rem; }
+.indice ul { display: flex; gap: .25rem 1.1rem; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+.indice li a { text-decoration: none; font-weight: 600; font-size: .95rem; padding: .25rem 0; border-bottom: 2px solid transparent; }
+.indice li a:hover { border-bottom-color: var(--cobre); }
+
+.diapositiva { padding: clamp(2.5rem, 7vw, 5rem) clamp(1rem, 6vw, 5rem); max-width: 78rem; margin: 0 auto; }
+.diapositiva + .diapositiva { border-top: 1px solid var(--linea); }
+.intro { font-size: 1.15rem; max-width: 52rem; }
+
+.portada { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; }
+.portada .etiqueta { color: var(--cobre-texto); font-weight: 600; letter-spacing: .02em; margin: 0 0 1rem; }
+.portada h1 { font-size: clamp(3.2rem, 11vw, 7rem); font-weight: 800; margin: 0; }
+.portada h1 span { color: var(--cobre); font-weight: 400; }
+.lema { font-family: var(--titulos); font-size: clamp(1.3rem, 3vw, 2rem); color: var(--navy-500); margin: .25rem 0 1.5rem; }
+.resumen { max-width: 46rem; font-size: 1.2rem; }
+.equipo { list-style: none; padding: 0; margin: 2rem 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; max-width: 60rem; }
+.equipo li { background: var(--blanco); border: 1px solid var(--linea); border-left: 4px solid var(--navy); border-radius: .5rem; padding: .75rem 1rem; display: flex; flex-direction: column; }
+.equipo strong { color: var(--navy); font-family: var(--titulos); }
+.equipo span { font-size: .92rem; }
+.ayuda-nav { font-size: .9rem; margin-top: 1.5rem; }
+
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.cifra { background: var(--blanco); border: 1px solid var(--linea); border-radius: .75rem; padding: 1.1rem 1.2rem; margin: 0; }
+.cifra strong { display: block; font-family: var(--titulos); font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--navy); line-height: 1.1; }
+.cifra span { display: block; margin-top: .35rem; font-size: .98rem; }
+
+.dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem 3rem; }
+.dos h3 { margin-top: .5rem; }
+.dos ul, .limites, .cierre ol { padding-left: 1.2rem; }
+.dos li, .limites li, .cierre li { margin-bottom: .55rem; }
+
+.nota { font-size: .95rem; color: var(--pizarra); border-left: 3px solid var(--linea); padding-left: .9rem; max-width: 60rem; }
+.nota.aviso { background: var(--cobre-100); border-left-color: var(--cobre-texto); padding: .8rem 1rem; border-radius: 0 .5rem .5rem 0; color: #3b2a14; }
+
+.galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 1.25rem; margin-top: 1.25rem; }
+.galeria.uno { grid-template-columns: 1fr; max-width: 60rem; }
+figure { margin: 0; background: var(--blanco); border: 1px solid var(--linea); border-radius: .75rem; overflow: hidden; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { padding: .7rem 1rem .9rem; font-size: .95rem; border-top: 1px solid var(--linea); }
+
+.tabla-envoltorio { overflow-x: auto; margin: 1.25rem 0; border: 1px solid var(--linea); border-radius: .75rem; background: var(--blanco); }
+table { border-collapse: collapse; width: 100%; min-width: 44rem; font-size: .98rem; }
+th, td { text-align: left; padding: .7rem .9rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+thead th { background: var(--navy-100); color: var(--navy); font-family: var(--titulos); }
+tbody th { color: var(--navy); font-family: var(--titulos); white-space: nowrap; }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+
+.limites { max-width: 60rem; }
+.cierre ol { max-width: 52rem; font-size: 1.1rem; }
+.repo { font-size: 1.3rem; font-family: var(--titulos); font-weight: 700; margin-top: 2rem; }
+footer { text-align: center; padding: 2rem 1rem 3rem; font-size: .9rem; border-top: 1px solid var(--linea); }
+.contador { position: fixed; right: 1rem; bottom: 1rem; margin: 0; background: var(--navy); color: var(--blanco); padding: .35rem .8rem; border-radius: 2rem; font-size: .85rem; z-index: 10; }
+
+@media (max-width: 640px) {
+  .indice ul { gap: .25rem .8rem; }
+  .portada { min-height: auto; }
+}
+@media print {
+  .indice, .contador, .ayuda-nav, .saltar { display: none; }
+  .diapositiva { break-inside: avoid-page; padding: 1.5rem; }
+  body { background: #fff; }
+}
