@@ -13,3 +13,12 @@ testpaths = ["tests", "apps"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["E501"]  # mensajes y nombres de prueba descriptivos
+
+[tool.coverage.run]
+source = ["apps", "config"]
+omit = ["*/migrations/*", "*/tests/*", "*/management/__init__.py"]
+
+[tool.coverage.report]
+show_missing = false
+skip_empty = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError", "if __name__ == .__main__.:"]
