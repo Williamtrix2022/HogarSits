@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Análisis{% endblock %}
+{% block titulo_pagina %}Análisis{% endblock %}
+
+{% block contenido %}
+<form class="filtros" method="get" aria-label="Periodo y umbral de espera">
+  <div class="filtros-campos">
+    {% include "componentes/campo.html" with campo=form.desde sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=form.hasta sin_opcional=True %}
+    {% include "componentes/campo.html" with campo=form.espera_max sin_opcional=True %}
+    <div class="acciones filtros-acciones"><button class="boton" type="submit">Actualizar</button></div>
+  </div>
+</form>
+{% include "componentes/resumen_errores.html" with form=form %}
+
+<p class="resumen-resultados" role="status">
+  Del {{ r.desde|date:"j \d\e F" }} al {{ r.hasta|date:"j \d\e F \d\e Y" }}.
+  {% if r.hay_datos %}{{ r.n_llegadas }} llegadas dentro del horario de atención ({{ r.apertura }}:00 a {{ r.cierre }}:00).{% endif %}
+</p>
+
+{% if r.advertencias %}
+<ul class="avisos" aria-label="Advertencias">
+  {% for aviso in r.advertencias %}{% include "componentes/aviso.html" with tipo="aviso" texto=aviso %}{% endfor %}
+</ul>
+{% endif %}
+
+{% if not r.hay_datos %}
+{% include "componentes/vacio.html" with icono="analisis" titulo="No hay datos en este periodo" texto="Pruebe con otro rango de fechas. Si todavía no hay solicitudes, puede generar datos simulados con «python manage.py seed_datos_simulados»." %}
+{% else %}
+
+<nav class="sub-nav" aria-label="Secciones del análisis">
+  <a href="#demanda">Demanda</a>
+  <a href="#esperas">Asesores y esperas</a>
+  <a href="#cierre">Probabilidad de cierre</a>
+</nav>
+
+{# ------------------------------------------------------------------ Demanda (W10) #}
+<section class="tarjeta" id="demanda" aria-labelledby="t-demanda">
+  <h2 id="t-demanda">¿Cuándo llegan los clientes?</h2>
+  <p class="frase-negocio">{{ frase_demanda }}</p>
+  {% if graficas.demanda %}
+  <div class="grafica">
+    <canvas id="graf-demanda" role="img" aria-label="Clientes que llegan por hora del día, promedio por día laboral"></canvas>
+  </div>
+  <p class="ayuda">Las barras claras tienen pocos datos (menos de 30 llegadas en esa hora): no son confiables.</p>
+  {% endif %}
+  <details class="detalle-tecnico">
+    <summary>Detalle técnico: λ por hora y ajuste de Poisson</summary>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <caption class="solo-lectores">λ por hora del día</caption>
+        <thead><tr><th scope="col">Hora</th><th scope="col" class="num">Días observados</th><th scope="col" class="num">Llegadas</th><th scope="col" class="num">λ (clientes/hora)</th><th scope="col">Datos</th></tr></thead>
+        <tbody>
+        {% for f in r.franjas %}
+          <tr><td>{{ f.hora }}:00</td><td class="num">{{ f.dias_observados }}</td><td class="num">{{ f.llegadas }}</td><td class="num">{{ f.lam|floatformat:2 }}</td><td>{% if f.suficiente %}Suficientes{% else %}<span class="chip peligro">Pocos</span>{% endif %}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if r.ajuste_pico %}
+    <h3>Ajuste de Poisson en la hora pico ({{ r.franja_pico.hora }}:00)</h3>
+    <p>{{ frase_ajuste }}</p>
+    {% if graficas.ajuste %}
+    <div class="grafica grafica-corta">
+      <canvas id="graf-ajuste" role="img" aria-label="Frecuencia observada de llegadas por hora frente a la distribución de Poisson, en la hora pico"></canvas>
+    </div>
+    {% endif %}
+    <ul>
+      <li>λ estimada: {{ r.ajuste_pico.lam|floatformat:2 }} clientes por hora ({{ r.ajuste_pico.n }} observaciones).</li>
+      <li>Índice de dispersión (var/media): {{ r.ajuste_pico.indice_dispersion|floatformat:2 }} (≈ 1 si es Poisson).</li>
+      {% if r.ajuste_pico.probado %}<li>χ² = {{ r.ajuste_pico.chi2|floatformat:2 }} con {{ r.ajuste_pico.grados_libertad }} grados de libertad; p = {{ r.ajuste_pico.p_valor|floatformat:3 }}.</li>
+      {% else %}<li>Muy pocos datos para la prueba χ².</li>{% endif %}
+    </ul>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <caption class="solo-lectores">Frecuencia observada y esperada</caption>
+        <thead><tr><th scope="col" class="num">Llegadas en la hora (k)</th><th scope="col" class="num">Observada</th><th scope="col" class="num">Poisson P(X = k)</th></tr></thead>
+        <tbody>
+        {% for k, o, e in ajuste_filas %}
+          <tr><td class="num">{{ k }}</td><td class="num">{{ o|floatformat:1 }} %</td><td class="num">{{ e|floatformat:1 }} %</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </details>
+</section>
+
+{# ------------------------------------------------------------ Asesores y esperas (W11) #}
+<section class="tarjeta" id="esperas" aria-labelledby="t-esperas">
+  <h2 id="t-esperas">Asesores y esperas</h2>
+  {% if r.cola %}
+  <ul class="indicadores" aria-label="Resumen de esperas">
+    <li><strong>{{ r.c_promedio|floatformat:1 }}</strong> asesores disponibles (promedio)</li>
+    {% if r.cola.estable %}<li><strong>{{ espera_min|floatformat:0 }}</strong> min de espera media</li>
+    <li><strong>{{ r.servicio_medio_min|floatformat:0 }}</strong> min de atención media</li>
+    <li><strong>{{ ocupacion|floatformat:0 }}</strong> % de ocupación</li>{% endif %}
+  </ul>
+  <p class="frase-negocio">{{ frase_colas }}</p>
+  {% if r.cola_pico %}<p class="frase-negocio">En la hora pico: {{ frase_colas_pico }}</p>{% endif %}
+  <p class="frase-negocio"><strong>{{ frase_recomendacion }}</strong></p>
+  <p class="ayuda">El modelo trabaja con asesores completos, así que el promedio de asesores disponibles se redondea al entero más cercano (1,8 → 2). Por eso la espera de la hora pico puede diferir mucho de la media: con un promedio cercano a la mitad (como 1,5) basta un asesor más o menos para pasar de minutos a horas.</p>
+  {% if graficas.colas %}
+  <div class="grafica grafica-corta">
+    <canvas id="graf-colas" role="img" aria-label="Espera media en minutos según el número de asesores disponibles en la hora pico, con el umbral aceptable"></canvas>
+  </div>
+  <p class="ayuda">Un triángulo es una espera mayor que el tope del gráfico (el valor exacto está en la tabla del detalle técnico). Un punto que falta significa que con ese número de asesores la carga es inestable: la fila crecería sin límite.</p>
+  {% endif %}
+  <details class="detalle-tecnico">
+    <summary>Detalle técnico: ρ, L, Lq, W, Wq del modelo M/M/c</summary>
+    <ul>
+      <li>λ promedio: {{ r.lam_hora|floatformat:2 }} clientes por hora laboral · μ: {{ r.mu_hora|floatformat:2 }} clientes por hora por asesor ({{ r.n_servicios }} atenciones) · c: {{ r.c_usado }}.</li>
+    </ul>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <caption class="solo-lectores">Modelo M/M/c en la hora pico según el número de asesores</caption>
+        <thead><tr><th scope="col" class="num">Asesores (c)</th><th scope="col" class="num">ρ</th><th scope="col" class="num">P(esperar)</th><th scope="col" class="num">Lq</th><th scope="col" class="num">Wq (min)</th><th scope="col" class="num">W (min)</th></tr></thead>
+        <tbody>
+        {% for q in tabla_c %}
+          <tr>
+            <td class="num">{{ q.c }}</td><td class="num">{{ q.rho|floatformat:2 }}</td>
+            {% if q.estable %}<td class="num">{{ q.p_espera|floatformat:2 }}</td><td class="num">{{ q.lq|floatformat:2 }}</td><td class="num">{{ q.wq_min|floatformat:1 }}</td><td class="num">{{ q.w_min|floatformat:1 }}</td>
+            {% else %}<td class="num" colspan="4">Inestable (ρ ≥ 1): la fila crecería sin límite</td>{% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+  {% else %}
+  <p class="frase-negocio">{{ frase_colas }}</p>
+  {% endif %}
+</section>
+
+{# ------------------------------------------------------- Probabilidad de cierre (W12) #}
+<section class="tarjeta" id="cierre" aria-labelledby="t-cierre">
+  <h2 id="t-cierre">Probabilidad de cierre</h2>
+  <p class="frase-negocio">{{ frase_cierre }}</p>
+  {% if frases_etapas %}
+  <ul class="indicadores" aria-label="Probabilidad de cerrar según la etapa">
+    {% for f in frases_etapas %}<li>{{ f }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if graficas.cierre %}
+  <div class="grafica grafica-corta">
+    <canvas id="graf-cierre" role="img" aria-label="Probabilidad de cierre y de abandono según la etapa en que está el cliente"></canvas>
+  </div>
+  {% endif %}
+  <details class="detalle-tecnico">
+    <summary>Detalle técnico: matriz de transición P y absorción</summary>
+    <p>Un «paso» es un seguimiento registrado, no un día (ADR-002): quedarse en la misma etapa también cuenta.</p>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <caption class="solo-lectores">Matriz de transición P estimada</caption>
+        <thead><tr><th scope="col">Desde \ hacia</th><th scope="col" class="num">Consulta</th><th scope="col" class="num">Visita</th><th scope="col" class="num">Negociación</th><th scope="col" class="num">Cierre</th><th scope="col" class="num">Abandono</th><th scope="col" class="num">Observaciones</th></tr></thead>
+        <tbody>
+        {% for nombre, fila, n, conteos in matriz %}
+          <tr>
+            <th scope="row">{{ nombre }}</th>
+            {% if fila %}{% for p in fila %}<td class="num">{{ p|floatformat:3 }}</td>{% endfor %}
+            {% else %}<td class="num" colspan="5">Sin observaciones: no se inventa</td>{% endif %}
+            <td class="num">{{ n }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if r.markov.absorcion %}
+    <ul>
+      {% for nombre, cierre, abandono, pasos in absorcion_filas %}
+      <li>Desde {{ nombre }}: cierra {{ cierre|floatformat:1 }} %, abandona {{ abandono|floatformat:1 }} %, ≈ {{ pasos|floatformat:2 }} pasos.</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </details>
+</section>
+{% endif %}
+
+{{ graficas|json_script:"datos-graficas" }}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/vendor/chart.umd.min.js' %}"></script>
+<script src="{% static 'js/analisis.js' %}" defer></script>
+{% endblock %}
